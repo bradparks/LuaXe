@@ -29,3 +29,6 @@
 ehthumbs.db
 Thumbs.db
 *Thumbs.db
+
+# etc
+*.html
