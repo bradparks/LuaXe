@@ -19,3 +19,13 @@
 *.exe
 *.out
 *.app
+
+# Mac & Win
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*Thumbs.db
