@@ -30,9 +30,9 @@ class Tandem extends Bicycle {
 
 class Car extends Vehicle {
     var speed: Float = 0.0;
-    public function new() {
+    public function new(maxP) {
         super();
-        maxPassengers = 5;
+        maxPassengers = 5 + maxP;
         numberOfWheels = 4;
     }
 
@@ -41,9 +41,9 @@ class Car extends Vehicle {
         '; traveling at $speed mph';
     }
 
-    public static function stat()
+    public static function stat(text, none = "none")
     {
-        trace("static called");
+        trace('static called with text "$text"');
     }
 }
 
@@ -60,7 +60,7 @@ class Main
             var d = Date.now().getTime();
         #end
 
-        Car.stat();
+        Car.stat("huh?");
         var someVehicle = new Vehicle();
         trace('Vehicle: ${someVehicle.description()}');
         var bicycle = new Bicycle();
@@ -68,7 +68,7 @@ class Main
         var tandem = new Tandem();
         trace(tandem);
         trace('Tandem: ${tandem.description()}');
-        trace('Car: ${(new Car()).description()}');
+        trace('Car: ${(new Car(5)).description()}');
         
         var arr = [5,55,555];
         var arr2 = ["a","b","c"];
@@ -77,6 +77,8 @@ class Main
         arr.push(77);
         arr2.push("x");
         trace(arr);
+
+        //var OpOr = arr[0] | 0;
 
         var obj = {a:2,b:3};
         var b = {a:2,b:3};

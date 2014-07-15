@@ -24,10 +24,10 @@
 package luaxe;
 
 import haxe.macro.Type;
-import haxe.macro.Expr;
 import haxe.macro.JSGenApi;
 import haxe.macro.Context;
 import haxe.macro.Compiler;
+import haxe.macro.TypedExprTools;
 
 using Lambda;
 using StringTools;
@@ -76,7 +76,7 @@ class LuaGenerator
 
     inline function genExpr(e)
     {
-        var expr = haxe.macro.Context.getTypedExpr(e);
+        var expr:haxe.macro.TypedExpr = e;
         var exprString = new LuaPrinter().printExpr(expr);
 
         print(exprString.replace("super(", "super.init("));
@@ -84,8 +84,7 @@ class LuaGenerator
 
     function field(p : String)
     {
-        return LuaPrinter.handleKeywords(p);
-//        return api.isKeyword(p) ? '$' + p : "" + p;
+    	return LuaPrinter.handleKeywords(p);
     }
 
     static var classCount = 0;
@@ -101,7 +100,6 @@ class LuaGenerator
                 var e = r.get();
                 getPath(e);
             default:
-//                trace(t);
         }
     }
 
@@ -118,7 +116,7 @@ class LuaGenerator
 		        LuaPrinter.pathHack.set(dotPath, fullPath);
 		}
 
-		if(t.module != t.name)   //TODO(av) see what this does with sub classes in packages
+	//	if(t.module != t.name)   //TODO(av) see what this does with sub classes in packages
 		{
 		    var modulePath = t.module + "." + t.name;
 //           trace(fullPath + " " + t);
@@ -126,6 +124,7 @@ class LuaGenerator
 		    if(!LuaPrinter.pathHack.exists(modulePath))
 		        LuaPrinter.pathHack.set(modulePath, t.name);
 		}
+        return t.module + "_" + t.name;
         return fullPath;
     }
 
@@ -148,6 +147,7 @@ class LuaGenerator
         {
             case FMethod(_):
                 print('function $p:$field');
+                luaxe.LuaPrinter.printFunctionHead = false;
                 genExpr(e);
                 newline();
             default:
@@ -194,6 +194,7 @@ class LuaGenerator
 //                else
                     //print('$stat $field ');
                     print('function ${p}.$field');
+                luaxe.LuaPrinter.printFunctionHead = false;
                 genExpr(e);
                 newline();
             default:
@@ -250,7 +251,7 @@ class LuaGenerator
             var ignorance = [
             "haxe_ds_IntMap", 
             "IMap", 
-            "Std", 
+            "Std", "Std_Std", 
             "Array",
             "HxOverrides",
             "js_Boot",
@@ -271,6 +272,7 @@ class LuaGenerator
                     print('\n__inherit($p, ${psup});');
                     else
                     print('\n__inherit($p, Object);');
+
                     print('\n$p.__index = $p;');
                     //print('\n$p.__index = ${psup != null?psup : p};');
                 }
@@ -291,6 +293,7 @@ class LuaGenerator
             newline();
             print('function $p.new');
             LuaPrinter.insideConstructor = p;
+            luaxe.LuaPrinter.printFunctionHead = false;
             genExpr(c.constructor.get().expr());
             LuaPrinter.insideConstructor = null;
             newline();
@@ -475,7 +478,7 @@ class LuaGenerator
         	"\nend\n" +
         	boot + 
         	"\nexec()" +
-        	"\nMain.main()");
+        	"\nMain_Main.main()");
     }
 
     static var indentCount : Int = 0;

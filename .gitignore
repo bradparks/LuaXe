@@ -32,3 +32,16 @@ Thumbs.db
 
 # etc
 *.html
+*.h
+
+*.cpp
+
+*.txt
+
+*.gch
+
+*.xml
+
+bin/hx/obj/darwin/all_objs
+
+bin/hx/Main

@@ -28,14 +28,15 @@ var Tandem = function() {
 Tandem.__super__ = Bicycle;
 Tandem.prototype = $extend(Bicycle.prototype,{
 });
-var Car = function() {
+var Car = function(maxP) {
 	this.speed = 0.0;
 	Vehicle.call(this);
-	this.maxPassengers = 5;
+	this.maxPassengers = 5 + maxP;
 	this.numberOfWheels = 4;
 };
-Car.stat = function() {
-	console.log("static called");
+Car.stat = function(text,none) {
+	if(none == null) none = "none";
+	console.log("static called with text \"" + text + "\"");
 };
 Car.__super__ = Vehicle;
 Car.prototype = $extend(Vehicle.prototype,{
@@ -47,7 +48,7 @@ var Main = function() { };
 Main.main = function() {
 	console.log("go -->");
 	var d = new Date().getTime();
-	Car.stat();
+	Car.stat("huh?");
 	var someVehicle = new Vehicle();
 	console.log("Vehicle: " + someVehicle.description());
 	var bicycle = new Bicycle();
@@ -55,7 +56,7 @@ Main.main = function() {
 	var tandem = new Tandem();
 	console.log(tandem);
 	console.log("Tandem: " + tandem.description());
-	console.log("Car: " + new Car().description());
+	console.log("Car: " + new Car(5).description());
 	var arr = [5,55,555];
 	var arr2 = ["a","b","c"];
 	console.log(arr);

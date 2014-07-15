@@ -1,101 +1,110 @@
 function exec()
--- class Vehicle
-Vehicle = {};
-__inherit(Vehicle, Object);
-Vehicle.__index = Vehicle;
+-- class Main_Vehicle
+Main_Vehicle = {};
+__inherit(Main_Vehicle, Object);
+Main_Vehicle.__index = Main_Vehicle;
 do --{
 	
-	function Vehicle.new(  )
+	function Main_Vehicle.new(  )
 		local self = {}
-		setmetatable(self, Vehicle) 
+		setmetatable(self, Main_Vehicle)
+		 
 		self.numberOfWheels = 0;
-		self.maxPassengers = 1;
+		self.maxPassengers = 1
 		return self
+	
 	end
 	--var numberOfWheels;
 	--var maxPassengers;
-	function Vehicle:description(  ) 
-		return "" .. self.numberOfWheels .. " wheels; up to " + self.maxPassengers .. " passengers";
+	function Main_Vehicle:description(  )
+		 return "" .. self.numberOfWheels .. " wheels; up to " + self.maxPassengers .. " passengers";
 	end
 	
 	
 end --}
 
--- class Bicycle extends Vehicle
-Bicycle = {};
-__inherit(Bicycle, Vehicle);
-Bicycle.__index = Bicycle;
+-- class Main_Bicycle extends Main_Vehicle
+Main_Bicycle = {};
+__inherit(Main_Bicycle, Main_Vehicle);
+Main_Bicycle.__index = Main_Bicycle;
 do --{
 	
-	function Bicycle.new(  )
+	function Main_Bicycle.new(  )
 		local self = {}
-		setmetatable(self, Bicycle) 
-				__inherit(self, Vehicle.new());
-		self.numberOfWheels = 2;
+		setmetatable(self, Main_Bicycle)
+		 
+				__inherit(self, Main_Vehicle.new());
+		self.numberOfWheels = 2
 		return self
+	
 	end
 	
 end --}
 
--- class Tandem extends Bicycle
-Tandem = {};
-__inherit(Tandem, Bicycle);
-Tandem.__index = Tandem;
+-- class Main_Tandem extends Main_Bicycle
+Main_Tandem = {};
+__inherit(Main_Tandem, Main_Bicycle);
+Main_Tandem.__index = Main_Tandem;
 do --{
 	
-	function Tandem.new(  )
+	function Main_Tandem.new(  )
 		local self = {}
-		setmetatable(self, Tandem) 
-				__inherit(self, Bicycle.new());
-		self.maxPassengers = 2;
+		setmetatable(self, Main_Tandem)
+		 
+				__inherit(self, Main_Bicycle.new());
+		self.maxPassengers = 2
 		return self
+	
 	end
 	
 end --}
 
--- class Car extends Vehicle
-Car = {};
-__inherit(Car, Vehicle);
-Car.__index = Car;
+-- class Main_Car extends Main_Vehicle
+Main_Car = {};
+__inherit(Main_Car, Main_Vehicle);
+Main_Car.__index = Main_Car;
 do --{
 	
-	function Car.new(  )
+	function Main_Car.new( maxP )
 		local self = {}
-		setmetatable(self, Car) 
+		setmetatable(self, Main_Car)
+		 
 		self.speed = 0.0;
-				__inherit(self, Vehicle.new());
-		self.maxPassengers = 5;
-		self.numberOfWheels = 4;
+				__inherit(self, Main_Vehicle.new());
+		self.maxPassengers = 5 + maxP;
+		self.numberOfWheels = 4
 		return self
+	
 	end
-	function Car.stat(  ) 
-		print("static called");
+	function Main_Car.stat( text, none )
+		 print("static called with text \"" .. text .. "\"")
 	end
 	--var speed;
-	function Car:description(  ) 
-		return "; traveling at " .. self.speed .. " mph";
+	function Main_Car:description(  )
+		 return "; traveling at " .. self.speed .. " mph";
 	end
 	
 	
 end --}
 
--- class Main
-Main = {};
-__inherit(Main, Object);
-Main.__index = Main;
+-- class Main_Main
+Main_Main = {};
+__inherit(Main_Main, Object);
+Main_Main.__index = Main_Main;
 do --{
-	function Main.main(  ) 
+	function Main_Main.main(  )
+		 
 		print("go -->");
 		local d = os:clock();
-		Car.stat();
-		local someVehicle = Vehicle.new();
+		Main_Car.stat("huh?");
+		local someVehicle = Main_Vehicle.new();
 		print("Vehicle: " .. someVehicle:description());
-		local bicycle = Bicycle.new();
+		local bicycle = Main_Bicycle.new();
 		print("Bicycle: " .. bicycle:description());
-		local tandem = Tandem.new();
+		local tandem = Main_Tandem.new();
 		print(tandem);
 		print("Tandem: " .. tandem:description());
-		print("Car: " .. Car.new():description());
+		print("Car: " .. Main_Car.new(5):description());
 		local arr = setmetatable({[0]=5, 55, 555}, HaxeArrayMeta);
 		local arr2 = setmetatable({[0]="a", "b", "c"}, HaxeArrayMeta);
 		print(arr);
@@ -105,58 +114,59 @@ do --{
 		print(arr);
 		local obj = setmetatable({ a = 2, b = 3 },Object);
 		local b = setmetatable({ a = 2, b = 3 },Object);
-		local factory = function (  ) 
-			return setmetatable({ a = 2, b = 3 },Object);
+		local factory = function (  )
+		 return setmetatable({ a = 2, b = 3 },Object);
 		end;
 		local count = 0;
 		local x = 0;
 		
 			local _g = 0;
-			do while((_g < 100000))do 
+			while((_g < 100000))do 
 				local i = _g; _g = _g + 1
 				table.insert(arr, i)
 				table.insert(arr2, "i")
 				obj = setmetatable({ a = 2, b = 3 },Object);
 				b = factory();
-				count = count + obj.a + b.b + arr.length;
-			end;
-		end;
+				count = count + obj.a + b.b + arr.length
+			end
+		;
 		
 			local _g1 = 0;
 			local _g2 = arr.length;
-			do while((_g1 < _g2))do 
+			while((_g1 < _g2))do 
 				local i1 = _g1; _g1 = _g1 + 1
 				count = count + arr[i1] + arr2.length;
 				x = x + 1
 				x = x + 1
 				x = x - 1
-				x = x - 1
-			end;
-		end;
+				(function () local _r = x or 0; x = _r - 1; return _r end)()
+			end
+		;
 		print(count);
 		print(arr.length);
 		print(b);
 		print(obj);
 		print("[lua] >");
-		print("" .. Std:int(1000 * (os:clock() - d)) .. "ms");
+		print("" .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
 		d = os:clock();
 		
 			local _g3 = 0;
-			do while((_g3 < 100000))do 
+			while((_g3 < 100000))do 
 				local i2 = _g3; _g3 = _g3 + 1
 				x = 0;
 				x = x + 1
 				x = x + 1
 				x = x - 1
-				x = x - 1
-			end;
-		end;
-		print("LangPerfTest: " .. Std:int(1000 * (os:clock() - d)) .. "ms");
+				(function () x = (x or 0) - 1; return x; end)()
+			end
+		;
+		print("LangPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms")
+	
 	end
 	
 end --}
 
--- class Std
+-- class Std_Std
 -- ignored --
 
 
@@ -164,6 +174,7 @@ end
 -- boot
 
 null = nil
+trace = print
 
 function __inherit(to, base)
 	-- copy all fields from parent
@@ -446,4 +457,4 @@ function HaxeMap:keys(self)
 	return pairs(self)
 end
 exec()
-Main.main()
+Main_Main.main()

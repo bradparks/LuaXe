@@ -1,6 +1,7 @@
 -- boot
 
 null = nil
+trace = print
 
 function __inherit(to, base)
 	-- copy all fields from parent

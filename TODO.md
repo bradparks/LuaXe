@@ -2,6 +2,7 @@ TODO
 =====
 
 * super in constructor
+* super-super-super... calls
 * parametrized supers
 * break in loops
 * continue in loops
@@ -19,9 +20,18 @@ TODO
 * exclude comments from boot code
 * minify boot code
 * Main-class detection fix
-* USE TYPED AST
 * fix keywords
 * remove dead-code loops
+* while to for i=0,n-1 do *need to bench*
+* functions default values init
+* special Dynamic boxed class (for Arrays etc)
+* handle keywords
+* try catch
+* verbose compiler mode luaxe-verbose
+* minify output luaxe-minify
+* file-per-package output mode
+* boot exec patch (Std etc) main
+* adopt for livecoding
 
 DONE
 =====
@@ -32,3 +42,4 @@ DONE
 * i++, ++i, i- -, - -i
 * concat string .. any
 * boot code after app code for readability
+* USE TYPED AST

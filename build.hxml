@@ -6,11 +6,9 @@
 --macro luaxe.LuaGenerator.use()
 -dce full
 --connect 6000
--cmd /usr/local/bin/luajit bin/hx.lua
--cmd /usr/local/bin/luajit -joff bin/hx.lua
--cmd /usr/local/bin/lua bin/hx.lua
 
 --next
+
 -cp src
 -cp demo
 -main Main
@@ -18,4 +16,19 @@
 -js bin/hx.js
 -dce full
 --connect 6000
+
+--next
+
+-cp src
+-cp demo
+-main Main
+-D !lua
+-cpp bin/hx
+-dce full
+--connect 6000
+
+-cmd bin/hx/Main
 -cmd /usr/bin/env node bin/hx.js
+-cmd /usr/local/bin/luajit bin/hx.lua
+-cmd /usr/local/bin/luajit -joff bin/hx.lua
+-cmd /usr/local/bin/lua bin/hx.lua
