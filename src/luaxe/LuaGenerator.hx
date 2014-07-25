@@ -249,10 +249,35 @@ class LuaGenerator
             } else print('-- class $p');
 
             var ignorance = [
+            // top classes:
+            "String", "String_String",
+            "Std", "Std_Std", 
+            "Class", "Class_Class",
+            "Date", "Date_Date",
+            "DateTools", "DateTools_DateTools",
+            "EReg", "EReg_EReg",
+            "Enum", "Enum_Enum",
+            "EnumValue", "EnumValue_EnumValue",
+            "IntIterator", "IntIterator_IntIterator",
+            "Lambda", "Lambda_Lambda",
+            "List", "List_List",
+            "Map", "Map_Map",
+            "Math", "Math_Math",
+            "Reflect", "Reflect_Reflect",
+            "StdTypes", "StdTypes_StdTypes",
+            "StringBuf", "StringBuf_StringBuf",
+            "StringTools", "StringTools_StringTools",
+            "Sys", "Sys_Sys",
+            "Type", "Type_Type",
+            "UInt", "UInt_UInt",
+            "Xml", "Xml_Xml",
+
+            "HxOverrides_HxOverrides",
+
             "haxe_ds_IntMap", 
             "IMap", 
-            "Std", "Std_Std", 
-            "Array",
+            
+            "Array", "Array_Array",
             "HxOverrides",
             "js_Boot",
             "haxe_Log"];

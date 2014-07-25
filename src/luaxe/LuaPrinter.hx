@@ -552,7 +552,7 @@ class LuaPrinter {
         }
       //  trace(ifExpr);
 
-       return 'if(${printExpr(econd)})then $ifExpr  ${opt(eelse,printExpr,"else ")}';
+       return 'if(${printExpr(econd)})then \n\t$tabs$ifExpr\n\t$tabs ${opt(eelse,printExpr,"else ")}\n\t${tabs}end';
     }
 
 //    public function enterExpr(e:Expr)

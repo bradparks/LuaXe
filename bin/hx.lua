@@ -1,91 +1,6 @@
 function exec()
--- class Main_Vehicle
-Main_Vehicle = {};
-__inherit(Main_Vehicle, Object);
-Main_Vehicle.__index = Main_Vehicle;
-do --{
-	
-	function Main_Vehicle.new(  )
-		local self = {}
-		setmetatable(self, Main_Vehicle)
-		 
-		self.numberOfWheels = 0;
-		self.maxPassengers = 1
-		return self
-	
-	end
-	--var numberOfWheels;
-	--var maxPassengers;
-	function Main_Vehicle:description(  )
-		 return "" .. self.numberOfWheels .. " wheels; up to " + self.maxPassengers .. " passengers";
-	end
-	
-	
-end --}
-
--- class Main_Bicycle extends Main_Vehicle
-Main_Bicycle = {};
-__inherit(Main_Bicycle, Main_Vehicle);
-Main_Bicycle.__index = Main_Bicycle;
-do --{
-	
-	function Main_Bicycle.new(  )
-		local self = {}
-		setmetatable(self, Main_Bicycle)
-		 
-				__inherit(self, Main_Vehicle.new());
-		self.numberOfWheels = 2
-		return self
-	
-	end
-	
-end --}
-
--- class Main_Tandem extends Main_Bicycle
-Main_Tandem = {};
-__inherit(Main_Tandem, Main_Bicycle);
-Main_Tandem.__index = Main_Tandem;
-do --{
-	
-	function Main_Tandem.new(  )
-		local self = {}
-		setmetatable(self, Main_Tandem)
-		 
-				__inherit(self, Main_Bicycle.new());
-		self.maxPassengers = 2
-		return self
-	
-	end
-	
-end --}
-
--- class Main_Car extends Main_Vehicle
-Main_Car = {};
-__inherit(Main_Car, Main_Vehicle);
-Main_Car.__index = Main_Car;
-do --{
-	
-	function Main_Car.new( maxP )
-		local self = {}
-		setmetatable(self, Main_Car)
-		 
-		self.speed = 0.0;
-				__inherit(self, Main_Vehicle.new());
-		self.maxPassengers = 5 + maxP;
-		self.numberOfWheels = 4
-		return self
-	
-	end
-	function Main_Car.stat( text, none )
-		 print("static called with text \"" .. text .. "\"")
-	end
-	--var speed;
-	function Main_Car:description(  )
-		 return "; traveling at " .. self.speed .. " mph";
-	end
-	
-	
-end --}
+-- class HxOverrides_HxOverrides
+-- ignored --
 
 -- class Main_Main
 Main_Main = {};
@@ -96,68 +11,15 @@ do --{
 		 
 		print("go -->");
 		local d = os:clock();
-		Main_Car.stat("huh?");
-		local someVehicle = Main_Vehicle.new();
-		print("Vehicle: " .. someVehicle:description());
-		local bicycle = Main_Bicycle.new();
-		print("Bicycle: " .. bicycle:description());
-		local tandem = Main_Tandem.new();
-		print(tandem);
-		print("Tandem: " .. tandem:description());
-		print("Car: " .. Main_Car.new(5):description());
-		local arr = setmetatable({[0]=5, 55, 555}, HaxeArrayMeta);
-		local arr2 = setmetatable({[0]="a", "b", "c"}, HaxeArrayMeta);
-		print(arr);
-		print(arr[0]);
-		table.insert(arr, 77)
-		table.insert(arr2, "x")
-		print(arr);
-		local obj = setmetatable({ a = 2, b = 3 },Object);
-		local b = setmetatable({ a = 2, b = 3 },Object);
-		local factory = function (  )
-		 return setmetatable({ a = 2, b = 3 },Object);
-		end;
-		local count = 0;
-		local x = 0;
-		
-			local _g = 0;
-			while((_g < 100000))do 
-				local i = _g; _g = _g + 1
-				table.insert(arr, i)
-				table.insert(arr2, "i")
-				obj = setmetatable({ a = 2, b = 3 },Object);
-				b = factory();
-				count = count + obj.a + b.b + arr.length
-			end
-		;
-		
-			local _g1 = 0;
-			local _g2 = arr.length;
-			while((_g1 < _g2))do 
-				local i1 = _g1; _g1 = _g1 + 1
-				count = count + arr[i1] + arr2.length;
-				x = x + 1
-				x = x + 1
-				x = x - 1
-				(function () local _r = x or 0; x = _r - 1; return _r end)()
-			end
-		;
-		print(count);
-		print(arr.length);
-		print(b);
-		print(obj);
+		TestString_TestString.test();
 		print("[lua] >");
 		print("" .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
 		d = os:clock();
 		
-			local _g3 = 0;
-			while((_g3 < 100000))do 
-				local i2 = _g3; _g3 = _g3 + 1
-				x = 0;
-				x = x + 1
-				x = x + 1
-				x = x - 1
-				(function () x = (x or 0) - 1; return x; end)()
+			local _g = 0;
+			while((_g < 100000))do 
+				local i = _g; _g = _g + 1
+				TestString_TestString.test(true)
 			end
 		;
 		print("LangPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms")
@@ -168,6 +30,46 @@ end --}
 
 -- class Std_Std
 -- ignored --
+
+-- class TestString_TestString
+TestString_TestString = {};
+__inherit(TestString_TestString, Object);
+TestString_TestString.__index = TestString_TestString;
+do --{
+	function TestString_TestString.test( perf )
+		 
+		if((not perf))then 
+			print("TestString begin");
+			 
+			end;
+		local test = function ( text, bool )
+		 if((not bool  and  not perf))then 
+			print(text .. " failed");
+			 
+			end
+		end;
+		local S = "Returns a String _!@#$%^&*()1234567890-=/*[]{}";
+		test("eq", S == "Returns a String _!@#$%^&*()1234567890-=/*[]{}");
+		test("length", S.length == 46);
+		test("toLowerCase", S:toLowerCase() == "returns a string _!@#$%^&*()1234567890-=/*[]{}");
+		test("toUpperCase", S:toUpperCase() == "RETURNS A STRING _!@#$%^&*()1234567890-=/*[]{}");
+		test("substring", S:substring(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
+		test("substr", HxOverrides_HxOverrides.substr(S, 8, 1) == "a");
+		test("fromCharCode", true);
+		test("charAt", S:charAt(5) == "n");
+		test("charCodeAt", HxOverrides_HxOverrides.cca(S, 5) == 110);
+		test("indexOf", S:indexOf(" a ") == 7);
+		test("lastIndexOf", S:lastIndexOf(" a ") == 7);
+		test("lastIndexOf", S:lastIndexOf(" aa ") == -1);
+		test("split", S:split(" ").length == 4);
+		if((not perf))then 
+			print("TestString end");
+			 
+			end
+	
+	end
+	
+end --}
 
 
 end
@@ -299,20 +201,121 @@ function Std.random( x )
 end
 -- String class
 
-local StringMeta = getmetatable('')
-function StringMeta.__add(a,b) return a .. b end
+String = {}
+String_String = String
 
-StringMeta.__index = function (str, p)
+local __StringMeta = getmetatable('')
+function __StringMeta.__add(a,b) return a .. b end
+
+__StringMeta.__index = function (str, p)
 	if (p == "length") then
-		return string.len(str)
-	elseif (tonumber(p) == p) then
-		return string.sub(str, p+1, p+1)
+		return string.len(str) -- var length:Int
+	--elseif (tonumber(p) == p) then -- no String indexing avalable in Haxe
+	--	return string.sub(str, p+1, p+1)
 	else
-		return str_proto[p]
+		return String[p]
 	end
 end
 
+-- optimize lookup
+local __string_sub = string.sub
+local __string_byte = string.byte
+local __string_find = string.find
 
+-- just easy
+-- http://lua-users.org/wiki/StringLibraryTutorial
+String.fromCharCode = string.char -- static Int -> String
+String.substring = string.sub -- Int -> ?Int -> String
+String.toLowerCase = string.lower --> String
+String.toUpperCase = string.upper --> String
+
+-- some useless
+function String.new(string) -- static String -> String (not Void)
+	return string
+end
+
+function String:toString() --> String
+	return self
+end
+
+-- complex funcs
+function String:charAt(index) -- Int -> String
+	return __string_sub(self, index+1, index+1)
+end
+
+function String:charCodeAt(index) -- Int -> Null<Int>
+	return __string_byte(__string_sub(self, index+1, index+1))
+end
+
+function String:indexOf(str, startIndex) -- String -> ?Int -> Int
+	local r = __string_find(self, str, startIndex)
+	if(r == nil) then return -1 end
+	return r - 1
+end
+
+-- TODO startIndex
+function String:lastIndexOf(str, startIndex) -- String -> ?Int -> Int
+	local i, j
+    local k = 0
+    repeat
+        i = j
+        j, k = __string_find(self, str, k + 1, true)
+    until j == nil
+
+    return (i or 0) - 1
+end
+
+-- http://lua-users.org/wiki/SplitJoin
+function String:split(delimiter) -- String -> Array<String>
+--Splits this String at each occurence of delimiter.
+--If this String is the empty String "", the result is not consistent across targets and may either be [] (on Js, Cpp) or [""].
+--If delimiter is the empty String "", this String is split into an Array of this.length elements, where the elements correspond to the characters of this String.
+--If delimiter is not found within this String, the result is an Array with one element, which equals this String.
+--If delimiter is null, the result is unspecified.
+--Otherwise, this String is split into parts at each occurence of delimiter. If this String starts (or ends) with [delimiter}, the result Array contains a leading (or trailing) empty String "" element. Two subsequent delimiters also result in an empty String "" element.
+local t, ll
+local d = delimiter
+local p = self
+  t={}
+  ll=0
+  if(#p == 1) then return {p} end
+    while true do
+      l=string.find(p,d,ll,true) -- find the next d in the string
+      if l~=nil then -- if "not not" found then..
+        table.insert(t, string.sub(p,ll,l-1)) -- Save it in our array.
+        ll=l+1 -- save just after where we found it for searching next time.
+      else
+        table.insert(t, string.sub(p,ll)) -- Save what's left in our array.
+        break -- Break at end, as it should be, according to the lua manual.
+      end
+    end
+  return t
+end
+
+function String:substr(pos, len) -- Int -> ?Int -> String
+	return __string_sub(self, pos, pos+len)
+end
+
+-- temporal fix
+HxOverrides_HxOverrides = HxOverrides_HxOverrides or {}
+HxOverrides_HxOverrides.substr = String.substr
+HxOverrides_HxOverrides.cca = String.charCodeAt
+
+-- TEST
+--S = "Returns a String"
+--print(S)
+--print(S.length)
+--print(S:toLowerCase())
+--print(S:toUpperCase())
+--print(S:substring(8))
+--print(S:substr(8,1))
+--print(String.fromCharCode(65))
+--print(S:charAt(5))
+--print(S:charCodeAt(5))
+--print(S:indexOf(" a "))
+--print(S:lastIndexOf(" a "))
+--print(S:lastIndexOf(" aa "))
+--print(S:split(" "))--
 -- base Object class
 Object = {}
 Object.__index = Object;

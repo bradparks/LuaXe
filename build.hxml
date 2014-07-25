@@ -17,18 +17,18 @@
 -dce full
 --connect 6000
 
---next
+#--next
+#
+#-cp src
+#-cp demo
+#-main Main
+#-D !lua
+#-cpp bin/hx
+#-dce full
+#--connect 6000
 
--cp src
--cp demo
--main Main
--D !lua
--cpp bin/hx
--dce full
---connect 6000
-
--cmd bin/hx/Main
+#-cmd bin/hx/Main
 -cmd /usr/bin/env node bin/hx.js
 -cmd /usr/local/bin/luajit bin/hx.lua
--cmd /usr/local/bin/luajit -joff bin/hx.lua
--cmd /usr/local/bin/lua bin/hx.lua
+#-cmd /usr/local/bin/luajit -joff bin/hx.lua
+#-cmd /usr/local/bin/lua bin/hx.lua

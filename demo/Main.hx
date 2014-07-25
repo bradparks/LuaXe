@@ -60,6 +60,9 @@ class Main
             var d = Date.now().getTime();
         #end
 
+        TestString.test();
+        /*
+
         Car.stat("huh?");
         var someVehicle = new Vehicle();
         trace('Vehicle: ${someVehicle.description()}');
@@ -114,6 +117,7 @@ class Main
         trace(b);
         trace(obj);
         
+        /* */
         #if neko
          trace("[neko] >");
         #elseif lua
@@ -129,20 +133,16 @@ class Main
         #else
             trace("" + Std.int((Date.now().getTime()-d)) + "ms");
         #end
-
+        
         #if lua
             d = untyped os.clock();
         #else
             d = Date.now().getTime();
         #end
-
+        
         for(i in 0...100000)
         {
-            x = 0;
-            x++;
-            ++x;
-            x--;
-            --x;
+            TestString.test(true);
         }
 
         #if lua
@@ -150,5 +150,6 @@ class Main
         #else
             trace("LangPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
         #end
+        /**/
     }
 }

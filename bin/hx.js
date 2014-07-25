@@ -1,116 +1,60 @@
 (function () { "use strict";
-function $extend(from, fields) {
-	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
-	for (var name in fields) proto[name] = fields[name];
-	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
-	return proto;
-}
-var Vehicle = function() {
-	this.numberOfWheels = 0;
-	this.maxPassengers = 1;
+var HxOverrides = function() { };
+HxOverrides.cca = function(s,index) {
+	var x = s.charCodeAt(index);
+	if(x != x) return undefined;
+	return x;
 };
-Vehicle.prototype = {
-	description: function() {
-		return "" + this.numberOfWheels + " wheels; up to " + this.maxPassengers + " passengers";
-	}
+HxOverrides.substr = function(s,pos,len) {
+	if(pos != null && pos != 0 && len != null && len < 0) return "";
+	if(len == null) len = s.length;
+	if(pos < 0) {
+		pos = s.length + pos;
+		if(pos < 0) pos = 0;
+	} else if(len < 0) len = s.length + len - pos;
+	return s.substr(pos,len);
 };
-var Bicycle = function() {
-	Vehicle.call(this);
-	this.numberOfWheels = 2;
-};
-Bicycle.__super__ = Vehicle;
-Bicycle.prototype = $extend(Vehicle.prototype,{
-});
-var Tandem = function() {
-	Bicycle.call(this);
-	this.maxPassengers = 2;
-};
-Tandem.__super__ = Bicycle;
-Tandem.prototype = $extend(Bicycle.prototype,{
-});
-var Car = function(maxP) {
-	this.speed = 0.0;
-	Vehicle.call(this);
-	this.maxPassengers = 5 + maxP;
-	this.numberOfWheels = 4;
-};
-Car.stat = function(text,none) {
-	if(none == null) none = "none";
-	console.log("static called with text \"" + text + "\"");
-};
-Car.__super__ = Vehicle;
-Car.prototype = $extend(Vehicle.prototype,{
-	description: function() {
-		return "; traveling at " + this.speed + " mph";
-	}
-});
 var Main = function() { };
 Main.main = function() {
 	console.log("go -->");
 	var d = new Date().getTime();
-	Car.stat("huh?");
-	var someVehicle = new Vehicle();
-	console.log("Vehicle: " + someVehicle.description());
-	var bicycle = new Bicycle();
-	console.log("Bicycle: " + bicycle.description());
-	var tandem = new Tandem();
-	console.log(tandem);
-	console.log("Tandem: " + tandem.description());
-	console.log("Car: " + new Car(5).description());
-	var arr = [5,55,555];
-	var arr2 = ["a","b","c"];
-	console.log(arr);
-	console.log(arr[0]);
-	arr.push(77);
-	arr2.push("x");
-	console.log(arr);
-	var obj = { a : 2, b : 3};
-	var b = { a : 2, b : 3};
-	var factory = function() {
-		return { a : 2, b : 3};
-	};
-	var count = 0;
-	var x = 0;
-	var _g = 0;
-	while(_g < 100000) {
-		var i = _g++;
-		arr.push(i);
-		arr2.push("i");
-		obj = { a : 2, b : 3};
-		b = factory();
-		count += obj.a + b.b + arr.length;
-	}
-	var _g1 = 0;
-	var _g2 = arr.length;
-	while(_g1 < _g2) {
-		var i1 = _g1++;
-		count += arr[i1] + arr2.length;
-		x++;
-		++x;
-		--x;
-		x--;
-	}
-	console.log(count);
-	console.log(arr.length);
-	console.log(b);
-	console.log(obj);
+	TestString.test();
 	console.log("[js] >");
 	console.log("" + Std["int"](new Date().getTime() - d) + "ms");
 	d = new Date().getTime();
-	var _g3 = 0;
-	while(_g3 < 100000) {
-		var i2 = _g3++;
-		x = 0;
-		x++;
-		++x;
-		x--;
-		--x;
+	var _g = 0;
+	while(_g < 100000) {
+		var i = _g++;
+		TestString.test(true);
 	}
 	console.log("LangPerfTest: " + Std["int"](new Date().getTime() - d) + "ms");
 };
 var Std = function() { };
 Std["int"] = function(x) {
 	return x | 0;
+};
+var TestString = function() { };
+TestString.test = function(perf) {
+	if(perf == null) perf = false;
+	if(!perf) console.log("TestString begin");
+	var test = function(text,bool) {
+		if(!bool && !perf) console.log(text + " failed");
+	};
+	var S = "Returns a String _!@#$%^&*()1234567890-=/*[]{}";
+	test("eq",S == "Returns a String _!@#$%^&*()1234567890-=/*[]{}");
+	test("length",S.length == 46);
+	test("toLowerCase",S.toLowerCase() == "returns a string _!@#$%^&*()1234567890-=/*[]{}");
+	test("toUpperCase",S.toUpperCase() == "RETURNS A STRING _!@#$%^&*()1234567890-=/*[]{}");
+	test("substring",S.substring(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
+	test("substr",HxOverrides.substr(S,8,1) == "a");
+	test("fromCharCode",true);
+	test("charAt",S.charAt(5) == "n");
+	test("charCodeAt",HxOverrides.cca(S,5) == 110);
+	test("indexOf",S.indexOf(" a ") == 7);
+	test("lastIndexOf",S.lastIndexOf(" a ") == 7);
+	test("lastIndexOf",S.lastIndexOf(" aa ") == -1);
+	test("split",S.split(" ").length == 4);
+	if(!perf) console.log("TestString end");
 };
 Main.main();
 })();
