@@ -1,0 +1,11 @@
+-- optimize lookup
+--local __string_sub = string.sub
+--local __string_byte = string.byte
+--local __string_find = string.find
+--local __string_fromCharCode = string.char -- static Int -> String
+--local __string_substring = string.sub -- Int -> ?Int -> String
+--local __string_toLowerCase = string.lower --> String
+--local __string_toUpperCase = string.upper --> String
+--local __string_len = string.len
+
+-- hm, it lowers performance

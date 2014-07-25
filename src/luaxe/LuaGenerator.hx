@@ -184,7 +184,7 @@ class LuaGenerator
         var e = f.expr();
         if(e == null)
         {
-            print('$stat var $field;'); //TODO(av) initialisation of static vars if needed
+            print('--$stat var $field;'); //TODO(av) initialisation of static vars if needed
             newline();
         }
         else switch( f.kind ) {
@@ -497,8 +497,9 @@ class LuaGenerator
         r = ~/\t([A-z,0-9]{0,}):push\(([A-z,0-9,"']{0,})\);\n/g;
         combined = r.replace(combined,"\ttable.insert($1, $2)\n");
 
-        sys.io.File.saveContent(api.outputFile, 
-        	"function exec()\n" +
+        sys.io.File.saveContent(api.outputFile,
+            sys.io.File.getContent('$path/boot/preboot.lua') +
+        	"\nfunction exec()\n" +
         	combined + 
         	"\nend\n" +
         	boot + 

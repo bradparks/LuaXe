@@ -20,6 +20,7 @@ Main.main = function() {
 	var d = new Date().getTime();
 	TestString.test();
 	TestIfs.test();
+	TestFuncs.test();
 	console.log("[js] >");
 	console.log("FeatureTest: " + Std["int"](new Date().getTime() - d) + "ms");
 	d = new Date().getTime();
@@ -34,12 +35,19 @@ Main.main = function() {
 	while(_g1 < 1000000) {
 		var i1 = _g1++;
 		TestIfs.test(true);
+		TestFuncs.test(true);
 	}
 	console.log("LangPerfTest: " + Std["int"](new Date().getTime() - d) + "ms");
 };
 var Std = function() { };
 Std["int"] = function(x) {
 	return x | 0;
+};
+var TestFuncs = function() { };
+TestFuncs.test = function(perf) {
+	if(perf == null) perf = false;
+	if(!perf) console.log("TestFuncs begin");
+	if(!perf) console.log("TestFuncs end");
 };
 var TestIfs = function() { };
 TestIfs.test = function(perf) {
@@ -97,26 +105,21 @@ TestIfs.test = function(perf) {
 	if(!perf) console.log("TestIfs end");
 };
 var TestString = function() { };
+TestString.eq = function(text,bool) {
+	if(!bool && !TestString._perf) console.log(text + " failed");
+};
 TestString.test = function(perf) {
 	if(perf == null) perf = false;
+	TestString._perf = perf;
 	if(!perf) console.log("TestString begin");
-	var test = function(text,bool) {
-		if(!bool && !perf) console.log(text + " failed");
-	};
 	var S = "Returns a String _!@#$%^&*()1234567890-=/*[]{}";
-	test("eq",S == "Returns a String _!@#$%^&*()1234567890-=/*[]{}");
-	test("length",S.length == 46);
-	test("toLowerCase",S.toLowerCase() == "returns a string _!@#$%^&*()1234567890-=/*[]{}");
-	test("toUpperCase",S.toUpperCase() == "RETURNS A STRING _!@#$%^&*()1234567890-=/*[]{}");
-	test("substring",S.substring(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
-	test("substr",HxOverrides.substr(S,8,1) == "a");
-	test("fromCharCode",true);
-	test("charAt",S.charAt(5) == "n");
-	test("charCodeAt",HxOverrides.cca(S,5) == 110);
-	test("indexOf",S.indexOf(" a ") == 7);
-	test("lastIndexOf",S.lastIndexOf(" a ") == 7);
-	test("lastIndexOf",S.lastIndexOf(" aa ") == -1);
-	test("split",S.split(" ").length == 4);
+	TestString.eq("eq",S == "Returns a String _!@#$%^&*()1234567890-=/*[]{}");
+	TestString.eq("length",S.length == 46);
+	TestString.eq("substring",S.substring(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
+	TestString.eq("substr",HxOverrides.substr(S,8,1) == "a");
+	TestString.eq("fromCharCode",true);
+	TestString.eq("charAt",S.charAt(5) == "n");
+	TestString.eq("charCodeAt",HxOverrides.cca(S,5) == 110);
 	if(!perf) console.log("TestString end");
 };
 Main.main();

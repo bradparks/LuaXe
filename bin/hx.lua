@@ -1,3 +1,14 @@
+-- optimize lookup
+--local __string_sub = string.sub
+--local __string_byte = string.byte
+--local __string_find = string.find
+--local __string_fromCharCode = string.char -- static Int -> String
+--local __string_substring = string.sub -- Int -> ?Int -> String
+--local __string_toLowerCase = string.lower --> String
+--local __string_toUpperCase = string.upper --> String
+--local __string_len = string.len
+
+-- hm, it lowers performance
 function exec()
 -- class HxOverrides_HxOverrides
 -- ignored --
@@ -13,6 +24,7 @@ do --{
 			local d = os:clock();
 			TestString_TestString.test();
 			TestIfs_TestIfs.test();
+			TestFuncs_TestFuncs.test();
 			print("[lua] >");
 			print("FeatureTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
 			d = os:clock();
@@ -29,7 +41,8 @@ do --{
 				local _g1 = 0;
 				while((_g1 < 1000000))do 
 					local i1 = _g1; _g1 = _g1 + 1
-					TestIfs_TestIfs.test(true)
+					TestIfs_TestIfs.test(true);
+					TestFuncs_TestFuncs.test(true)
 				end
 			;
 			print("LangPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms")
@@ -40,6 +53,24 @@ end --}
 
 -- class Std_Std
 -- ignored --
+
+-- class TestFuncs_TestFuncs
+TestFuncs_TestFuncs = {};
+__inherit(TestFuncs_TestFuncs, Object);
+TestFuncs_TestFuncs.__index = TestFuncs_TestFuncs;
+do --{
+	function TestFuncs_TestFuncs.test( perf )
+		
+			if(not perf)then
+				print("TestFuncs begin")
+			end;
+			if(not perf)then
+				print("TestFuncs end")
+			end
+		
+	end
+	
+end --}
 
 -- class TestIfs_TestIfs
 TestIfs_TestIfs = {};
@@ -147,30 +178,26 @@ TestString_TestString = {};
 __inherit(TestString_TestString, Object);
 TestString_TestString.__index = TestString_TestString;
 do --{
+	--static var _perf;
+	function TestString_TestString.eq( text, bool )
+		if(not bool  and  not TestString_TestString._perf)then
+			print(text .. " failed")
+		end
+	end
 	function TestString_TestString.test( perf )
 		
+			TestString_TestString._perf = perf;
 			if(not perf)then
 				print("TestString begin")
 			end;
-			local test = function ( text, bool )
-				if(not bool  and  not perf)then
-					print(text .. " failed")
-				end
-			end;
 			local S = "Returns a String _!@#$%^&*()1234567890-=/*[]{}";
-			test("eq", S == "Returns a String _!@#$%^&*()1234567890-=/*[]{}");
-			test("length", S.length == 46);
-			test("toLowerCase", S:toLowerCase() == "returns a string _!@#$%^&*()1234567890-=/*[]{}");
-			test("toUpperCase", S:toUpperCase() == "RETURNS A STRING _!@#$%^&*()1234567890-=/*[]{}");
-			test("substring", S:substring(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
-			test("substr", HxOverrides_HxOverrides.substr(S, 8, 1) == "a");
-			test("fromCharCode", true);
-			test("charAt", S:charAt(5) == "n");
-			test("charCodeAt", HxOverrides_HxOverrides.cca(S, 5) == 110);
-			test("indexOf", S:indexOf(" a ") == 7);
-			test("lastIndexOf", S:lastIndexOf(" a ") == 7);
-			test("lastIndexOf", S:lastIndexOf(" aa ") == -1);
-			test("split", S:split(" ").length == 4);
+			TestString_TestString.eq("eq", S == "Returns a String _!@#$%^&*()1234567890-=/*[]{}");
+			TestString_TestString.eq("length", #(S) == 46);
+			TestString_TestString.eq("substring", S:substring(1+8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
+			TestString_TestString.eq("substr", HxOverrides_HxOverrides.substr(S, 8, 1) == "a");
+			TestString_TestString.eq("fromCharCode", true);
+			TestString_TestString.eq("charAt", S:charAt(5) == "n");
+			TestString_TestString.eq("charCodeAt", HxOverrides_HxOverrides.cca(S, 5) == 110);
 			if(not perf)then
 				print("TestString end")
 			end
@@ -356,9 +383,8 @@ function String:charCodeAt(index) -- Int -> Null<Int>
 end
 
 function String:indexOf(str, startIndex) -- String -> ?Int -> Int
-	local r = __string_find(self, str, startIndex)
-	if(r == nil) then return -1 end
-	return r - 1
+	local r = string.find(self, str, startIndex)
+  return r and (r - 1) or -1
 end
 
 -- TODO startIndex

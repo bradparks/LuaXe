@@ -62,6 +62,7 @@ class Main
 
         TestString.test();
         TestIfs.test();
+        TestFuncs.test();
         /*
 
         Car.stat("huh?");
@@ -163,6 +164,7 @@ class Main
         for(i in 0...1000000)
         {
             TestIfs.test(true);
+            TestFuncs.test(true);
         }
 
         #if lua

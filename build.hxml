@@ -27,7 +27,18 @@
 #-dce full
 #--connect 6000
 
+--next
+
+#-cp src
+#-cp demo
+#-main Main
+#-D !lua
+#-neko bin/hx.n
+#-dce full
+#--connect 6000
+#
 #-cmd bin/hx/Main
+#-cmd neko bin/hx.n
 -cmd /usr/bin/env node bin/hx.js
 -cmd /usr/local/bin/luajit bin/hx.lua
 #-cmd /usr/local/bin/luajit -joff bin/hx.lua

@@ -47,9 +47,8 @@ function String:charCodeAt(index) -- Int -> Null<Int>
 end
 
 function String:indexOf(str, startIndex) -- String -> ?Int -> Int
-	local r = __string_find(self, str, startIndex)
-	if(r == nil) then return -1 end
-	return r - 1
+	local r = string.find(self, str, startIndex)
+  return r and (r - 1) or -1
 end
 
 -- TODO startIndex
