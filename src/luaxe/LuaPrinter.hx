@@ -421,26 +421,13 @@ class LuaPrinter {
                 formatPrintCall(el);
             case "__lua__":
                 extractString(el[0]);
-            //case "__call__":
-            //    '${printExpr(el.shift())}(${printExprs(el,", ")})';
-            //case "__assert__":
-            //    'assert(${printExprs(el,", ")})';
-            //case "__new_named__":
-            //    'new ${extractString(el.shift())}(${printExprs(el,", ")})';
-            //case "__call_named__":
-            //    '${extractString(el.shift())}(${printExprs(el,", ")})';
-            //case "__is__":
-            //    '(${printExpr(el[0])} is ${printExpr(el[1])})';
-            //case "__as__":
-            //    '(${printExpr(el[0])} as ${printExpr(el[1])})';
-            //case "__call_after__":
-            //    var methodName = extractString(el.shift());
-            //    '(${printExpr(el[0])}).$methodName()';
-            //case "__cascade__":
-            //     '${printExpr(el.shift())}..${printExprs(el, ",")}';
+            case "__call__":
+                '${printExpr(el.shift())}(${printExprs(el,", ")})';
+            case "__tail__":
+                '${printExpr(el.shift())}:${printExpr(el.shift())}(${printExprs(el,", ")})';    
+            case "__global__":
+                '_G.${printExpr(el.shift())}(${printExprs(el,", ")})';
             default:
-               //'$id(${printExprs(el,", ")})'; // <-- here to . :
-
             (function(){
 
                 switch (e1.expr) {
@@ -448,28 +435,15 @@ class LuaPrinter {
                         switch (e.expr) {
                             case TField(e, field):
                             {
-                                //trace(e1.expr);
-
                                 return '$id(${printExprs(el,", ")})'
                                 .replace(".set(", ":set(")
                                 .replace(".get(", ":get(")
                                 .replace(".iterator(", ":iterator(");
                             };
-                            /*case EConst(c):
-                            {
-                                trace("const!");
-                                trace(c);
-                                trace(id);
-                                trace('$id(${printExprs(el,", ")})');
-                            };*/
                             default:{};
                         }
                     default:{};
                 }
-
-                // optimizations here
-                //trace(id);
-                
 				// huh, tail calls are faster
                 switch( e1.expr )
             	{
@@ -480,41 +454,25 @@ class LuaPrinter {
             			var e:TypedExprDef = ( e1.expr.getParameters()[0].expr );
             			var name = (e.getParameters()[0].name);
             			switch(param) {
-
-            				//case "toLowerCase": 
-            				
-            				//trace(haxe.Json.stringify(e));
-            				
-            				//return 'string.lower(${name})';
-            				//case "toUpperCase": trace("string.upper");
-            				//case "charAt": trace("it works");
-            				//case "indexOf": trace("it works");
             				// TODO static
             				case "substring": return '$name:substring(1+${printExprs(el,", 1+")})';
             				case "substr": return '$name:substr(1+${printExprs(el,", -1 +")})';
-            				case _: {};//trace("it dont works");
+            				case _: {};
             			}
             			case _:{};
             		}
             		case _:{};
             	}
 
-            		//case TLocal( v ) if( ""+v.t == "TInst(String,[])" ): 
-
-
                 var r = '${_static?id : id.replace(".",":")}(${printExprs(el,", ")})';
                 
                 if(_static && id.indexOf(".") == -1) r = currentPath + r;
-                //return r.indexOf('.new(') == -1? r.replace(".",":") : r;
-                //if() r = r.replace(".",":")
-                return r
-                    .replace(":new(", ".new(")
-                    ;
+                return r.replace(":new(", ".new(");
             })();
         }
 
         if(result == "super()")
-            result = '\t\t__inherit(self, $superClass.new())';//"--super()";
+            result = '\t\t__inherit(self, $superClass.new())';
 
         return result;
     }

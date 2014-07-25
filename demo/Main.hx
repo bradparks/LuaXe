@@ -63,6 +63,7 @@ class Main
         TestString.test();
         TestIfs.test();
         TestFuncs.test();
+       	#if lua TestMagic.test(); #end
         /*
 
         Car.stat("huh?");

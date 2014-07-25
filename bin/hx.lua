@@ -25,6 +25,7 @@ do --{
 			TestString_TestString.test();
 			TestIfs_TestIfs.test();
 			TestFuncs_TestFuncs.test();
+			TestMagic_TestMagic.test();
 			print("[lua] >");
 			print("FeatureTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
 			d = os:clock();
@@ -64,6 +65,59 @@ do --{
 			if(not perf)then
 				print("TestFuncs begin")
 			end;
+			local none22 = 0;
+			local none = function (  ) end;
+			local none2 = function (  )
+				
+					none();
+					local none221 = 0
+				
+			end;
+			local none3 = function (  )
+				
+					local none1 = function (  ) end;
+					local none21 = function (  )
+						none1()
+					end
+				
+			end;
+			local none4 = function (  )
+				
+					local x = 0;
+					local none5 = function (  )
+						
+							x = x + 1
+							local none31 = function (  )
+								
+									local none6 = function (  ) end;
+									local none23 = function (  )
+										none6()
+									end
+								
+							end;
+							none31()
+						
+					end;
+					local none24 = function (  )
+						
+							none5();
+							(function () local _r = x or 0; x = _r + 1; return _r end)()
+						
+					end;
+					none5();
+					none24();
+					if(not perf)then
+						print(x == 3)
+					end
+				
+			end;
+			local fx = function (  )
+				return 0;
+			end;
+			none();
+			none2();
+			none3();
+			none4();
 			if(not perf)then
 				print("TestFuncs end")
 			end
@@ -168,6 +222,22 @@ do --{
 			if(not perf)then
 				print("TestIfs end")
 			end
+		
+	end
+	
+end --}
+
+-- class TestMagic_TestMagic
+TestMagic_TestMagic = {};
+__inherit(TestMagic_TestMagic, Object);
+TestMagic_TestMagic.__index = TestMagic_TestMagic;
+do --{
+	function TestMagic_TestMagic.test(  )
+		
+			_G.print('__lua__');
+			print(1, 2, 3);
+			os:clock(1, 2, "hi");
+			_G.print("__lua__", 2)
 		
 	end
 	

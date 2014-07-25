@@ -47,6 +47,48 @@ var TestFuncs = function() { };
 TestFuncs.test = function(perf) {
 	if(perf == null) perf = false;
 	if(!perf) console.log("TestFuncs begin");
+	var none22 = 0;
+	var none = function() {
+	};
+	var none2 = function() {
+		none();
+		var none221 = 0;
+	};
+	var none3 = function() {
+		var none1 = function() {
+		};
+		var none21 = function() {
+			none1();
+		};
+	};
+	var none4 = function() {
+		var x = 0;
+		var none5 = function() {
+			x++;
+			var none31 = function() {
+				var none6 = function() {
+				};
+				var none23 = function() {
+					none6();
+				};
+			};
+			none31();
+		};
+		var none24 = function() {
+			none5();
+			x++;
+		};
+		none5();
+		none24();
+		if(!perf) console.log(x == 3);
+	};
+	var fx = function() {
+		return 0;
+	};
+	none();
+	none2();
+	none3();
+	none4();
 	if(!perf) console.log("TestFuncs end");
 };
 var TestIfs = function() { };
