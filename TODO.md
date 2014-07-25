@@ -32,6 +32,12 @@ TODO
 * file-per-package output mode
 * boot exec patch (Std etc) main
 * adopt for livecoding
+* two words about (un)defined behaviors
+* array length: keep length in separate var?
+* arrays & maps: indexing with get/set funcs, not [] ? (because of metatables)
+* arrays & maps boxing when converting to Dynamic
+* define globals as locals at top for speed
+* unhardcode path to boot classes
 
 DONE
 =====
