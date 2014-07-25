@@ -1,0 +1,10 @@
+{
+    "name": "luaxe",
+    "url": "https://github.com/PeyTy/LuaXe.git",
+    "license": "MIT",
+    "tags": ["lua", "luajit", "target", "js", "compiler", "haxe"],
+    "description": "Lua target for Haxe language",
+    "version": "1.0.0",
+    "releasenote": "",
+    "contributors": ["peyty"]
+}
