@@ -61,6 +61,7 @@ class Main
         #end
 
         TestString.test();
+        TestIfs.test();
         /*
 
         Car.stat("huh?");
@@ -129,11 +130,12 @@ class Main
         #end
 
         #if lua
-            trace("" + Std.int(1000*((untyped os.clock())-d)) + "ms");
+            trace("FeatureTest: " + Std.int(1000*((untyped os.clock())-d)) + "ms");
         #else
-            trace("" + Std.int((Date.now().getTime()-d)) + "ms");
+            trace("FeatureTest: " + Std.int((Date.now().getTime()-d)) + "ms");
         #end
         
+        // Lua is SLOW on strings, so test them separately
         #if lua
             d = untyped os.clock();
         #else
@@ -146,10 +148,28 @@ class Main
         }
 
         #if lua
+            trace("StringPerfTest: " + Std.int(1000*((untyped os.clock())-d)) + "ms");
+        #else
+            trace("StringPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
+        #end
+
+        // combined perf test without strings
+        #if lua
+            d = untyped os.clock();
+        #else
+            d = Date.now().getTime();
+        #end
+        
+        for(i in 0...1000000)
+        {
+            TestIfs.test(true);
+        }
+
+        #if lua
             trace("LangPerfTest: " + Std.int(1000*((untyped os.clock())-d)) + "ms");
         #else
             trace("LangPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
         #end
-        /**/
+        /* TODO ComplexPerfTest*/
     }
 }

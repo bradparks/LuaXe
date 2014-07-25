@@ -250,18 +250,29 @@ class LuaPrinter {
 	{
 		var head = printFunctionHead;
 		printFunctionHead = true;
-		return
-//	UNUSED	(func.params.length > 0 ? "<" + func.params.map(printTypeParamDecl).join(", ") + ">" : "") 
-		(head?"function ":"") + "( " + printArgs(func.args) + " )"
-////	DONE	+ "( " + func.args.map(printFunctionArg).join(", ") + " )"
-////	UNUSED	+ opt(func.ret, printComplexType, " : ")
-        + (insideConstructor != null ?
+
+		var body:String = (head?"function ":"") + "( " + printArgs(func.args) + " )";
+
+		if(insideConstructor != null)
+		{
+			body +=
             '\n\t\tlocal self = {}' +
-            '\n\t\tsetmetatable(self, $insideConstructor)'
-            //'\n\t\tinherit(self, $insideConstructor.new())'
-        : '') + '\n\t\t'
-		+ opt(func.expr, printExpr, " ") + '\n${tabs}end';
+            '\n\t\tsetmetatable(self, $insideConstructor)';
+        }
+
+        var t = tabs;
+        tabs += "\t";
+		
+		switch (func.expr.expr) {
+            case TBlock(el) if (el.length == 0):	body += " end";
+            case _: body += opt(func.expr, printExpr, '\n${tabs}') + '\n${t}end';
+        }
+
+        tabs = t;
+
+        return body;
 	}
+
 //	  public function printVar(v:Var)
 //    {
 //        return
@@ -542,30 +553,36 @@ class LuaPrinter {
         }
     }
 
-    function printIfElse(econd, eif, eelse)
+    function printIfElse(econd:TypedExpr, eif:TypedExpr, eelse:TypedExpr)
     {
-        var ifExpr = printExpr(eif);
-        var lastChar = ifExpr.charAt(ifExpr.length - 1);
-        if(lastChar != ";" && lastChar != "}")
-        {
-            ifExpr += ";";
-        }
-      //  trace(ifExpr);
+        // eliminate: if(x){} and if(x){}else{} etc
+        var _a:String = "if";
+        var _b:String = printExpr(econd);
+        var _c:String;
+        var _d:String;
 
-       return 'if(${printExpr(econd)})then \n\t$tabs$ifExpr\n\t$tabs ${opt(eelse,printExpr,"else ")}\n\t${tabs}end';
+        switch (eif.expr) {
+            case TBlock(el) if (el.length == 0):	_c = null;
+            case _: _c = printExpr(eif);
+        }
+
+        if(eelse != null)
+        switch (eelse.expr) {
+            case TBlock(el) if (el.length == 0):	_d = null;
+            case _: _d = printExpr(eelse);
+        }
+
+        if(_c == null && _d == null) return _a + _b + "then end";
+        if(_c == null && _d != null) return _a + "(not(" + _b + ')) then\n$tabs\t$_d\n${tabs}end';
+        if(_c != null && _d == null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}end';
+        if(_c != null && _d != null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}else\n${tabs}\t$_d\n${tabs}end';
+
+        return "SOMETHIG GOES WRONG";
     }
 
-//    public function enterExpr(e:Expr)
-//    {
-//
-//    }
-    //var insideEObjectDecl = false;
-
-    
-//
 	public function printExpr(e:TypedExpr){
 //        trace(e);
-        return e == null ? "#NULL" : switch(e.expr) {
+        return e == null ? /*"#NULL"*/ null : switch(e.expr) {
 		
         case TConst(c): printConstant(c); // ok
 

@@ -8,22 +8,32 @@ __inherit(Main_Main, Object);
 Main_Main.__index = Main_Main;
 do --{
 	function Main_Main.main(  )
-		 
-		print("go -->");
-		local d = os:clock();
-		TestString_TestString.test();
-		print("[lua] >");
-		print("" .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
-		d = os:clock();
 		
-			local _g = 0;
-			while((_g < 100000))do 
-				local i = _g; _g = _g + 1
-				TestString_TestString.test(true)
-			end
-		;
-		print("LangPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms")
-	
+			print("go -->");
+			local d = os:clock();
+			TestString_TestString.test();
+			TestIfs_TestIfs.test();
+			print("[lua] >");
+			print("FeatureTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
+			d = os:clock();
+			
+				local _g = 0;
+				while((_g < 100000))do 
+					local i = _g; _g = _g + 1
+					TestString_TestString.test(true)
+				end
+			;
+			print("StringPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
+			d = os:clock();
+			
+				local _g1 = 0;
+				while((_g1 < 1000000))do 
+					local i1 = _g1; _g1 = _g1 + 1
+					TestIfs_TestIfs.test(true)
+				end
+			;
+			print("LangPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms")
+		
 	end
 	
 end --}
@@ -31,42 +41,140 @@ end --}
 -- class Std_Std
 -- ignored --
 
+-- class TestIfs_TestIfs
+TestIfs_TestIfs = {};
+__inherit(TestIfs_TestIfs, Object);
+TestIfs_TestIfs.__index = TestIfs_TestIfs;
+do --{
+	function TestIfs_TestIfs.test( perf )
+		
+			if(not perf)then
+				print("TestIfs begin")
+			end;
+			local none = function (  ) end;
+			local bool = true;
+			if(bool)then end;
+			if(not bool)then end;
+			if(not bool  and  bool)then end;
+			if(not bool  and  bool  or  bool)then end;
+			if(bool)then
+				none()
+			end;
+			if(bool)then
+				none()
+			end;
+			if(not((bool))) then
+				none()
+			end;
+			if(bool)then
+				none()
+			else
+				none()
+			end;
+			if(not bool  and  bool)then
+				none()
+			end;
+			if(not bool  and  bool  or  bool)then
+				none()
+			end;
+			local rr = function (  )
+				
+					if(not bool)then
+						return
+					else
+						return
+					end;
+					return
+				
+			end;
+			rr();
+			local rr1 = function (  )
+				
+					if(bool)then
+						return 1
+					else
+						return 2
+					end;
+					return 3
+				
+			end;
+			rr1();
+			if(bool)then
+				if(not bool)then
+				if(not bool  and  bool)then end
+			else
+				if(not bool  and  bool  or  bool)then end
+			end
+			end;
+			if(bool)then
+				
+				none();
+				if(bool)then
+					none()
+				else
+					if(bool)then
+					if(not bool  and  bool)then
+					
+					if(bool)then
+						
+						if(not bool  and  bool  or  bool)then
+							none()
+						end;
+						none()
+					
+					else
+						none()
+					end;
+					none()
+				
+				end
+				else
+					none()
+				end
+				end
+			
+			end;
+			if(not perf)then
+				print("TestIfs end")
+			end
+		
+	end
+	
+end --}
+
 -- class TestString_TestString
 TestString_TestString = {};
 __inherit(TestString_TestString, Object);
 TestString_TestString.__index = TestString_TestString;
 do --{
 	function TestString_TestString.test( perf )
-		 
-		if((not perf))then 
-			print("TestString begin");
-			 
+		
+			if(not perf)then
+				print("TestString begin")
 			end;
-		local test = function ( text, bool )
-		 if((not bool  and  not perf))then 
-			print(text .. " failed");
-			 
+			local test = function ( text, bool )
+				if(not bool  and  not perf)then
+					print(text .. " failed")
+				end
+			end;
+			local S = "Returns a String _!@#$%^&*()1234567890-=/*[]{}";
+			test("eq", S == "Returns a String _!@#$%^&*()1234567890-=/*[]{}");
+			test("length", S.length == 46);
+			test("toLowerCase", S:toLowerCase() == "returns a string _!@#$%^&*()1234567890-=/*[]{}");
+			test("toUpperCase", S:toUpperCase() == "RETURNS A STRING _!@#$%^&*()1234567890-=/*[]{}");
+			test("substring", S:substring(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
+			test("substr", HxOverrides_HxOverrides.substr(S, 8, 1) == "a");
+			test("fromCharCode", true);
+			test("charAt", S:charAt(5) == "n");
+			test("charCodeAt", HxOverrides_HxOverrides.cca(S, 5) == 110);
+			test("indexOf", S:indexOf(" a ") == 7);
+			test("lastIndexOf", S:lastIndexOf(" a ") == 7);
+			test("lastIndexOf", S:lastIndexOf(" aa ") == -1);
+			test("split", S:split(" ").length == 4);
+			if(not perf)then
+				print("TestString end")
 			end
-		end;
-		local S = "Returns a String _!@#$%^&*()1234567890-=/*[]{}";
-		test("eq", S == "Returns a String _!@#$%^&*()1234567890-=/*[]{}");
-		test("length", S.length == 46);
-		test("toLowerCase", S:toLowerCase() == "returns a string _!@#$%^&*()1234567890-=/*[]{}");
-		test("toUpperCase", S:toUpperCase() == "RETURNS A STRING _!@#$%^&*()1234567890-=/*[]{}");
-		test("substring", S:substring(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
-		test("substr", HxOverrides_HxOverrides.substr(S, 8, 1) == "a");
-		test("fromCharCode", true);
-		test("charAt", S:charAt(5) == "n");
-		test("charCodeAt", HxOverrides_HxOverrides.cca(S, 5) == 110);
-		test("indexOf", S:indexOf(" a ") == 7);
-		test("lastIndexOf", S:lastIndexOf(" a ") == 7);
-		test("lastIndexOf", S:lastIndexOf(" aa ") == -1);
-		test("split", S:split(" ").length == 4);
-		if((not perf))then 
-			print("TestString end");
-			 
-			end
-	
+		
 	end
 	
 end --}
