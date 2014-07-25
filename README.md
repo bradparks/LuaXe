@@ -13,7 +13,7 @@ Require Haxe Compiler 3.1, Lua 5.2 or LuaJIT 2
 
 Magic
 =====
-```csharp
+```haxe
 untyped __lua__("_G.print('__lua__')");
 untyped __call__(print, 1, 2, 3);
 untyped __tail__(os, clock, 1, 2, "hi");
