@@ -21,11 +21,12 @@ Main.main = function() {
 	TestString.test();
 	TestIfs.test();
 	TestFuncs.test();
+	TestFuncs.test();
 	console.log("[js] >");
 	console.log("FeatureTest: " + Std["int"](new Date().getTime() - d) + "ms");
 	d = new Date().getTime();
 	var _g = 0;
-	while(_g < 100000) {
+	while(_g < 10000) {
 		var i = _g++;
 		TestString.test(true);
 	}
@@ -36,6 +37,7 @@ Main.main = function() {
 		var i1 = _g1++;
 		TestIfs.test(true);
 		TestFuncs.test(true);
+		TestLoops.test(true);
 	}
 	console.log("LangPerfTest: " + Std["int"](new Date().getTime() - d) + "ms");
 };
@@ -145,6 +147,17 @@ TestIfs.test = function(perf) {
 		} else none();
 	}
 	if(!perf) console.log("TestIfs end");
+};
+var TestLoops = function() { };
+TestLoops.test = function(perf) {
+	if(perf == null) perf = false;
+	if(!perf) console.log("TestLoops begin");
+	var _g = 0;
+	while(_g < 1000) {
+		var i = _g++;
+		var x = 1;
+	}
+	if(!perf) console.log("TestLoops end");
 };
 var TestString = function() { };
 TestString.eq = function(text,bool) {

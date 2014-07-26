@@ -26,12 +26,13 @@ do --{
 			TestIfs_TestIfs.test();
 			TestFuncs_TestFuncs.test();
 			TestMagic_TestMagic.test();
+			TestFuncs_TestFuncs.test();
 			print("[lua] >");
 			print("FeatureTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
 			d = os:clock();
 			
 				local _g = 0;
-				while((_g < 100000))do 
+				while((_g < 10000))do 
 					local i = _g; _g = _g + 1
 					TestString_TestString.test(true)
 				end
@@ -43,7 +44,8 @@ do --{
 				while((_g1 < 1000000))do 
 					local i1 = _g1; _g1 = _g1 + 1
 					TestIfs_TestIfs.test(true);
-					TestFuncs_TestFuncs.test(true)
+					TestFuncs_TestFuncs.test(true);
+					TestLoops_TestLoops.test(true)
 				end
 			;
 			print("LangPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms")
@@ -221,6 +223,31 @@ do --{
 			end;
 			if(not perf)then
 				print("TestIfs end")
+			end
+		
+	end
+	
+end --}
+
+-- class TestLoops_TestLoops
+TestLoops_TestLoops = {};
+__inherit(TestLoops_TestLoops, Object);
+TestLoops_TestLoops.__index = TestLoops_TestLoops;
+do --{
+	function TestLoops_TestLoops.test( perf )
+		
+			if(not perf)then
+				print("TestLoops begin")
+			end;
+			
+				local _g = 0;
+				while((_g < 1000))do 
+					local i = _g; _g = _g + 1
+					local x = 1
+				end
+			;
+			if(not perf)then
+				print("TestLoops end")
 			end
 		
 	end
