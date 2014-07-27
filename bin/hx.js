@@ -1,4 +1,10 @@
 (function () { "use strict";
+function $extend(from, fields) {
+	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
+	for (var name in fields) proto[name] = fields[name];
+	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
+	return proto;
+}
 var HxOverrides = function() { };
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
@@ -22,6 +28,7 @@ Main.main = function() {
 	TestIfs.test();
 	TestFuncs.test();
 	TestFuncs.test();
+	TestClasses.test();
 	console.log("[js] >");
 	console.log("FeatureTest: " + Std["int"](new Date().getTime() - d) + "ms");
 	d = new Date().getTime();
@@ -33,7 +40,7 @@ Main.main = function() {
 	console.log("StringPerfTest: " + Std["int"](new Date().getTime() - d) + "ms");
 	d = new Date().getTime();
 	var _g1 = 0;
-	while(_g1 < 1000000) {
+	while(_g1 < 100000) {
 		var i1 = _g1++;
 		TestIfs.test(true);
 		TestFuncs.test(true);
@@ -44,6 +51,56 @@ Main.main = function() {
 var Std = function() { };
 Std["int"] = function(x) {
 	return x | 0;
+};
+var LClass = function() {
+};
+var _TestClasses = {};
+_TestClasses.BaseClass = function() {
+	console.log("BaseClass::new");
+	if(_TestClasses.BaseClass._instances == null) _TestClasses.BaseClass._instances = 0;
+	_TestClasses.BaseClass._instances++;
+	this._count = 0;
+	_TestClasses.BaseClass.UninitialisedStaticVar = 1.234;
+};
+_TestClasses.InterfaceDemo = function() { };
+_TestClasses.AClass = function() {
+	_TestClasses.BaseClass.call(this);
+};
+_TestClasses.AClass.__super__ = _TestClasses.BaseClass;
+_TestClasses.AClass.prototype = $extend(_TestClasses.BaseClass.prototype,{
+});
+_TestClasses.BClass = function(arg) {
+	_TestClasses.AClass.call(this);
+	console.log("BClass::new " + arg);
+	this.apiVar = true;
+};
+_TestClasses.BClass.__interfaces__ = [_TestClasses.InterfaceDemo];
+_TestClasses.BClass.__super__ = _TestClasses.AClass;
+_TestClasses.BClass.prototype = $extend(_TestClasses.AClass.prototype,{
+	methodInBClass: function() {
+		console.log("BClass::methodInBClass");
+	}
+	,doSomething: function() {
+		console.log("BClass::doSomething()");
+	}
+});
+var CClass = function(arg) {
+	_TestClasses.BClass.call(this,arg);
+	console.log("CClass::new " + arg);
+};
+CClass.__super__ = _TestClasses.BClass;
+CClass.prototype = $extend(_TestClasses.BClass.prototype,{
+});
+var TestClasses = function() { };
+TestClasses.test = function(perf) {
+	if(perf == null) perf = false;
+	if(!perf) console.log("TestClasses begin");
+	var L = new LClass();
+	var bc = new _TestClasses.BaseClass();
+	var a = new _TestClasses.AClass();
+	var b = new _TestClasses.BClass("arg");
+	var c = new CClass("arg");
+	if(!perf) console.log("TestClasses end");
 };
 var TestFuncs = function() { };
 TestFuncs.test = function(perf) {
@@ -146,6 +203,9 @@ TestIfs.test = function(perf) {
 			}
 		} else none();
 	}
+	var z = 10;
+	var x = 0;
+	if(z > 2) x = 7; else x = 10;
 	if(!perf) console.log("TestIfs end");
 };
 var TestLoops = function() { };
@@ -153,9 +213,33 @@ TestLoops.test = function(perf) {
 	if(perf == null) perf = false;
 	if(!perf) console.log("TestLoops begin");
 	var _g = 0;
-	while(_g < 1000) {
+	while(_g < 10) {
 		var i = _g++;
 		var x = 1;
+	}
+	var x1 = 0;
+	while(x1 < 10) {
+		x1++;
+		var _g1 = 0;
+		while(_g1 < 10) {
+			var i1 = _g1++;
+			var x2 = 1;
+			var _g11 = 0;
+			while(_g11 < 10) {
+				var i2 = _g11++;
+				var x3 = 1;
+			}
+		}
+		var _g2 = 0;
+		while(_g2 < 10) {
+			var i3 = _g2++;
+			var x4 = 1;
+			var _g12 = 0;
+			while(_g12 < 10) {
+				var i4 = _g12++;
+				var x5 = 1;
+			}
+		}
 	}
 	if(!perf) console.log("TestLoops end");
 };
@@ -177,5 +261,6 @@ TestString.test = function(perf) {
 	TestString.eq("charCodeAt",HxOverrides.cca(S,5) == 110);
 	if(!perf) console.log("TestString end");
 };
+_TestClasses.BClass.WHOOT = "whoot";
 Main.main();
 })();

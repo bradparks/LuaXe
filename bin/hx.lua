@@ -27,6 +27,7 @@ do --{
 			TestFuncs_TestFuncs.test();
 			TestMagic_TestMagic.test();
 			TestFuncs_TestFuncs.test();
+			TestClasses_TestClasses.test();
 			print("[lua] >");
 			print("FeatureTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
 			d = os:clock();
@@ -41,7 +42,7 @@ do --{
 			d = os:clock();
 			
 				local _g1 = 0;
-				while((_g1 < 1000000))do 
+				while((_g1 < 100000))do 
 					local i1 = _g1; _g1 = _g1 + 1
 					TestIfs_TestIfs.test(true);
 					TestFuncs_TestFuncs.test(true);
@@ -50,12 +51,148 @@ do --{
 			;
 			print("LangPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms")
 		
+	
 	end
 	
 end --}
 
 -- class Std_Std
 -- ignored --
+
+-- class TestClasses_LClass
+TestClasses_LClass = {};
+__inherit(TestClasses_LClass, Object);
+TestClasses_LClass.__index = TestClasses_LClass;
+do --{
+	
+	function TestClasses_LClass.new(  )
+		local self = {}
+		setmetatable(self, TestClasses_LClass) end
+	
+end --}
+
+-- class TestClasses_BaseClass
+TestClasses_BaseClass = {};
+__inherit(TestClasses_BaseClass, Object);
+TestClasses_BaseClass.__index = TestClasses_BaseClass;
+do --{
+	
+	function TestClasses_BaseClass.new(  )
+		local self = {}
+		setmetatable(self, TestClasses_BaseClass)
+		
+			print("BaseClass::new");
+			if(TestClasses_BaseClass._instances == nil)then
+				TestClasses_BaseClass._instances = 0
+			end;
+			(function () local _r = TestClasses_BaseClass._instances or 0; TestClasses_BaseClass._instances = _r + 1; return _r end)();
+			self._count = 0;
+			TestClasses_BaseClass.UninitialisedStaticVar = 1.234
+		
+	
+	return self
+	end
+	--static var UninitialisedStaticVar;
+	--static var _instances;
+	--var _count;
+	
+end --}
+
+-- class TestClasses_InterfaceDemo abstract class TestClasses_InterfaceDemo
+do --{
+	
+end --}
+
+-- class TestClasses_AClass extends TestClasses_BaseClass
+TestClasses_AClass = {};
+__inherit(TestClasses_AClass, TestClasses_BaseClass);
+TestClasses_AClass.__index = TestClasses_AClass;
+do --{
+	
+	function TestClasses_AClass.new(  )
+		local self = {}
+		setmetatable(self, TestClasses_AClass)
+				__inherit(self, TestClasses_BaseClass.new())
+	
+	return self
+	end
+	
+end --}
+
+-- class TestClasses_BClass extends TestClasses_AClass
+TestClasses_BClass = {};
+__inherit(TestClasses_BClass, TestClasses_AClass);
+TestClasses_BClass.__index = TestClasses_BClass; -- implements TestClasses_InterfaceDemo
+do --{
+	
+	function TestClasses_BClass.new( arg )
+		local self = {}
+		setmetatable(self, TestClasses_BClass)
+		
+					__inherit(self, TestClasses_AClass.new());
+			print("BClass::new " .. arg);
+			self.apiVar = true
+		
+	
+	return self
+	end
+	TestClasses_BClass.WHOOT = "whoot";
+	--var apiVar;
+	function TestClasses_BClass:methodInBClass(  )
+		print("BClass::methodInBClass")
+	
+	end
+	
+	function TestClasses_BClass:doSomething(  )
+		print("BClass::doSomething()")
+	
+	end
+	
+	
+end --}
+
+-- class TestClasses_CClass extends TestClasses_BClass
+TestClasses_CClass = {};
+__inherit(TestClasses_CClass, TestClasses_BClass);
+TestClasses_CClass.__index = TestClasses_CClass;
+do --{
+	
+	function TestClasses_CClass.new( arg )
+		local self = {}
+		setmetatable(self, TestClasses_CClass)
+		
+					__inherit(self, TestClasses_BClass.new(arg));
+			print("CClass::new " .. arg)
+		
+	
+	return self
+	end
+	
+end --}
+
+-- class TestClasses_TestClasses
+TestClasses_TestClasses = {};
+__inherit(TestClasses_TestClasses, Object);
+TestClasses_TestClasses.__index = TestClasses_TestClasses;
+do --{
+	function TestClasses_TestClasses.test( perf )
+		
+			if(not perf)then
+				print("TestClasses begin")
+			end;
+			local L = TestClasses_LClass.new();
+			local bc = TestClasses_BaseClass.new();
+			local a = TestClasses_AClass.new();
+			local b = TestClasses_BClass.new("arg");
+			local c = TestClasses_CClass.new("arg");
+			if(not perf)then
+				print("TestClasses end")
+			end
+		
+	
+	end
+	
+end --}
 
 -- class TestFuncs_TestFuncs
 TestFuncs_TestFuncs = {};
@@ -74,14 +211,17 @@ do --{
 					none();
 					local none221 = 0
 				
+			
 			end;
 			local none3 = function (  )
 				
 					local none1 = function (  ) end;
 					local none21 = function (  )
 						none1()
+					
 					end
 				
+			
 			end;
 			local none4 = function (  )
 				
@@ -94,17 +234,21 @@ do --{
 									local none6 = function (  ) end;
 									local none23 = function (  )
 										none6()
+									
 									end
 								
+							
 							end;
 							none31()
 						
+					
 					end;
 					local none24 = function (  )
 						
 							none5();
 							(function () local _r = x or 0; x = _r + 1; return _r end)()
 						
+					
 					end;
 					none5();
 					none24();
@@ -112,9 +256,11 @@ do --{
 						print(x == 3)
 					end
 				
+			
 			end;
 			local fx = function (  )
 				return 0;
+			
 			end;
 			none();
 			none2();
@@ -124,6 +270,7 @@ do --{
 				print("TestFuncs end")
 			end
 		
+	
 	end
 	
 end --}
@@ -173,6 +320,7 @@ do --{
 					end;
 					return
 				
+			
 			end;
 			rr();
 			local rr1 = function (  )
@@ -184,6 +332,7 @@ do --{
 					end;
 					return 3
 				
+			
 			end;
 			rr1();
 			if(bool)then
@@ -221,10 +370,18 @@ do --{
 				end
 			
 			end;
+			local z = 10;
+			local x = 0;
+			if(z > 2)then
+				x = 7
+			else
+				x = 10
+			end;
 			if(not perf)then
 				print("TestIfs end")
 			end
 		
+	
 	end
 	
 end --}
@@ -241,15 +398,48 @@ do --{
 			end;
 			
 				local _g = 0;
-				while((_g < 1000))do 
+				while((_g < 10))do 
 					local i = _g; _g = _g + 1
 					local x = 1
 				end
 			;
+			local x1 = 0;
+			while((x1 < 10))do 
+				x1 = x1 + 1
+				
+					local _g1 = 0;
+					while((_g1 < 10))do 
+						local i1 = _g1; _g1 = _g1 + 1
+						local x2 = 1;
+						
+							local _g11 = 0;
+							while((_g11 < 10))do 
+								local i2 = _g11; _g11 = _g11 + 1
+								local x3 = 1
+							end
+						
+					end
+				;
+				
+					local _g2 = 0;
+					while((_g2 < 10))do 
+						local i3 = _g2; _g2 = _g2 + 1
+						local x4 = 1;
+						
+							local _g12 = 0;
+							while((_g12 < 10))do 
+								local i4 = _g12; _g12 = _g12 + 1
+								local x5 = 1
+							end
+						
+					end
+				
+			end;
 			if(not perf)then
 				print("TestLoops end")
 			end
 		
+	
 	end
 	
 end --}
@@ -266,6 +456,7 @@ do --{
 			os:clock(1, 2, "hi");
 			_G.print("__lua__", 2)
 		
+	
 	end
 	
 end --}
@@ -280,6 +471,7 @@ do --{
 		if(not bool  and  not TestString_TestString._perf)then
 			print(text .. " failed")
 		end
+	
 	end
 	function TestString_TestString.test( perf )
 		
@@ -299,6 +491,7 @@ do --{
 				print("TestString end")
 			end
 		
+	
 	end
 	
 end --}

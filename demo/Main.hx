@@ -65,6 +65,7 @@ class Main
         TestFuncs.test();
        	#if lua TestMagic.test(); #end
         TestFuncs.test();
+        TestClasses.test();
         /*
 
         Car.stat("huh?");
@@ -164,7 +165,7 @@ class Main
             d = Date.now().getTime();
         #end
       
-        for(i in 0...1000000)
+        for(i in 0...100000)
         {
             TestIfs.test(true);
             TestFuncs.test(true);

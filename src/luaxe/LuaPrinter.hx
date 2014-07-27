@@ -252,20 +252,21 @@ class LuaPrinter {
 		printFunctionHead = true;
 
 		var body:String = (head?"function ":"") + "( " + printArgs(func.args) + " )";
+        var retsefl = '\n${tabs}return self';
 
 		if(insideConstructor != null)
 		{
 			body +=
             '\n\t\tlocal self = {}' +
             '\n\t\tsetmetatable(self, $insideConstructor)';
-        }
+        } else retsefl = '';
 
         var t = tabs;
         tabs += "\t";
 		
 		switch (func.expr.expr) {
-            case TBlock(el) if (el.length == 0):	body += " end";
-            case _: body += opt(func.expr, printExpr, '\n${tabs}') + '\n${t}end';
+            case TBlock(el) if (el.length == 0):	body += ' end';
+            case _: body += opt(func.expr, printExpr, '\n${tabs}') + '\n${t}${retsefl}\n${t}end';
         }
 
         tabs = t;
@@ -470,9 +471,9 @@ class LuaPrinter {
                 return r.replace(":new(", ".new(");
             })();
         }
-
-        if(result == "super()")
-            result = '\t\t__inherit(self, $superClass.new())';
+        // TODO fix super calls in non-constuctors, and pointing to another funcs
+        if(result.startsWith("super("))
+            result = '\t\t__inherit(self, $superClass.new(${printExprs(el,", ")}))';
 
         return result;
     }
@@ -691,7 +692,7 @@ class LuaPrinter {
 			tabs += tabString;
 			var s = /*'{'*/ '\n$tabs' + printExprs(el, ';\n$tabs');//';\n$tabs');
 			tabs = old;
-			s + '\n${tabs}${insideConstructor!=null?"\treturn self\n\t":""}'/*'}'*/;
+			s + '\n${tabs}'/*'}'*/;
             //insideConstructor = null;
 
 		//case TFor(e1, e2): 'for ${printExpr(e1)} do\n${tabs} ${printExpr(e2)}\n${tabs}end';//'for(${printExpr(e1)}) ${printExpr(e2)}';

@@ -7,10 +7,37 @@ class TestLoops
 	{
 		if(!perf) trace("TestLoops begin");
 
-		for(i in 0...1000)
+		// for
+		for(i in 0...10)
 		{
 			var x = 1;
 		}
+
+		// while & nested
+		var x = 0;
+		while(x < 10) {
+			x++;
+			for(i in 0...10)
+			{
+				var x = 1;
+				for(i in 0...10)
+				{
+					var x = 1;
+				}
+			}
+			for(i in 0...10)
+			{
+				var x = 1;
+				for(i in 0...10)
+				{
+					var x = 1;
+				}
+			}
+		}
+
+		// TODO for in array
+
+
 
 		if(!perf) trace("TestLoops end");
 	}
