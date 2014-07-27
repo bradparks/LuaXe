@@ -456,8 +456,8 @@ class LuaPrinter {
             			var name = (e.getParameters()[0].name);
             			switch(param) {
             				// TODO static
-            				case "substring": return '$name:substring(1+${printExprs(el,", 1+")})';
-            				case "substr": return '$name:substr(1+${printExprs(el,", -1 +")})';
+            				case "substring": return '$name:substring(1+${printExprs(el,", 0+")})';
+            				//case "substr": return '$name:substr(1+${printExprs(el,", -1 +")})';
             				case _: {};
             			}
             			case _:{};
@@ -472,6 +472,7 @@ class LuaPrinter {
             })();
         }
         // TODO fix super calls in non-constuctors, and pointing to another funcs
+        // TODO inline inheritance
         if(result.startsWith("super("))
             result = '\t\t__inherit(self, $superClass.new(${printExprs(el,", ")}))';
 

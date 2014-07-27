@@ -40,6 +40,9 @@ do --{
 			;
 			print("StringPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
 			d = os:clock();
+			benchmark.LoopTesterApp_LoopTesterApp.main();
+			print("ComplexPerfTest: " .. Std_Std.int(1000 * (os:clock() - d)) .. "ms");
+			d = os:clock();
 			
 				local _g1 = 0;
 				while((_g1 < 100000))do 
@@ -53,6 +56,11 @@ do --{
 		
 	
 	end
+	
+end --}
+
+-- class Map_IMap abstract class Map_IMap
+do --{
 	
 end --}
 
@@ -484,6 +492,9 @@ do --{
 			TestString_TestString.eq("length", #(S) == 46);
 			TestString_TestString.eq("substring", S:substring(1+8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
 			TestString_TestString.eq("substr", HxOverrides_HxOverrides.substr(S, 8, 1) == "a");
+			TestString_TestString.eq("substring a,b", S:substring(1+8, 0+10) == "a ");
+			TestString_TestString.eq("substr a,b", HxOverrides_HxOverrides.substr(S, 8, 1) == "a");
+			TestString_TestString.eq("substr", HxOverrides_HxOverrides.substr(S, 8, nil) == "a String _!@#$%^&*()1234567890-=/*[]{}");
 			TestString_TestString.eq("fromCharCode", true);
 			TestString_TestString.eq("charAt", S:charAt(5) == "n");
 			TestString_TestString.eq("charCodeAt", HxOverrides_HxOverrides.cca(S, 5) == 110);
@@ -493,6 +504,603 @@ do --{
 		
 	
 	end
+	
+end --}
+
+-- class benchmark_LoopTesterApp_LoopTesterApp
+benchmark_LoopTesterApp_LoopTesterApp = {};
+__inherit(benchmark_LoopTesterApp_LoopTesterApp, Object);
+benchmark_LoopTesterApp_LoopTesterApp.__index = benchmark_LoopTesterApp_LoopTesterApp;
+do --{
+	function benchmark_LoopTesterApp_LoopTesterApp.buildDiamond( cfg, start )
+		
+			local bb0 = start;
+			benchmark.MaoLoops_BasicBlockEdge.new(cfg, bb0, bb0 + 1);
+			benchmark.MaoLoops_BasicBlockEdge.new(cfg, bb0, bb0 + 2);
+			benchmark.MaoLoops_BasicBlockEdge.new(cfg, bb0 + 1, bb0 + 3);
+			benchmark.MaoLoops_BasicBlockEdge.new(cfg, bb0 + 2, bb0 + 3);
+			return bb0 + 3
+		
+	
+	end
+	function benchmark_LoopTesterApp_LoopTesterApp.buildStraight( cfg, start, n )
+		
+			
+				local _g = 0;
+				while((_g < n))do 
+					local i = _g; _g = _g + 1
+					benchmark.MaoLoops_BasicBlockEdge.new(cfg, start + i, start + i + 1)
+				end
+			;
+			return start + n
+		
+	
+	end
+	function benchmark_LoopTesterApp_LoopTesterApp.buildBaseLoop( cfg, from )
+		
+			local header = benchmark.LoopTesterApp_LoopTesterApp.buildStraight(cfg, from, 1);
+			local diamond1 = benchmark.LoopTesterApp_LoopTesterApp.buildDiamond(cfg, header);
+			local d11 = benchmark.LoopTesterApp_LoopTesterApp.buildStraight(cfg, diamond1, 1);
+			local diamond2 = benchmark.LoopTesterApp_LoopTesterApp.buildDiamond(cfg, d11);
+			local footer = benchmark.LoopTesterApp_LoopTesterApp.buildStraight(cfg, diamond2, 1);
+			benchmark.MaoLoops_BasicBlockEdge.new(cfg, diamond2, d11);
+			benchmark.MaoLoops_BasicBlockEdge.new(cfg, diamond1, header);
+			benchmark.MaoLoops_BasicBlockEdge.new(cfg, footer, from);
+			footer = benchmark.LoopTesterApp_LoopTesterApp.buildStraight(cfg, footer, 1);
+			return footer
+		
+	
+	end
+	function benchmark_LoopTesterApp_LoopTesterApp.main(  )
+		
+			local d = __new__(Date_Date):getTime();
+			local cfg = benchmark.MaoLoops_MaoCFG.new();
+			local lsg = benchmark.MaoLoops_LoopStructureGraph.new();
+			cfg:CreateNode(0);
+			benchmark.LoopTesterApp_LoopTesterApp.buildBaseLoop(cfg, 0);
+			cfg:CreateNode(1);
+			benchmark.MaoLoops_BasicBlockEdge.new(cfg, 0, 2);
+			
+				local _g = 0;
+				while((_g < 300))do 
+					local dummyloops = _g; _g = _g + 1
+					local lsglocal = benchmark.MaoLoops_LoopStructureGraph.new();
+					benchmark:MaoLoops_MaoLoops.new(cfg, lsglocal):run()
+				end
+			;
+			local n = 2;
+			
+				local _g1 = 0;
+				while((_g1 < 10))do 
+					local parlooptrees = _g1; _g1 = _g1 + 1
+					cfg:CreateNode(n + 1);
+					benchmark.MaoLoops_BasicBlockEdge.new(cfg, 2, n + 1);
+					n = n + 1;
+					
+						local _g11 = 0;
+						while((_g11 < 100))do 
+							local i = _g11; _g11 = _g11 + 1
+							local top = n;
+							n = benchmark.LoopTesterApp_LoopTesterApp.buildStraight(cfg, n, 1);
+							
+								local _g2 = 0;
+								while((_g2 < 25))do 
+									local j = _g2; _g2 = _g2 + 1
+									n = benchmark.LoopTesterApp_LoopTesterApp.buildBaseLoop(cfg, n)
+								end
+							;
+							local bottom = benchmark.LoopTesterApp_LoopTesterApp.buildStraight(cfg, n, 1);
+							benchmark.MaoLoops_BasicBlockEdge.new(cfg, n, top);
+							n = bottom
+						end
+					;
+					benchmark.MaoLoops_BasicBlockEdge.new(cfg, n, 1)
+				end
+			
+		
+	
+	end
+	
+end --}
+
+-- class benchmark_MaoLoops_BasicBlockEdge
+benchmark_MaoLoops_BasicBlockEdge = {};
+__inherit(benchmark_MaoLoops_BasicBlockEdge, Object);
+benchmark_MaoLoops_BasicBlockEdge.__index = benchmark_MaoLoops_BasicBlockEdge;
+do --{
+	
+	function benchmark_MaoLoops_BasicBlockEdge.new( cfg, from_name, to_name )
+		local self = {}
+		setmetatable(self, benchmark_MaoLoops_BasicBlockEdge)
+		
+			self.from_ = cfg:CreateNode(from_name);
+			self.to_ = cfg:CreateNode(to_name);
+			self.from_.out_edges_.push(self.to_);
+			self.to_.in_edges_.push(self.from_);
+			cfg.edge_list_.push(self)
+		
+	
+	return self
+	end
+	--var from_;
+	--var to_;
+	
+end --}
+
+-- class benchmark_MaoLoops_BasicBlock
+benchmark_MaoLoops_BasicBlock = {};
+__inherit(benchmark_MaoLoops_BasicBlock, Object);
+benchmark_MaoLoops_BasicBlock.__index = benchmark_MaoLoops_BasicBlock;
+do --{
+	
+	function benchmark_MaoLoops_BasicBlock.new( name )
+		local self = {}
+		setmetatable(self, benchmark_MaoLoops_BasicBlock)
+		
+			self.in_edges_ = Array_Array.new();
+			self.out_edges_ = Array_Array.new();
+			self.name_ = name
+		
+	
+	return self
+	end
+	--var in_edges_;
+	--var out_edges_;
+	--var name_;
+	
+end --}
+
+-- class benchmark_MaoLoops_MaoCFG
+benchmark_MaoLoops_MaoCFG = {};
+__inherit(benchmark_MaoLoops_MaoCFG, Object);
+benchmark_MaoLoops_MaoCFG.__index = benchmark_MaoLoops_MaoCFG;
+do --{
+	
+	function benchmark_MaoLoops_MaoCFG.new(  )
+		local self = {}
+		setmetatable(self, benchmark_MaoLoops_MaoCFG)
+		
+			self.node_count = 0;
+			self.basic_block_map_ = haxe.ds.IntMap_IntMap.new();
+			self.edge_list_ = Array_Array.new()
+		
+	
+	return self
+	end
+	--var basic_block_map_;
+	--var start_node_;
+	--var edge_list_;
+	--var node_count;
+	function benchmark_MaoLoops_MaoCFG:CreateNode( name )
+		
+			local first = self.node_count == 0;
+			local node = self.basic_block_map_:get(name);
+			if(node == nil)then
+				
+				node = benchmark.MaoLoops_BasicBlock.new(name);
+				self.basic_block_map_:set(name, node);
+				(function () local _r = self.node_count or 0; self.node_count = _r + 1; return _r end)()
+			
+			end;
+			if(first)then
+				self.start_node_ = node
+			end;
+			return node
+		
+	
+	end
+	
+	
+end --}
+
+-- class benchmark_MaoLoops_SimpleLoop
+benchmark_MaoLoops_SimpleLoop = {};
+__inherit(benchmark_MaoLoops_SimpleLoop, Object);
+benchmark_MaoLoops_SimpleLoop.__index = benchmark_MaoLoops_SimpleLoop;
+do --{
+	
+	function benchmark_MaoLoops_SimpleLoop.new(  )
+		local self = {}
+		setmetatable(self, benchmark_MaoLoops_SimpleLoop)
+		
+			self.is_root_ = false;
+			self.nesting_level_ = 0;
+			self.depth_level_ = 0;
+			self.basic_blocks_ = Array_Array.new();
+			self.children_ = Array_Array.new()
+		
+	
+	return self
+	end
+	function benchmark_MaoLoops_SimpleLoop:AddNode( basic_block )
+		
+			
+				local _g = 0;
+				local _g1 = self.basic_blocks_;
+				while((_g < _g1.length))do 
+					local b = _g1[_g];
+					_g = _g + 1
+					if(b == basic_block)then
+						return
+					end
+				end
+			;
+			self.basic_blocks_.push(basic_block)
+		
+	
+	end
+	
+	function benchmark_MaoLoops_SimpleLoop:AddChildLoop( loop )
+		
+			
+				local _g = 0;
+				local _g1 = self.children_;
+				while((_g < _g1.length))do 
+					local c = _g1[_g];
+					_g = _g + 1
+					if(c == loop)then
+						return
+					end
+				end
+			;
+			self.children_.push(loop)
+		
+	
+	end
+	
+	function benchmark_MaoLoops_SimpleLoop:set_parent( parent )
+		
+			self.parent_ = parent;
+			parent:AddChildLoop(self)
+		
+	
+	end
+	
+	function benchmark_MaoLoops_SimpleLoop:set_counter( value )
+		self.counter_ = value
+	
+	end
+	
+	function benchmark_MaoLoops_SimpleLoop:set_nesting_level( level )
+		
+			self.nesting_level_ = level;
+			if(level == 0)then
+				self.is_root_ = true
+			end
+		
+	
+	end
+	
+	--var basic_blocks_;
+	--var children_;
+	--var parent_;
+	--var is_root_;
+	--var counter_;
+	--var nesting_level_;
+	--var depth_level_;
+	
+end --}
+
+-- class benchmark_MaoLoops_LoopStructureGraph
+benchmark_MaoLoops_LoopStructureGraph = {};
+__inherit(benchmark_MaoLoops_LoopStructureGraph, Object);
+benchmark_MaoLoops_LoopStructureGraph.__index = benchmark_MaoLoops_LoopStructureGraph;
+do --{
+	
+	function benchmark_MaoLoops_LoopStructureGraph.new(  )
+		local self = {}
+		setmetatable(self, benchmark_MaoLoops_LoopStructureGraph)
+		
+			self.root_ = benchmark.MaoLoops_SimpleLoop.new();
+			self.loops_ = Array_Array.new();
+			self.loop_counter_ = 0;
+			self.root_.set_nesting_level(0);
+			self.root_.set_counter((function () local _r = self.loop_counter_ or 0; self.loop_counter_ = _r + 1; return _r end)());
+			self.loops_.push(self.root_)
+		
+	
+	return self
+	end
+	function benchmark_MaoLoops_LoopStructureGraph:CreateNewLoop(  )
+		
+			local loop = benchmark.MaoLoops_SimpleLoop.new();
+			loop:set_counter((function () local _r = self.loop_counter_ or 0; self.loop_counter_ = _r + 1; return _r end)());
+			return loop
+		
+	
+	end
+	
+	--var root_;
+	--var loops_;
+	--var loop_counter_;
+	
+end --}
+
+-- class benchmark_MaoLoops_UnionFindNode
+benchmark_MaoLoops_UnionFindNode = {};
+__inherit(benchmark_MaoLoops_UnionFindNode, Object);
+benchmark_MaoLoops_UnionFindNode.__index = benchmark_MaoLoops_UnionFindNode;
+do --{
+	
+	function benchmark_MaoLoops_UnionFindNode.new( bb, dfs_number )
+		local self = {}
+		setmetatable(self, benchmark_MaoLoops_UnionFindNode)
+		
+			self.dfs_number_ = 0;
+			self.parent_ = self;
+			self.bb_ = bb;
+			self.dfs_number_ = dfs_number
+		
+	
+	return self
+	end
+	function benchmark_MaoLoops_UnionFindNode:FindSet(  )
+		
+			local nodeList = Array_Array.new();
+			local node = self;
+			while((node ~= node.parent_))do 
+				if(node.parent_ ~= node.parent_.parent_)then
+					nodeList:push(node)
+				end;
+				node = node.parent_
+			end;
+			local p = node.parent_;
+			
+				local _g = 0;
+				while((_g < nodeList.length))do 
+					local n = nodeList[_g];
+					_g = _g + 1
+					n.parent_ = p
+				end
+			;
+			return node
+		
+	
+	end
+	
+	--var parent_;
+	--var bb_;
+	--var loop_;
+	--var dfs_number_;
+	
+end --}
+
+-- class benchmark_MaoLoops_MaoLoops
+benchmark_MaoLoops_MaoLoops = {};
+__inherit(benchmark_MaoLoops_MaoLoops, Object);
+benchmark_MaoLoops_MaoLoops.__index = benchmark_MaoLoops_MaoLoops;
+do --{
+	
+	function benchmark_MaoLoops_MaoLoops.new( cfg, lsg )
+		local self = {}
+		setmetatable(self, benchmark_MaoLoops_MaoLoops)
+		
+			self.CFG_ = cfg;
+			self.lsg_ = lsg
+		
+	
+	return self
+	end
+	function benchmark_MaoLoops_MaoLoops.IsAncestor( w, v, last )
+		return w <= v  and  v <= last[w];
+	
+	end
+	function benchmark_MaoLoops_MaoLoops:DFS( current_node, nodes, number, last, current )
+		
+			nodes[current] = benchmark.MaoLoops_UnionFindNode.new(current_node, current);
+			number:set(current_node.name_, current);
+			local lastid = current;
+			
+				local _g = 0;
+				local _g1 = current_node.out_edges_;
+				while((_g < _g1.length))do 
+					local target = _g1[_g];
+					_g = _g + 1
+					if(number:get(target.name_) == -1)then
+						lastid = self:DFS(target, nodes, number, last, lastid + 1)
+					end
+				end
+			;
+			last[number:get(current_node.name_)] = lastid;
+			return lastid
+		
+	
+	end
+	
+	function benchmark_MaoLoops_MaoLoops:FindLoops(  )
+		
+			if(self.CFG_.start_node_ == nil)then
+				return
+			end;
+			local size = self.CFG_.node_count;
+			if(size < 1)then
+				return
+			end;
+			local non_back_preds = Array_Array.new();
+			non_back_preds[size - 1] = nil;
+			local back_preds = Array_Array.new();
+			back_preds[size - 1] = nil;
+			
+				local _g = 0;
+				while((_g < size))do 
+					local i = _g; _g = _g + 1
+					non_back_preds[i] = haxe.ds.IntMap_IntMap.new();
+					back_preds[i] = Array_Array.new()
+				end
+			;
+			local header = Array_Array.new();
+			header[size - 1] = 0;
+			local type = Array_Array.new();
+			type[size - 1] = 0;
+			local last = Array_Array.new();
+			last[size - 1] = 0;
+			local nodes = Array_Array.new();
+			local number = haxe.ds.IntMap_IntMap.new();
+			
+	-------{ expr => TFor({ meta => [], name => block, extra => null, t => TInst(benchmark.BasicBlock,[]), id => 217208, capture => false },{ expr => TCall({ expr => TField({ expr => TField({ expr => TField({ expr => TConst(TThis), t => TInst(benchmark.MaoLoops,[]), pos => #pos(demo/benchmark/MaoLoops.hx:475: characters 16-35) },FInstance(benchmark.MaoLoops,CFG_)), t => TInst(benchmark.MaoCFG,[]), pos => #pos(demo/benchmark/MaoLoops.hx:475: characters 16-35) },FInstance(benchmark.MaoCFG,basic_block_map_)), t => TInst(haxe.ds.IntMap,[TInst(benchmark.BasicBlock,[])]), pos => #pos(demo/benchmark/MaoLoops.hx:475: characters 16-37) },FInstance(haxe.ds.IntMap,iterator)), t => TFun([],TType(Iterator,[TInst(benchmark.BasicBlock,[])])), pos => #pos(demo/benchmark/MaoLoops.hx:475: characters 16-37) },[]), t => TType(Iterator,[TInst(benchmark.BasicBlock,[])]), pos => #pos(demo/benchmark/MaoLoops.hx:475: characters 16-37) },{ expr => TCall({ expr => TField({ expr => TLocal({ meta => [], name => number, extra => null, t => TType(benchmark.BasicBlockMap,[]), id => 217205, capture => false }), t => TInst(haxe.ds.IntMap,[TAbstract(Int,[])]), pos => #pos(demo/benchmark/MaoLoops.hx:476: characters 5-15) },FInstance(haxe.ds.IntMap,set)), t => TFun([{ name => k, t => TAbstract(Int,[]), opt => false },{ name => v, t => TAbstract(Int,[]), opt => false }],TAbstract(Void,[])), pos => #pos(demo/benchmark/MaoLoops.hx:476: characters 5-15) },[{ expr => TField({ expr => TLocal({ meta => [], name => block, extra => null, t => TInst(benchmark.BasicBlock,[]), id => 217208, capture => false }), t => TInst(benchmark.BasicBlock,[]), pos => #pos(demo/benchmark/MaoLoops.hx:476: characters 16-27) },FInstance(benchmark.BasicBlock,name_)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:476: characters 16-27) },{ expr => TConst(TInt(-1)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:476: characters 28-38) }]), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:476: characters 5-39) }), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:475: lines 475-476) };
+			self:DFS(self.CFG_.start_node_, nodes, number, last, 0);
+			
+				local _g1 = 0;
+				while((_g1 < size))do 
+					local w = _g1; _g1 = _g1 + 1
+					header[w] = 0;
+					type[w] = 1;
+					local node_w = nodes[w].bb_;
+					if(node_w == nil)then
+						
+						type[w] = 5;
+						continue
+					
+					end;
+					if(node_w.in_edges_.length ~= 0)then
+						
+						local _g11 = 0;
+						local _g2 = node_w.in_edges_;
+						while((_g11 < _g2.length))do 
+							local node_v = _g2[_g11];
+							_g11 = _g11 + 1
+							local v = number:get(node_v.name_);
+							if(v == -1)then
+								continue
+							end;
+							if(w <= v  and  v <= last[w])then
+								back_preds[w]:push(v)
+							else
+								non_back_preds[w]:set(v, v)
+							end
+						end
+					
+					end
+				end
+			;
+			header[0] = 0;
+			local w1 = size - 1;
+			while((w1 >= 0))do 
+				local node_pool = Array_Array.new();
+				local node_w1 = nodes[w1].bb_;
+				if(node_w1 == nil)then
+					
+					w1 = w1 - 1
+					continue
+				
+				end;
+				
+					local _g3 = 0;
+					local _g12 = back_preds[w1];
+					while((_g3 < _g12.length))do 
+						local v1 = _g12[_g3];
+						_g3 = _g3 + 1
+						if(v1 ~= w1)then
+							node_pool:push(nodes[v1]:FindSet())
+						else
+							type[w1] = 3
+						end
+					end
+				;
+				local worklist = node_pool:slice();
+				if(node_pool.length < 1)then
+					type[w1] = 2
+				end;
+				local jobs = worklist.length;
+				while((jobs > 0))do 
+					local x = worklist[(function () jobs = (jobs or 0) - 1; return jobs; end)()];
+					local non_back_size = 0;
+					
+	-------{ expr => TFor({ meta => [], name => i1, extra => null, t => TAbstract(Int,[]), id => 217299, capture => false },{ expr => TCall({ expr => TField({ expr => TArray({ expr => TLocal({ meta => [], name => non_back_preds, extra => null, t => TType(benchmark.IntSetVector,[]), id => 217197, capture => false }), t => TType(benchmark.IntSetVector,[]), pos => #pos(demo/benchmark/MaoLoops.hx:567: characters 12-26) },{ expr => TField({ expr => TLocal({ meta => [], name => x, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217292, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:567: characters 27-39) },FInstance(benchmark.UnionFindNode,dfs_number_)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:567: characters 27-41) }), t => TInst(haxe.ds.IntMap,[TAbstract(Int,[])]), pos => #pos(demo/benchmark/MaoLoops.hx:567: characters 12-42) },FInstance(haxe.ds.IntMap,keys)), t => TFun([],TType(Iterator,[TAbstract(Int,[])])), pos => #pos(demo/benchmark/MaoLoops.hx:567: characters 12-42) },[]), t => TType(Iterator,[TAbstract(Int,[])]), pos => #pos(demo/benchmark/MaoLoops.hx:567: characters 12-49) },{ expr => TBlock([{ expr => TUnop(OpIncrement,true,{ expr => TLocal({ meta => [], name => non_back_size, extra => null, t => TAbstract(Int,[]), id => 217293, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:569: characters 4-17) }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:569: characters 4-19) },{ expr => TIf({ expr => TParenthesis({ expr => TBinop(OpGt,{ expr => TLocal({ meta => [], name => non_back_size, extra => null, t => TAbstract(Int,[]), id => 217293, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:570: characters 8-21) },{ expr => TConst(TInt(32768)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:570: characters 24-40) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:570: characters 8-40) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:570: characters 8-40) },{ expr => TReturn(null), t => TDynamic(null), pos => #pos(demo/benchmark/MaoLoops.hx:570: characters 42-48) },null), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:570: characters 4-48) },{ expr => TVar({ meta => [], name => y, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217300, capture => false },{ expr => TArray({ expr => TLocal({ meta => [], name => nodes, extra => null, t => TType(benchmark.NodeVector,[]), id => 217204, capture => false }), t => TType(benchmark.NodeVector,[]), pos => #pos(demo/benchmark/MaoLoops.hx:572: characters 17-22) },{ expr => TLocal({ meta => [], name => i1, extra => null, t => TAbstract(Int,[]), id => 217299, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:572: characters 23-24) }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:572: characters 17-25) }), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:572: characters 17-25) },{ expr => TVar({ meta => [], name => ydash, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217301, capture => false },{ expr => TCall({ expr => TField({ expr => TLocal({ meta => [], name => y, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217300, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:573: characters 16-25) },FInstance(benchmark.UnionFindNode,FindSet)), t => TFun([],TInst(benchmark.UnionFindNode,[])), pos => #pos(demo/benchmark/MaoLoops.hx:573: characters 16-25) },[]), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:573: characters 16-27) }), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:573: characters 16-27) },{ expr => TIf({ expr => TParenthesis({ expr => TUnop(OpNot,false,{ expr => TCall({ expr => TField({ expr => TTypeExpr(TClassDecl(benchmark.MaoLoops)), t => TType(Class<benchmark.MaoLoops>,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 9-19) },FStatic(benchmark.MaoLoops,IsAncestor)), t => TFun([{ name => w, t => TAbstract(Int,[]), opt => false },{ name => v, t => TAbstract(Int,[]), opt => false },{ name => last, t => TType(benchmark.IntVector,[]), opt => false }],TAbstract(Bool,[])), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 9-48) },[{ expr => TLocal({ meta => [], name => w1, extra => null, t => TAbstract(Int,[]), id => 217271, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 20-21) },{ expr => TField({ expr => TLocal({ meta => [], name => ydash, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217301, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 23-39) },FInstance(benchmark.UnionFindNode,dfs_number_)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 23-41) },{ expr => TLocal({ meta => [], name => last, extra => null, t => TType(benchmark.IntVector,[]), id => 217203, capture => false }), t => TType(benchmark.IntVector,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 43-47) }]), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 9-48) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 8-48) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: characters 8-48) },{ expr => TBlock([{ expr => TBinop(OpAssign,{ expr => TArray({ expr => TLocal({ meta => [], name => type, extra => null, t => TType(benchmark.IntVector,[]), id => 217202, capture => false }), t => TType(benchmark.IntVector,[]), pos => #pos(demo/benchmark/MaoLoops.hx:576: characters 3-7) },{ expr => TLocal({ meta => [], name => w1, extra => null, t => TAbstract(Int,[]), id => 217271, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:576: characters 8-9) }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:576: characters 3-10) },{ expr => TConst(TInt(4)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:576: characters 13-27) }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:576: characters 3-27) },{ expr => TCall({ expr => TField({ expr => TArray({ expr => TLocal({ meta => [], name => non_back_preds, extra => null, t => TType(benchmark.IntSetVector,[]), id => 217197, capture => false }), t => TType(benchmark.IntSetVector,[]), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 3-17) },{ expr => TLocal({ meta => [], name => w1, extra => null, t => TAbstract(Int,[]), id => 217271, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 18-19) }), t => TInst(haxe.ds.IntMap,[TAbstract(Int,[])]), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 3-20) },FInstance(haxe.ds.IntMap,set)), t => TFun([{ name => k, t => TAbstract(Int,[]), opt => false },{ name => v, t => TAbstract(Int,[]), opt => false }],TAbstract(Void,[])), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 3-20) },[{ expr => TField({ expr => TLocal({ meta => [], name => ydash, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217301, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 25-41) },FInstance(benchmark.UnionFindNode,dfs_number_)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 25-43) },{ expr => TField({ expr => TLocal({ meta => [], name => ydash, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217301, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 44-60) },FInstance(benchmark.UnionFindNode,dfs_number_)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 44-62) }]), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:577: characters 3-63) }]), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: lines 575-578) },{ expr => TIf({ expr => TParenthesis({ expr => TBinop(OpNotEq,{ expr => TField({ expr => TLocal({ meta => [], name => ydash, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217301, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:579: characters 7-23) },FInstance(benchmark.UnionFindNode,dfs_number_)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:579: characters 7-25) },{ expr => TLocal({ meta => [], name => w1, extra => null, t => TAbstract(Int,[]), id => 217271, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:579: characters 29-30) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:579: characters 7-30) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:579: characters 7-30) },{ expr => TBlock([{ expr => TVar({ meta => [], name => found, extra => null, t => TAbstract(Bool,[]), id => 217320, capture => false },{ expr => TConst(TBool(false)), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:580: characters 17-22) }), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:580: characters 17-22) },{ expr => TBlock([{ expr => TVar({ meta => [], name => _g4, extra => null, t => TAbstract(Int,[]), id => 217322, capture => false },{ expr => TConst(TInt(0)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) }), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) },{ expr => TWhile({ expr => TParenthesis({ expr => TBinop(OpLt,{ expr => TLocal({ meta => [], name => _g4, extra => null, t => TAbstract(Int,[]), id => 217322, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) },{ expr => TField({ expr => TLocal({ meta => [], name => node_pool, extra => null, t => TType(benchmark.NodeList,[]), id => 217272, capture => false }), t => TType(benchmark.NodeList,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: characters 14-23) },FInstance(Array,length)), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) },{ expr => TBlock([{ expr => TVar({ meta => [], name => n, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217321, capture => false },{ expr => TArray({ expr => TLocal({ meta => [], name => node_pool, extra => null, t => TType(benchmark.NodeList,[]), id => 217272, capture => false }), t => TType(benchmark.NodeList,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: characters 14-23) },{ expr => TLocal({ meta => [], name => _g4, extra => null, t => TAbstract(Int,[]), id => 217322, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) }), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) },{ expr => TUnop(OpIncrement,false,{ expr => TLocal({ meta => [], name => _g4, extra => null, t => TAbstract(Int,[]), id => 217322, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) },{ expr => TIf({ expr => TParenthesis({ expr => TBinop(OpEq,{ expr => TLocal({ meta => [], name => n, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217321, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:582: characters 9-10) },{ expr => TLocal({ meta => [], name => ydash, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217301, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:582: characters 12-17) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:582: characters 9-17) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:582: characters 9-17) },{ expr => TBlock([{ expr => TBinop(OpAssign,{ expr => TLocal({ meta => [], name => found, extra => null, t => TAbstract(Bool,[]), id => 217320, capture => false }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:584: characters 5-10) },{ expr => TConst(TBool(true)), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:584: characters 13-17) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:584: characters 5-17) },{ expr => TBreak, t => TDynamic(null), pos => #pos(demo/benchmark/MaoLoops.hx:585: characters 5-10) }]), t => TDynamic(null), pos => #pos(demo/benchmark/MaoLoops.hx:583: lines 583-586) },null), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:582: lines 582-586) }]), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) },true), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) }]), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:581: lines 581-586) },{ expr => TIf({ expr => TParenthesis({ expr => TUnop(OpNot,false,{ expr => TLocal({ meta => [], name => found, extra => null, t => TAbstract(Bool,[]), id => 217320, capture => false }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:588: characters 10-15) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:588: characters 9-15) }), t => TAbstract(Bool,[]), pos => #pos(demo/benchmark/MaoLoops.hx:588: characters 9-15) },{ expr => TBlock([{ expr => TBinop(OpAssign,{ expr => TArray({ expr => TLocal({ meta => [], name => worklist, extra => null, t => TInst(Array,[TInst(benchmark.UnionFindNode,[])]), id => 217290, capture => false }), t => TInst(Array,[TInst(benchmark.UnionFindNode,[])]), pos => #pos(demo/benchmark/MaoLoops.hx:589: characters 4-12) },{ expr => TUnop(OpIncrement,false,{ expr => TLocal({ meta => [], name => jobs, extra => null, t => TAbstract(Int,[]), id => 217291, capture => false }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:589: characters 15-19) }), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:589: characters 13-19) }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:589: characters 4-20) },{ expr => TLocal({ meta => [], name => ydash, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217301, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:589: characters 23-28) }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:589: characters 4-28) },{ expr => TCall({ expr => TField({ expr => TLocal({ meta => [], name => node_pool, extra => null, t => TType(benchmark.NodeList,[]), id => 217272, capture => false }), t => TType(benchmark.NodeList,[]), pos => #pos(demo/benchmark/MaoLoops.hx:590: characters 4-18) },FInstance(Array,push)), t => TFun([{ name => x, t => TInst(benchmark.UnionFindNode,[]), opt => false }],TAbstract(Int,[])), pos => #pos(demo/benchmark/MaoLoops.hx:590: characters 4-18) },[{ expr => TLocal({ meta => [], name => ydash, extra => null, t => TInst(benchmark.UnionFindNode,[]), id => 217301, capture => false }), t => TInst(benchmark.UnionFindNode,[]), pos => #pos(demo/benchmark/MaoLoops.hx:590: characters 19-24) }]), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:590: characters 4-25) }]), t => TAbstract(Int,[]), pos => #pos(demo/benchmark/MaoLoops.hx:588: lines 588-591) },null), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:588: lines 588-591) }]), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:579: lines 579-592) },null), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:579: lines 579-592) }), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:575: lines 575-593) }]), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:568: lines 568-594) }), t => TAbstract(Void,[]), pos => #pos(demo/benchmark/MaoLoops.hx:567: lines 567-594) }
+				end;
+				if(node_pool.length > 0  or  type[w1] == 3)then
+					
+					local loop = self.lsg_.CreateNewLoop();
+					nodes[w1].loop_ = loop;
+					
+						local _g5 = 0;
+						while((_g5 < node_pool.length))do 
+							local node = node_pool[_g5];
+							_g5 = _g5 + 1
+							header[node.dfs_number_] = w1;
+							node.parent_ = nodes[w1];
+							if(node.loop_ ~= nil)then
+								node.loop_.set_parent(loop)
+							else
+								loop:AddNode(node.bb_)
+							end
+						end
+					;
+					self.lsg_.loops_.push(loop)
+				
+				end;
+				(function () w1 = (w1 or 0) - 1; return w1; end)()
+			end
+		
+	
+	end
+	
+	--var CFG_;
+	--var lsg_;
+	function benchmark_MaoLoops_MaoLoops:run(  )
+		
+			self:FindLoops();
+			return self.lsg_.loops_.length
+		
+	
+	end
+	
+	
+end --}
+
+-- class haxe_ds_IntMap_IntMap
+haxe_ds_IntMap_IntMap = {};
+__inherit(haxe_ds_IntMap_IntMap, Object);
+haxe_ds_IntMap_IntMap.__index = haxe_ds_IntMap_IntMap; -- implements Map_IMap
+do --{
+	
+	function haxe_ds_IntMap_IntMap.new(  )
+		local self = {}
+		setmetatable(self, haxe_ds_IntMap_IntMap)
+		self.h = setmetatable({  },Object)
+	
+	return self
+	end
+	--var h;
+	function haxe_ds_IntMap_IntMap:set( key, value )
+		self.h[key] = value
+	
+	end
+	
+	function haxe_ds_IntMap_IntMap:get( key )
+		return self.h[key];
+	
+	end
+	
+	function haxe_ds_IntMap_IntMap:keys(  )
+		
+			local a = setmetatable({}, HaxeArrayMeta);
+			
+				__js__("for( var key in this.h ) {");
+				if(self.h.hasOwnProperty(key))then
+					a:push(key or 0)
+				end;
+				__js__("}")
+			;
+			return HxOverrides_HxOverrides.iter(a)
+		
+	
+	end
+	
+	function haxe_ds_IntMap_IntMap:iterator(  )
+		return setmetatable({ ref = self.h, it = self:keys(), hasNext = function function (  )
+			return self.it.hasNext();
+		
+		end, next = function function (  )
+			
+				local i = self.it.next();
+				return self.ref[i]
+			
+		
+		end },Object);
+	
+	end
+	
 	
 end --}
 
@@ -717,7 +1325,8 @@ local p = self
 end
 
 function String:substr(pos, len) -- Int -> ?Int -> String
-	return __string_sub(self, pos, pos+len)
+	return len and __string_sub(self, pos+1, pos+len)
+  or __string_sub(self, pos+1)
 end
 
 -- temporal fix

@@ -158,6 +158,20 @@ class Main
             trace("StringPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
         #end
 
+        #if lua
+            d = untyped os.clock();
+        #else
+            d = Date.now().getTime();
+        #end
+
+        benchmark.LoopTesterApp.main();
+
+        #if lua
+            trace("ComplexPerfTest: " + Std.int(1000*((untyped os.clock())-d)) + "ms");
+        #else
+            trace("ComplexPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
+        #end
+
         // combined perf test without strings
         #if lua
             d = untyped os.clock();
@@ -177,6 +191,5 @@ class Main
         #else
             trace("LangPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
         #end
-        /* TODO ComplexPerfTest*/
     }
 }

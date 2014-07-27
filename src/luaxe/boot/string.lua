@@ -91,7 +91,8 @@ local p = self
 end
 
 function String:substr(pos, len) -- Int -> ?Int -> String
-	return __string_sub(self, pos, pos+len)
+	return len and __string_sub(self, pos+1, pos+len)
+  or __string_sub(self, pos+1)
 end
 
 -- temporal fix

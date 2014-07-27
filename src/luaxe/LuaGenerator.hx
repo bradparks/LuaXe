@@ -233,7 +233,7 @@ class LuaGenerator
         }
 
         api.setCurrentClass(c);
-        var p = getPath(c);
+        var p = getPath(c).replace(".","_");
 
         LuaPrinter.currentPath = p + ".";
 

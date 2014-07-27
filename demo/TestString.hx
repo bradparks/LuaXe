@@ -22,6 +22,9 @@ class TestString
 		///*SLOW*/ eq("toUpperCase", S.toUpperCase() == "RETURNS A STRING _!@#$%^&*()1234567890-=/*[]{}");
 		eq("substring", S.substring(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
 		eq("substr", S.substr(8,1) == "a");
+		eq("substring a,b", S.substring(8,10) == "a ");
+		eq("substr a,b", S.substr(8,1) == "a");
+		eq("substr", S.substr(8) == "a String _!@#$%^&*()1234567890-=/*[]{}");
 		eq("fromCharCode", String.fromCharCode(65) == "A");
 		eq("charAt", S.charAt(5) == "n");
 		eq("charCodeAt", S.charCodeAt(5) == 110);
