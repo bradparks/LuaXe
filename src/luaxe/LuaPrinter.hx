@@ -552,7 +552,7 @@ class LuaPrinter {
 
     function printBaseType(tp:BaseType):String
     {
-    	return tp.module + "_" + tp.name;
+    	return tp.module.replace(".", "_") + "_" + tp.name;
     }
 
     public function printModuleType (t:ModuleType) 
@@ -591,10 +591,11 @@ class LuaPrinter {
         if(_c != null && _d != null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}else\n${tabs}\t$_d\n${tabs}end';
 
         return "SOMETHIG GOES WRONG";
-    }
+    }  
+    
+    var _continueLabel = false; // <-- not perfect, TODO improve
+	public function printExpr(e:TypedExpr){        
 
-	public function printExpr(e:TypedExpr){
-//        trace(e);
         return e == null ? /*"#NULL"*/ null : switch(e.expr) {
 		
         case TConst(c): printConstant(c); // ok
@@ -682,6 +683,13 @@ class LuaPrinter {
 		//case TFunction(/*_,*/ func): /*"function " +*/ printFunction(func);
         case TFunction(func): printFunction(func);
 
+        case TFor(v, e1, e2):
+        //for index, value in ipairs(t) do print(index,value) end
+        // TODO no (i)pairs on Maps... and Arrays
+        // TODO smart ::continue::
+        // TODO while-iterator
+        'for ___, ${v.name} in (' + printExpr(e1) + ') do \n$tabs\t' + printExpr(e2) + '\n${tabs}end';
+
 		//case TVars(vl): "local " +vl.map(printVar).join(", ");
 
         case TVar(v,e): "local " + printVar(v, e);
@@ -701,8 +709,17 @@ class LuaPrinter {
 		
         case TIf(econd, eif, eelse): printIfElse(econd, eif, eelse); // 'if(${printExpr(econd)}) ${printExpr(eif)}  ${opt(eelse,printExpr,"else ")}';
 		
-        case TWhile(econd, e1, true): 'while(${printExpr(econd)})do ${printExpr(e1)}end';
-        case TWhile(econd, e1, false): 'do ${printExpr(e1)} while(${printExpr(econd)})';
+        case TWhile(econd, e1, true): 
+            var _cond = 'while(${printExpr(econd)})do';
+            _continueLabel = true; // <-- buggy for now
+            var _state = '${printExpr(e1)}end';
+             _cond + (_continueLabel?" ::continue:: ":"") + _state;
+        //
+        case TWhile(econd, e1, false): 
+            var _state = 'do ${printExpr(e1)}';
+            _continueLabel = true; // <-- buggy for now
+            var _cond = 'while(${printExpr(econd)})';
+             _state + (_continueLabel?" ::continue:: ":"") + _cond;
 		
         //case TSwitch(e1, cl, edef):  printSwitch(e1, cl, edef);
 		/*case TTry(e1, cl):
@@ -713,7 +730,9 @@ class LuaPrinter {
 		case TReturn(eo): "return" + opt(eo, printExpr, " ");
 
 		case TBreak: "break";
-		case TContinue: "continue";
+		case TContinue: 
+            _continueLabel = true;
+            "goto continue";
 		
 		case TThrow(e1): "throw " +printExpr(e1);
 		//case TCast(e1, cto) if (cto != null): '${printExpr(e1)} as ${printComplexType(cto)}';

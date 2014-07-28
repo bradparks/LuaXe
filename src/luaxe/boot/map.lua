@@ -13,7 +13,7 @@ function toString():String
 HaxeMap = {}
 __inherit(HaxeMap, Object);
 HaxeMap.__index = HaxeMap;
-function Map()
+function HaxeMap.Map()
 	local r = {}
 	setmetatable(r, HaxeMap) 
 	return r
@@ -34,3 +34,5 @@ end
 function HaxeMap:keys(self)
 	return pairs(self)
 end
+
+haxe_ds_IntMap_IntMap = HaxeMap
