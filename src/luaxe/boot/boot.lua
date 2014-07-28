@@ -10,6 +10,10 @@ function __inherit(to, base)
     end
 end
 
+function __new__(obj)
+	return obj.new()
+end
+
 function __concat(a, b)
 	return a .. b
 end

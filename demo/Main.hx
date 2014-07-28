@@ -54,11 +54,7 @@ class Main
     public static function main()
     {
         trace("go -->");
-        #if lua
-            var d = untyped os.clock();
-        #else
-            var d = Date.now().getTime();
-        #end
+        var d = Date.now().getTime();
 
         TestString.test();
         TestIfs.test();
@@ -133,51 +129,26 @@ class Main
          trace("[cpp] >");
         #end
 
-        #if lua
-            trace("FeatureTest: " + Std.int(1000*((untyped os.clock())-d)) + "ms");
-        #else
-            trace("FeatureTest: " + Std.int((Date.now().getTime()-d)) + "ms");
-        #end
+        trace("FeatureTest: " + Std.int((Date.now().getTime()-d)) + "ms");
         
         // Lua is SLOW on strings, so test them separately
-        #if lua
-            d = untyped os.clock();
-        #else
-            d = Date.now().getTime();
-        #end
-        
+        d = Date.now().getTime();
 
         for(i in 0...10000)
         {
             TestString.test(true);
         }
 
-        #if lua
-            trace("StringPerfTest: " + Std.int(1000*((untyped os.clock())-d)) + "ms");
-        #else
-            trace("StringPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
-        #end
+        trace("StringPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
 
-        #if lua
-            d = untyped os.clock();
-        #else
-            d = Date.now().getTime();
-        #end
+        d = Date.now().getTime();
 
         benchmark.LoopTesterApp.main();
 
-        #if lua
-            trace("ComplexPerfTest: " + Std.int(1000*((untyped os.clock())-d)) + "ms");
-        #else
-            trace("ComplexPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
-        #end
+        trace("ComplexPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
 
         // combined perf test without strings
-        #if lua
-            d = untyped os.clock();
-        #else
-            d = Date.now().getTime();
-        #end
+        d = Date.now().getTime();
       
         for(i in 0...100000)
         {
@@ -186,10 +157,6 @@ class Main
             TestLoops.test(true);
         }
 
-        #if lua
-            trace("LangPerfTest: " + Std.int(1000*((untyped os.clock())-d)) + "ms");
-        #else
-            trace("LangPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
-        #end
+        trace("LangPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
     }
 }

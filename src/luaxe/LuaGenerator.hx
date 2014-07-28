@@ -275,6 +275,7 @@ class LuaGenerator
             "HxOverrides_HxOverrides",
 
             "haxe_ds_IntMap", 
+            "haxe_ds_IntMap_IntMap",
             "IMap", 
             
             "Array", "Array_Array",
@@ -458,6 +459,7 @@ class LuaGenerator
         boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
+        boot += "\n" + sys.io.File.getContent('$path/boot/date.lua');
 
         var combined = importsBuf.toString() + topLevelBuf.toString() +  buf.toString();
 
