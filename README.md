@@ -58,6 +58,48 @@ os:clock(1, 2, "hi");
 _G.print("__lua__", 2);
 ```
 
+External Classes
+=====
+It is very easy to create external classes for LuaXe.
+Create extern class definition:
+```haxe
+// placed inside root package TestExtern
+extern class Extern {
+	function new(x:Int);
+	static function test():String;
+	static var hi:String;
+	function selfcall():String;
+	var X:Int;
+}
+```
+Create implementation of class in Lua that is fully compatible with OOP-style LuaXe API:
+```lua
+local Extern = {}
+TestExtern_Extern = Extern -- setting proper namespace 
+-- Another namespace? Use "_": namespace.TestExtern.Extern -> namespace_TestExtern_Extern
+Extern.__index = Extern -- need for metatable
+Extern.hi = "Hello!" -- static var
+
+function Extern.new(x) -- constructor
+	local self = { X = x } -- "X" is a class field
+	setmetatable(self, Extern)
+	return self
+end
+
+function Extern:selfcall() return self.X end -- public function
+function Extern.test() return "static test" end -- static function
+```
+Everything works just as usual:
+```haxe
+// static:
+trace(Extern.test());
+trace(Extern.hi);
+// fields:
+var inst = new Extern(5);
+trace(inst.selfcall());
+trace(inst.X);
+```
+
 Links
 =====
 https://github.com/frabbit/hx2python
