@@ -385,6 +385,17 @@ do --{
 			else
 				x = 10
 			end;
+			local v = Math_Math.round(Math_Math.random() * 100);
+			
+			if (v) == 0 then 
+			 end
+			elseif (v) == 1 then 
+			 end
+			elseif (v) == 65 then 
+			 end
+			else 
+			 end
+			end;
 			if(not perf)then
 				print("TestIfs end")
 			end
@@ -936,7 +947,7 @@ do --{
 			last[size - 1] = 0;
 			local nodes = Array_Array.new();
 			local number = haxe_ds_IntMap_IntMap.new();
-			for ___, block in (self.CFG_.basic_block_map_:iterator()) do ::continue:: 
+			for ___, block in (self.CFG_.basic_block_map_:iterator()) do 
 				number:set(block.name_, -1)
 			end;
 			self:DFS(self.CFG_.start_node_, nodes, number, last, 0);
@@ -1006,7 +1017,7 @@ do --{
 				while((jobs > 0))do ::continue:: 
 					local x = worklist[(function () jobs = (jobs or 0) - 1; return jobs; end)()];
 					local non_back_size = 0;
-					for ___, i1 in (non_back_preds[x:dfs_number_]:keys()) do ::continue:: 
+					for ___, i1 in (non_back_preds[x:dfs_number_]:keys()) do 
 						
 						non_back_size = non_back_size + 1
 						if(non_back_size > 32768)then

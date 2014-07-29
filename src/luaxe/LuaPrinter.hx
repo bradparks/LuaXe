@@ -721,7 +721,7 @@ class LuaPrinter {
             var _cond = 'while(${printExpr(econd)})';
              _state + (_continueLabel?" ::continue:: ":"") + _cond;
 		
-        //case TSwitch(e1, cl, edef):  printSwitch(e1, cl, edef);
+        case TSwitch(e, cases, edef):  printSwitch(e, cases, edef);
 		/*case TTry(e1, cl):
 			'try ${printExpr(e1)}'
 			+ cl.map(function(c) return ' catch(${c.name} ) ${printExpr(c.expr)}').join("");   //: ${printComplexType(c.type)}/**/
@@ -752,28 +752,50 @@ class LuaPrinter {
     	return /*"=> " +*/ value + (hasReturn ? ";" : "");
     }
 
-    function printSwitch(e1, cl, edef)
+    function printSwitch( _e : haxe.macro.TypedExpr , cases : Array<{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr }> , edef : Null<haxe.macro.TypedExpr>)
     {
 //        trace(e1);
 //        trace(cl);
 //        trace(edef);
+    
+    //    if     v == "a" then print("aah")
+    //elseif v == "b" then print("bee")
+    //юю
+    //else                 print("blah")
+    //end
 
-        var old = tabs;
-        tabs += tabString;
-        var s = 'switch ${printExpr(e1)} {\n$tabs' +
-                    cl.map(printSwitchCase).join('\n$tabs');
-        if (edef != null)
-            s += '\n${tabs}default: ' + (edef.expr == null ? "" : printExpr(edef) + ";");
+        var s:String = "";
+        var e = printExpr(_e);
 
-        tabs = old;
-        s += '\n$tabs}';
+        var c = cases.shift();
+        
+        s += '\n${tabs}if ' + e + " == " + printExprs(c.values, ", ") + " then " + opt(c.expr, printExpr); 
+
+        function _case(c:{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr })
+        {
+            s += '\n${tabs}elseif ' + e + " == " + printExprs(c.values, ", ") + " then " + opt(c.expr, printExpr); 
+        }
+
+        for(c in cases) _case(c);
+
+        if(edef != null) s += '\n${tabs}else ' + opt(edef, printExpr); 
+
+        //var old = tabs;
+        //tabs += tabString;
+        //var s = 'switch ${printExpr(e1)} {\n$tabs' +
+        //            cl.map(printSwitchCase).join('\n$tabs');
+        //if (edef != null)
+        //    s += '\n${tabs}else ' + (edef.expr == null ? "" : printExpr(edef) + ";");
+//
+        //tabs = old;
+        s += '\n${tabs}end';
 
         return s;
     }
 
-    function printSwitchCase(c)
+    function printSwitchCase(c, first = false)
     {
-        return 'case ${printExprs(c.values, ", ")}'
+        return 'elseif ${printExprs(c.values, ", ")}'
                + (c.guard != null ? ' if(${printExpr(c.guard)}): ' : ":")
                + (c.expr != null ? (opt(c.expr, printExpr)) + "; break;" : "");
     }

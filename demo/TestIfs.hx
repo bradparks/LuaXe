@@ -83,7 +83,18 @@ class TestIfs
         } else {
         	x = 10;
         }
-		
+		// switch
+		var v:Int = Math.round(Math.random() * 100);
+		switch( v ) {
+    	case 0:
+    	    {};
+    	case 1:// TODO foo(1):
+    	    {};
+    	case 65:
+    	    {};
+    	default:
+    	    {};
+    	}
 		
 		
 		

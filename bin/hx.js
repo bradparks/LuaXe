@@ -217,6 +217,16 @@ TestIfs.test = function(perf) {
 	var z = 10;
 	var x = 0;
 	if(z > 2) x = 7; else x = 10;
+	var v = Math.round(Math.random() * 100);
+	switch(v) {
+	case 0:
+		break;
+	case 1:
+		break;
+	case 65:
+		break;
+	default:
+	}
 	if(!perf) console.log("TestIfs end");
 };
 var TestLoops = function() { };
@@ -623,6 +633,15 @@ haxe.ds.IntMap.prototype = {
 			return this.ref[i];
 		}};
 	}
+};
+Math.NaN = Number.NaN;
+Math.NEGATIVE_INFINITY = Number.NEGATIVE_INFINITY;
+Math.POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
+Math.isFinite = function(i) {
+	return isFinite(i);
+};
+Math.isNaN = function(i1) {
+	return isNaN(i1);
 };
 _TestClasses.BClass.WHOOT = "whoot";
 Main.main();
