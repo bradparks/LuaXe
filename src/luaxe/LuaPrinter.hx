@@ -596,7 +596,7 @@ class LuaPrinter {
     var _continueLabel = false; // <-- not perfect, TODO improve
 	public function printExpr(e:TypedExpr){        
 
-        return e == null ? /*"#NULL"*/ null : switch(e.expr) {
+        return e == null ? null : switch(e.expr) {
 		
         case TConst(c): printConstant(c); // ok
 
@@ -679,8 +679,6 @@ class LuaPrinter {
         case TUnop(op, true, e1): printUnop(op,printExpr(e1),true);//printExpr(e1) + printUnop(op);//, printExpr(e1));
 		case TUnop(op, false, e1): printUnop(op,printExpr(e1),false);//printUnop(op) + printExpr(e1);
 		
-        //case TFunction(no, func) if (no != null): '$no' + printFunction(func);
-		//case TFunction(/*_,*/ func): /*"function " +*/ printFunction(func);
         case TFunction(func): printFunction(func);
 
         case TFor(v, e1, e2):
@@ -735,13 +733,16 @@ class LuaPrinter {
             "goto continue";
 		
 		case TThrow(e1): "throw " +printExpr(e1);
-		//case TCast(e1, cto) if (cto != null): '${printExpr(e1)} as ${printComplexType(cto)}';
 		
         case TCast(e1, _): printExpr(e1); // ok
 		
 		case TMeta(meta, e1): printMetadata(meta) + " " +printExpr(e1);
 
-        case _: "\n\t-------"+e;
+        case TPatMatch: "" + e; // TODO WTF
+
+        case TTry(e1, catches): printTry(e1, catches);
+
+        case TEnumParameter( e1 /*: haxe.macro.TypedExpr */, ef /*: haxe.macro.EnumField*/ , index /*: Int */): "" + e;
 	};
     }
 
@@ -750,6 +751,21 @@ class LuaPrinter {
     	var hasReturn = value.indexOf("return ") == 0;
     	//if(hasReturn) value = value.substr(7);
     	return /*"=> " +*/ value + (hasReturn ? ";" : "");
+    }
+
+    function printTry(e1:haxe.macro.TypedExpr, catches: Array<{ v : haxe.macro.TVar, expr : haxe.macro.TypedExpr }>)
+    {
+        // TODO catch other types of exceptions
+        // getting last (e:Dynamic) catch:
+        var _dynCatch = catches.pop();
+
+        var s = 'local try, catch = pcall(function () ${printExpr(e1)} end);';
+
+        s += '\n${tabs}if try == false then ';
+        s += '\n${tabs}local ${_dynCatch.v.name} = catch;';
+        s += '\n${tabs}${printExpr(_dynCatch.expr)}end';
+
+        return s;
     }
 
     function printSwitch( _e : haxe.macro.TypedExpr , cases : Array<{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr }> , edef : Null<haxe.macro.TypedExpr>)

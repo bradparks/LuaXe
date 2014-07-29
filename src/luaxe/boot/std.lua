@@ -13,7 +13,7 @@ end
 --If s is a structure, the field names along with their values are returned. The field order and the operator separating field names and values are unspecified.
 --If s is null, "null" is returned.
 function Std.string( s )
-	return "" .. x -- TODO
+	return tostring(s) -- TODO
 end
 --function instance<T, S>(value:T, c:Class<S>):S
 --Checks if object value is an instance of class c.
@@ -41,7 +41,7 @@ end
 --In decimal mode, parsing continues until an invalid character is detected, in which case the result up to that point is returned. For hexadecimal notation, the effect of invalid characters is unspecified.
 --Leading 0s that are not part of the 0x/0X hexadecimal notation are ignored, which means octal notation is not supported.
 --If the input cannot be recognized, the result is null.
-function Std.string( x )
+function Std.parseInt( x )
 	return nil -- TODO
 end
 --static function random(x:Int):Int

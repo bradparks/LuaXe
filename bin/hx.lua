@@ -28,6 +28,7 @@ do --{
 			TestMagic_TestMagic.test();
 			TestFuncs_TestFuncs.test();
 			TestClasses_TestClasses.test();
+			TestExceptions_TestExceptions.test();
 			print("[lua] >");
 			print("FeatureTest: " .. Std_Std.int(__new__(Date_Date):getTime() - d) .. "ms");
 			d = __new__(Date_Date):getTime();
@@ -40,7 +41,6 @@ do --{
 			;
 			print("StringPerfTest: " .. Std_Std.int(__new__(Date_Date):getTime() - d) .. "ms");
 			d = __new__(Date_Date):getTime();
-			benchmark_LoopTesterApp_LoopTesterApp.main();
 			print("ComplexPerfTest: " .. Std_Std.int(__new__(Date_Date):getTime() - d) .. "ms");
 			d = __new__(Date_Date):getTime();
 			
@@ -56,11 +56,6 @@ do --{
 		
 	
 	end
-	
-end --}
-
--- class Map_IMap abstract class Map_IMap
-do --{
 	
 end --}
 
@@ -199,6 +194,42 @@ do --{
 		
 	
 	end
+	
+end --}
+
+-- class TestExceptions_TestExceptions
+TestExceptions_TestExceptions = {};
+__inherit(TestExceptions_TestExceptions, Object);
+TestExceptions_TestExceptions.__index = TestExceptions_TestExceptions;
+do --{
+	function TestExceptions_TestExceptions.test( perf )
+		
+			if(not perf)then
+				print("TestExceptions begin")
+			end;
+			local x = nil;
+			local try, catch = pcall(function () x:tryMe() end);
+			if try == false then 
+			local e1 = catch;
+			
+				if(not perf)then
+					print("Exception here!")
+				end;
+				if(not perf)then
+					print("Info: " .. Std_Std.string(e1))
+				end
+			end;
+			if(not perf)then
+				print("TestExceptions end")
+			end
+		
+	
+	end
+	function TestExceptions_TestExceptions:tryMe(  )
+		return 0;
+	
+	end
+	
 	
 end --}
 
@@ -473,7 +504,8 @@ do --{
 			_G.print('__lua__');
 			print(1, 2, 3);
 			os:clock(1, 2, "hi");
-			_G.print("__lua__", 2)
+			_G.print("__lua__", 2);
+			local z = "0"
 		
 	
 	end
@@ -518,588 +550,7 @@ do --{
 	
 end --}
 
--- class benchmark_LoopTesterApp_LoopTesterApp
-benchmark_LoopTesterApp_LoopTesterApp = {};
-__inherit(benchmark_LoopTesterApp_LoopTesterApp, Object);
-benchmark_LoopTesterApp_LoopTesterApp.__index = benchmark_LoopTesterApp_LoopTesterApp;
-do --{
-	function benchmark_LoopTesterApp_LoopTesterApp.buildDiamond( cfg, start )
-		
-			local bb0 = start;
-			benchmark_MaoLoops_BasicBlockEdge.new(cfg, bb0, bb0 + 1);
-			benchmark_MaoLoops_BasicBlockEdge.new(cfg, bb0, bb0 + 2);
-			benchmark_MaoLoops_BasicBlockEdge.new(cfg, bb0 + 1, bb0 + 3);
-			benchmark_MaoLoops_BasicBlockEdge.new(cfg, bb0 + 2, bb0 + 3);
-			return bb0 + 3
-		
-	
-	end
-	function benchmark_LoopTesterApp_LoopTesterApp.buildStraight( cfg, start, n )
-		
-			
-				local _g = 0;
-				while((_g < n))do ::continue:: 
-					local i = _g; _g = _g + 1
-					benchmark_MaoLoops_BasicBlockEdge.new(cfg, start + i, start + i + 1)
-				end
-			;
-			return start + n
-		
-	
-	end
-	function benchmark_LoopTesterApp_LoopTesterApp.buildBaseLoop( cfg, from )
-		
-			local header = benchmark_LoopTesterApp_LoopTesterApp.buildStraight(cfg, from, 1);
-			local diamond1 = benchmark_LoopTesterApp_LoopTesterApp.buildDiamond(cfg, header);
-			local d11 = benchmark_LoopTesterApp_LoopTesterApp.buildStraight(cfg, diamond1, 1);
-			local diamond2 = benchmark_LoopTesterApp_LoopTesterApp.buildDiamond(cfg, d11);
-			local footer = benchmark_LoopTesterApp_LoopTesterApp.buildStraight(cfg, diamond2, 1);
-			benchmark_MaoLoops_BasicBlockEdge.new(cfg, diamond2, d11);
-			benchmark_MaoLoops_BasicBlockEdge.new(cfg, diamond1, header);
-			benchmark_MaoLoops_BasicBlockEdge.new(cfg, footer, from);
-			footer = benchmark_LoopTesterApp_LoopTesterApp.buildStraight(cfg, footer, 1);
-			return footer
-		
-	
-	end
-	function benchmark_LoopTesterApp_LoopTesterApp.main(  )
-		
-			local d = __new__(Date_Date):getTime();
-			local cfg = benchmark_MaoLoops_MaoCFG.new();
-			local lsg = benchmark_MaoLoops_LoopStructureGraph.new();
-			cfg:CreateNode(0);
-			benchmark_LoopTesterApp_LoopTesterApp.buildBaseLoop(cfg, 0);
-			cfg:CreateNode(1);
-			benchmark_MaoLoops_BasicBlockEdge.new(cfg, 0, 2);
-			
-				local _g = 0;
-				while((_g < 300))do ::continue:: 
-					local dummyloops = _g; _g = _g + 1
-					local lsglocal = benchmark_MaoLoops_LoopStructureGraph.new();
-					benchmark_MaoLoops_MaoLoops.new(cfg, lsglocal):run()
-				end
-			;
-			local n = 2;
-			
-				local _g1 = 0;
-				while((_g1 < 10))do ::continue:: 
-					local parlooptrees = _g1; _g1 = _g1 + 1
-					cfg:CreateNode(n + 1);
-					benchmark_MaoLoops_BasicBlockEdge.new(cfg, 2, n + 1);
-					n = n + 1;
-					
-						local _g11 = 0;
-						while((_g11 < 100))do ::continue:: 
-							local i = _g11; _g11 = _g11 + 1
-							local top = n;
-							n = benchmark_LoopTesterApp_LoopTesterApp.buildStraight(cfg, n, 1);
-							
-								local _g2 = 0;
-								while((_g2 < 25))do ::continue:: 
-									local j = _g2; _g2 = _g2 + 1
-									n = benchmark_LoopTesterApp_LoopTesterApp.buildBaseLoop(cfg, n)
-								end
-							;
-							local bottom = benchmark_LoopTesterApp_LoopTesterApp.buildStraight(cfg, n, 1);
-							benchmark_MaoLoops_BasicBlockEdge.new(cfg, n, top);
-							n = bottom
-						end
-					;
-					benchmark_MaoLoops_BasicBlockEdge.new(cfg, n, 1)
-				end
-			
-		
-	
-	end
-	
-end --}
-
--- class benchmark_MaoLoops_BasicBlockEdge
-benchmark_MaoLoops_BasicBlockEdge = {};
-__inherit(benchmark_MaoLoops_BasicBlockEdge, Object);
-benchmark_MaoLoops_BasicBlockEdge.__index = benchmark_MaoLoops_BasicBlockEdge;
-do --{
-	
-	function benchmark_MaoLoops_BasicBlockEdge.new( cfg, from_name, to_name )
-		local self = {}
-		setmetatable(self, benchmark_MaoLoops_BasicBlockEdge)
-		
-			self.from_ = cfg:CreateNode(from_name);
-			self.to_ = cfg:CreateNode(to_name);
-			self.from_.out_edges_.push(self.to_);
-			self.to_.in_edges_.push(self.from_);
-			cfg.edge_list_.push(self)
-		
-	
-	return self
-	end
-	--var from_;
-	--var to_;
-	
-end --}
-
--- class benchmark_MaoLoops_BasicBlock
-benchmark_MaoLoops_BasicBlock = {};
-__inherit(benchmark_MaoLoops_BasicBlock, Object);
-benchmark_MaoLoops_BasicBlock.__index = benchmark_MaoLoops_BasicBlock;
-do --{
-	
-	function benchmark_MaoLoops_BasicBlock.new( name )
-		local self = {}
-		setmetatable(self, benchmark_MaoLoops_BasicBlock)
-		
-			self.in_edges_ = Array_Array.new();
-			self.out_edges_ = Array_Array.new();
-			self.name_ = name
-		
-	
-	return self
-	end
-	--var in_edges_;
-	--var out_edges_;
-	--var name_;
-	
-end --}
-
--- class benchmark_MaoLoops_MaoCFG
-benchmark_MaoLoops_MaoCFG = {};
-__inherit(benchmark_MaoLoops_MaoCFG, Object);
-benchmark_MaoLoops_MaoCFG.__index = benchmark_MaoLoops_MaoCFG;
-do --{
-	
-	function benchmark_MaoLoops_MaoCFG.new(  )
-		local self = {}
-		setmetatable(self, benchmark_MaoLoops_MaoCFG)
-		
-			self.node_count = 0;
-			self.basic_block_map_ = haxe_ds_IntMap_IntMap.new();
-			self.edge_list_ = Array_Array.new()
-		
-	
-	return self
-	end
-	--var basic_block_map_;
-	--var start_node_;
-	--var edge_list_;
-	--var node_count;
-	function benchmark_MaoLoops_MaoCFG:CreateNode( name )
-		
-			local first = self.node_count == 0;
-			local node = self.basic_block_map_:get(name);
-			if(node == nil)then
-				
-				node = benchmark_MaoLoops_BasicBlock.new(name);
-				self.basic_block_map_:set(name, node);
-				(function () local _r = self.node_count or 0; self.node_count = _r + 1; return _r end)()
-			
-			end;
-			if(first)then
-				self.start_node_ = node
-			end;
-			return node
-		
-	
-	end
-	
-	
-end --}
-
--- class benchmark_MaoLoops_SimpleLoop
-benchmark_MaoLoops_SimpleLoop = {};
-__inherit(benchmark_MaoLoops_SimpleLoop, Object);
-benchmark_MaoLoops_SimpleLoop.__index = benchmark_MaoLoops_SimpleLoop;
-do --{
-	
-	function benchmark_MaoLoops_SimpleLoop.new(  )
-		local self = {}
-		setmetatable(self, benchmark_MaoLoops_SimpleLoop)
-		
-			self.is_root_ = false;
-			self.nesting_level_ = 0;
-			self.depth_level_ = 0;
-			self.basic_blocks_ = Array_Array.new();
-			self.children_ = Array_Array.new()
-		
-	
-	return self
-	end
-	function benchmark_MaoLoops_SimpleLoop:AddNode( basic_block )
-		
-			
-				local _g = 0;
-				local _g1 = self.basic_blocks_;
-				while((_g < _g1.length))do ::continue:: 
-					local b = _g1[_g];
-					_g = _g + 1
-					if(b == basic_block)then
-						return
-					end
-				end
-			;
-			self.basic_blocks_.push(basic_block)
-		
-	
-	end
-	
-	function benchmark_MaoLoops_SimpleLoop:AddChildLoop( loop )
-		
-			
-				local _g = 0;
-				local _g1 = self.children_;
-				while((_g < _g1.length))do ::continue:: 
-					local c = _g1[_g];
-					_g = _g + 1
-					if(c == loop)then
-						return
-					end
-				end
-			;
-			self.children_.push(loop)
-		
-	
-	end
-	
-	function benchmark_MaoLoops_SimpleLoop:set_parent( parent )
-		
-			self.parent_ = parent;
-			parent:AddChildLoop(self)
-		
-	
-	end
-	
-	function benchmark_MaoLoops_SimpleLoop:set_counter( value )
-		self.counter_ = value
-	
-	end
-	
-	function benchmark_MaoLoops_SimpleLoop:set_nesting_level( level )
-		
-			self.nesting_level_ = level;
-			if(level == 0)then
-				self.is_root_ = true
-			end
-		
-	
-	end
-	
-	--var basic_blocks_;
-	--var children_;
-	--var parent_;
-	--var is_root_;
-	--var counter_;
-	--var nesting_level_;
-	--var depth_level_;
-	
-end --}
-
--- class benchmark_MaoLoops_LoopStructureGraph
-benchmark_MaoLoops_LoopStructureGraph = {};
-__inherit(benchmark_MaoLoops_LoopStructureGraph, Object);
-benchmark_MaoLoops_LoopStructureGraph.__index = benchmark_MaoLoops_LoopStructureGraph;
-do --{
-	
-	function benchmark_MaoLoops_LoopStructureGraph.new(  )
-		local self = {}
-		setmetatable(self, benchmark_MaoLoops_LoopStructureGraph)
-		
-			self.root_ = benchmark_MaoLoops_SimpleLoop.new();
-			self.loops_ = Array_Array.new();
-			self.loop_counter_ = 0;
-			self.root_.set_nesting_level(0);
-			self.root_.set_counter((function () local _r = self.loop_counter_ or 0; self.loop_counter_ = _r + 1; return _r end)());
-			self.loops_.push(self.root_)
-		
-	
-	return self
-	end
-	function benchmark_MaoLoops_LoopStructureGraph:CreateNewLoop(  )
-		
-			local loop = benchmark_MaoLoops_SimpleLoop.new();
-			loop:set_counter((function () local _r = self.loop_counter_ or 0; self.loop_counter_ = _r + 1; return _r end)());
-			return loop
-		
-	
-	end
-	
-	--var root_;
-	--var loops_;
-	--var loop_counter_;
-	
-end --}
-
--- class benchmark_MaoLoops_UnionFindNode
-benchmark_MaoLoops_UnionFindNode = {};
-__inherit(benchmark_MaoLoops_UnionFindNode, Object);
-benchmark_MaoLoops_UnionFindNode.__index = benchmark_MaoLoops_UnionFindNode;
-do --{
-	
-	function benchmark_MaoLoops_UnionFindNode.new( bb, dfs_number )
-		local self = {}
-		setmetatable(self, benchmark_MaoLoops_UnionFindNode)
-		
-			self.dfs_number_ = 0;
-			self.parent_ = self;
-			self.bb_ = bb;
-			self.dfs_number_ = dfs_number
-		
-	
-	return self
-	end
-	function benchmark_MaoLoops_UnionFindNode:FindSet(  )
-		
-			local nodeList = Array_Array.new();
-			local node = self;
-			while((node ~= node.parent_))do ::continue:: 
-				if(node.parent_ ~= node.parent_.parent_)then
-					nodeList:push(node)
-				end;
-				node = node.parent_
-			end;
-			local p = node.parent_;
-			
-				local _g = 0;
-				while((_g < nodeList.length))do ::continue:: 
-					local n = nodeList[_g];
-					_g = _g + 1
-					n.parent_ = p
-				end
-			;
-			return node
-		
-	
-	end
-	
-	--var parent_;
-	--var bb_;
-	--var loop_;
-	--var dfs_number_;
-	
-end --}
-
--- class benchmark_MaoLoops_MaoLoops
-benchmark_MaoLoops_MaoLoops = {};
-__inherit(benchmark_MaoLoops_MaoLoops, Object);
-benchmark_MaoLoops_MaoLoops.__index = benchmark_MaoLoops_MaoLoops;
-do --{
-	
-	function benchmark_MaoLoops_MaoLoops.new( cfg, lsg )
-		local self = {}
-		setmetatable(self, benchmark_MaoLoops_MaoLoops)
-		
-			self.CFG_ = cfg;
-			self.lsg_ = lsg
-		
-	
-	return self
-	end
-	function benchmark_MaoLoops_MaoLoops.IsAncestor( w, v, last )
-		return w <= v  and  v <= last[w];
-	
-	end
-	function benchmark_MaoLoops_MaoLoops:DFS( current_node, nodes, number, last, current )
-		
-			nodes[current] = benchmark_MaoLoops_UnionFindNode.new(current_node, current);
-			number:set(current_node.name_, current);
-			local lastid = current;
-			
-				local _g = 0;
-				local _g1 = current_node.out_edges_;
-				while((_g < _g1.length))do ::continue:: 
-					local target = _g1[_g];
-					_g = _g + 1
-					if(number:get(target.name_) == -1)then
-						lastid = self:DFS(target, nodes, number, last, lastid + 1)
-					end
-				end
-			;
-			last[number:get(current_node.name_)] = lastid;
-			return lastid
-		
-	
-	end
-	
-	function benchmark_MaoLoops_MaoLoops:FindLoops(  )
-		
-			if(self.CFG_.start_node_ == nil)then
-				return
-			end;
-			local size = self.CFG_.node_count;
-			if(size < 1)then
-				return
-			end;
-			local non_back_preds = Array_Array.new();
-			non_back_preds[size - 1] = nil;
-			local back_preds = Array_Array.new();
-			back_preds[size - 1] = nil;
-			
-				local _g = 0;
-				while((_g < size))do ::continue:: 
-					local i = _g; _g = _g + 1
-					non_back_preds[i] = haxe_ds_IntMap_IntMap.new();
-					back_preds[i] = Array_Array.new()
-				end
-			;
-			local header = Array_Array.new();
-			header[size - 1] = 0;
-			local type = Array_Array.new();
-			type[size - 1] = 0;
-			local last = Array_Array.new();
-			last[size - 1] = 0;
-			local nodes = Array_Array.new();
-			local number = haxe_ds_IntMap_IntMap.new();
-			for ___, block in (self.CFG_.basic_block_map_:iterator()) do 
-				number:set(block.name_, -1)
-			end;
-			self:DFS(self.CFG_.start_node_, nodes, number, last, 0);
-			
-				local _g1 = 0;
-				while((_g1 < size))do ::continue:: 
-					local w = _g1; _g1 = _g1 + 1
-					header[w] = 0;
-					type[w] = 1;
-					local node_w = nodes[w].bb_;
-					if(node_w == nil)then
-						
-						type[w] = 5;
-						goto continue
-					
-					end;
-					if(node_w.in_edges_.length ~= 0)then
-						
-						local _g11 = 0;
-						local _g2 = node_w.in_edges_;
-						while((_g11 < _g2.length))do ::continue:: 
-							local node_v = _g2[_g11];
-							_g11 = _g11 + 1
-							local v = number:get(node_v.name_);
-							if(v == -1)then
-								goto continue
-							end;
-							if(w <= v  and  v <= last[w])then
-								back_preds[w]:push(v)
-							else
-								non_back_preds[w]:set(v, v)
-							end
-						end
-					
-					end
-				end
-			;
-			header[0] = 0;
-			local w1 = size - 1;
-			while((w1 >= 0))do ::continue:: 
-				local node_pool = Array_Array.new();
-				local node_w1 = nodes[w1].bb_;
-				if(node_w1 == nil)then
-					
-					w1 = w1 - 1
-					goto continue
-				
-				end;
-				
-					local _g3 = 0;
-					local _g12 = back_preds[w1];
-					while((_g3 < _g12.length))do ::continue:: 
-						local v1 = _g12[_g3];
-						_g3 = _g3 + 1
-						if(v1 ~= w1)then
-							node_pool:push(nodes[v1]:FindSet())
-						else
-							type[w1] = 3
-						end
-					end
-				;
-				local worklist = node_pool:slice();
-				if(node_pool.length < 1)then
-					type[w1] = 2
-				end;
-				local jobs = worklist.length;
-				while((jobs > 0))do ::continue:: 
-					local x = worklist[(function () jobs = (jobs or 0) - 1; return jobs; end)()];
-					local non_back_size = 0;
-					for ___, i1 in (non_back_preds[x:dfs_number_]:keys()) do 
-						
-						non_back_size = non_back_size + 1
-						if(non_back_size > 32768)then
-							return
-						end;
-						local y = nodes[i1];
-						local ydash = y:FindSet();
-						if(not benchmark_MaoLoops_MaoLoops.IsAncestor(w1, ydash.dfs_number_, last))then
-							
-							type[w1] = 4;
-							non_back_preds[w1]:set(ydash.dfs_number_, ydash.dfs_number_)
-						
-						else
-							if(ydash.dfs_number_ ~= w1)then
-							
-							local found = false;
-							
-								local _g4 = 0;
-								while((_g4 < node_pool.length))do ::continue:: 
-									local n = node_pool[_g4];
-									_g4 = _g4 + 1
-									if(n == ydash)then
-										
-										found = true;
-										break
-									
-									end
-								end
-							;
-							if(not found)then
-								
-								worklist[(function () jobs = (jobs or 0) + 1; return jobs; end)()] = ydash;
-								node_pool:push(ydash)
-							
-							end
-						
-						end
-						end
-					
-					end
-				end;
-				if(node_pool.length > 0  or  type[w1] == 3)then
-					
-					local loop = self.lsg_.CreateNewLoop();
-					nodes[w1].loop_ = loop;
-					
-						local _g5 = 0;
-						while((_g5 < node_pool.length))do ::continue:: 
-							local node = node_pool[_g5];
-							_g5 = _g5 + 1
-							header[node.dfs_number_] = w1;
-							node.parent_ = nodes[w1];
-							if(node.loop_ ~= nil)then
-								node.loop_.set_parent(loop)
-							else
-								loop:AddNode(node.bb_)
-							end
-						end
-					;
-					self.lsg_.loops_.push(loop)
-				
-				end;
-				(function () w1 = (w1 or 0) - 1; return w1; end)()
-			end
-		
-	
-	end
-	
-	--var CFG_;
-	--var lsg_;
-	function benchmark_MaoLoops_MaoLoops:run(  )
-		
-			self:FindLoops();
-			return self.lsg_.loops_.length
-		
-	
-	end
-	
-	
-end --}
-
--- class haxe_ds_IntMap_IntMap
+-- class js_Boot_Boot
 -- ignored --
 
 
@@ -1196,7 +647,7 @@ end
 --If s is a structure, the field names along with their values are returned. The field order and the operator separating field names and values are unspecified.
 --If s is null, "null" is returned.
 function Std.string( s )
-	return "" .. x -- TODO
+	return tostring(s) -- TODO
 end
 --function instance<T, S>(value:T, c:Class<S>):S
 --Checks if object value is an instance of class c.
@@ -1224,7 +675,7 @@ end
 --In decimal mode, parsing continues until an invalid character is detected, in which case the result up to that point is returned. For hexadecimal notation, the effect of invalid characters is unspecified.
 --Leading 0s that are not part of the 0x/0X hexadecimal notation are ignored, which means octal notation is not supported.
 --If the input cannot be recognized, the result is null.
-function Std.string( x )
+function Std.parseInt( x )
 	return nil -- TODO
 end
 --static function random(x:Int):Int
@@ -1234,6 +685,15 @@ function Std.random( x )
 	if x <= 1 then return 0 end
 	return 0 -- TODO
 end
+Math = {}
+Math_Math = Math
+
+function Math_Math.round(num)
+	if num >= 0 then return math.floor(num+.5) 
+	 else return math.ceil(num-.5) end
+end
+
+Math_Math.random = math.random;
 -- String class
 
 String = {}

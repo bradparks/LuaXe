@@ -277,6 +277,8 @@ class LuaGenerator
             "haxe_ds_IntMap", 
             "haxe_ds_IntMap_IntMap",
             "IMap", 
+            "js_Boot_Boot",
+            "Map_IMap",
             
             "Array", "Array_Array",
             "HxOverrides",
@@ -455,6 +457,7 @@ class LuaGenerator
         boot = "" + sys.io.File.getContent('$path/boot/boot.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/tostring.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/std.lua');
+        boot += "\n" + sys.io.File.getContent('$path/boot/math.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/string.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');

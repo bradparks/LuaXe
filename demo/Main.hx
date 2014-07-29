@@ -62,6 +62,7 @@ class Main
        	#if lua TestMagic.test(); #end
         TestFuncs.test();
         TestClasses.test();
+        TestExceptions.test();
         /*
 
         Car.stat("huh?");
@@ -143,7 +144,7 @@ class Main
 
         d = Date.now().getTime();
 
-        benchmark.LoopTesterApp.main();
+        //benchmark.LoopTesterApp.main();
 
         trace("ComplexPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
 
