@@ -39,6 +39,7 @@ TODO
 - [ ] define globals as locals at top for speed
 - [ ] unhardcode path to boot classes
 - [ ] @expose (maybe "local" would used for class definitions by default)
+- [ ] @require
 - [ ] multiline strings
 - [x] basic code generation
 - [x] basic classes
