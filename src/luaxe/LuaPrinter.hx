@@ -754,50 +754,31 @@ class LuaPrinter {
 
     function printSwitch( _e : haxe.macro.TypedExpr , cases : Array<{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr }> , edef : Null<haxe.macro.TypedExpr>)
     {
-//        trace(e1);
-//        trace(cl);
-//        trace(edef);
-    
-    //    if     v == "a" then print("aah")
-    //elseif v == "b" then print("bee")
-    //юю
-    //else                 print("blah")
-    //end
-
         var s:String = "";
         var e = printExpr(_e);
-
         var c = cases.shift();
+
+        function _opt(c:haxe.macro.TypedExpr, f) // Crop If "End" Or Print
+        {
+            if(""+c.expr != "TBlock([])")
+            return opt(c, f);
+            return "";
+        }
         
-        s += '\n${tabs}if ' + e + " == " + printExprs(c.values, ", ") + " then " + opt(c.expr, printExpr); 
+        s += '\n${tabs}if ' + e + " == " + printExprs(c.values, ' or $e == ') + " then " + _opt(c.expr, printExpr); 
 
         function _case(c:{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr })
         {
-            s += '\n${tabs}elseif ' + e + " == " + printExprs(c.values, ", ") + " then " + opt(c.expr, printExpr); 
+            s += '\n${tabs}elseif ' + e + " == " + printExprs(c.values, ' or $e == ') + " then " + _opt(c.expr, printExpr); 
         }
 
         for(c in cases) _case(c);
 
-        if(edef != null) s += '\n${tabs}else ' + opt(edef, printExpr); 
+        if(edef != null) s += '\n${tabs}else ' + _opt(edef, printExpr); 
 
-        //var old = tabs;
-        //tabs += tabString;
-        //var s = 'switch ${printExpr(e1)} {\n$tabs' +
-        //            cl.map(printSwitchCase).join('\n$tabs');
-        //if (edef != null)
-        //    s += '\n${tabs}else ' + (edef.expr == null ? "" : printExpr(edef) + ";");
-//
-        //tabs = old;
         s += '\n${tabs}end';
 
         return s;
-    }
-
-    function printSwitchCase(c, first = false)
-    {
-        return 'elseif ${printExprs(c.values, ", ")}'
-               + (c.guard != null ? ' if(${printExpr(c.guard)}): ' : ":")
-               + (c.expr != null ? (opt(c.expr, printExpr)) + "; break;" : "");
     }
 
 	public function printExprs(el:Array<TypedExpr>, sep:String) {

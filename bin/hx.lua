@@ -386,15 +386,15 @@ do --{
 				x = 10
 			end;
 			local v = Math_Math.round(Math_Math.random() * 100);
+			local foo = function ( x1 )
+				return x1 + 1;
+			
+			end;
 			
 			if (v) == 0 then 
-			 end
-			elseif (v) == 1 then 
-			 end
+			elseif (v) == 1 or (v) == 2 or (v) == 3 then 
 			elseif (v) == 65 then 
-			 end
 			else 
-			 end
 			end;
 			if(not perf)then
 				print("TestIfs end")

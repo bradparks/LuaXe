@@ -85,11 +85,18 @@ class TestIfs
         }
 		// switch
 		var v:Int = Math.round(Math.random() * 100);
+
+		function foo(x:Int):Int return x + 1;
+
 		switch( v ) {
     	case 0:
     	    {};
-    	case 1:// TODO foo(1):
-    	    {};
+    	//case foo(1):
+    	//    {};
+    	case 1,2,3:
+    	    {
+    	    	//trace("1,2,3 ok");
+    	    };
     	case 65:
     	    {};
     	default:

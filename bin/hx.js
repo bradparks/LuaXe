@@ -218,10 +218,13 @@ TestIfs.test = function(perf) {
 	var x = 0;
 	if(z > 2) x = 7; else x = 10;
 	var v = Math.round(Math.random() * 100);
+	var foo = function(x1) {
+		return x1 + 1;
+	};
 	switch(v) {
 	case 0:
 		break;
-	case 1:
+	case 1:case 2:case 3:
 		break;
 	case 65:
 		break;
