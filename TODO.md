@@ -38,6 +38,8 @@ TODO
 - [ ] arrays & maps boxing when converting to Dynamic
 - [ ] define globals as locals at top for speed
 - [ ] unhardcode path to boot classes
+- [ ] @expose (maybe "local" would used for class definitions by default)
+- [ ] multiline strings
 - [x] basic code generation
 - [x] basic classes
 - [x] basic inheritance
