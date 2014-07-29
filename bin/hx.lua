@@ -29,6 +29,7 @@ do --{
 			TestFuncs_TestFuncs.test();
 			TestClasses_TestClasses.test();
 			TestExceptions_TestExceptions.test();
+			TestExtern_TestExtern.test();
 			print("[lua] >");
 			print("FeatureTest: " .. Std_Std.int(__new__(Date_Date):getTime() - d) .. "ms");
 			d = __new__(Date_Date):getTime();
@@ -230,6 +231,26 @@ do --{
 	
 	end
 	
+	
+end --}
+
+-- class TestExtern_TestExtern
+TestExtern_TestExtern = {};
+__inherit(TestExtern_TestExtern, Object);
+TestExtern_TestExtern.__index = TestExtern_TestExtern;
+do --{
+	function TestExtern_TestExtern.test(  )
+		
+			print("TestExtern begin");
+			print(TestExtern_Extern.test());
+			print(TestExtern_Extern.hi);
+			local inst = TestExtern_Extern.new(5);
+			print(inst:selfcall());
+			print(inst.X);
+			print("TestExtern end")
+		
+	
+	end
 	
 end --}
 
@@ -974,5 +995,18 @@ Date.new = Date.now
 function Date:getTime()
 	return self.t
 end
+local Extern = {}
+TestExtern_Extern = Extern -- setting proper namespace (namespace.TestExtern.Extern -> namespace_TestExtern_Extern)
+Extern.__index = Extern -- need for metatable
+Extern.hi = "Hello!" -- static var
+
+function Extern.new(x) -- constructor
+	local self = { X = x } -- "X" is a class field
+	setmetatable(self, Extern)
+	return self
+end
+
+function Extern:selfcall() return self.X end
+function Extern.test() return "static test" end
 exec()
 Main_Main.main()

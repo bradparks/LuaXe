@@ -463,6 +463,7 @@ class LuaGenerator
         boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/date.lua');
+        boot += "\n" + sys.io.File.getContent('$path/boot/extern.lua'); // TODO remove from *release*
 
         var combined = importsBuf.toString() + topLevelBuf.toString() +  buf.toString();
 
