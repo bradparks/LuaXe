@@ -604,7 +604,50 @@ do --{
 			local a;
 			local b;
 			local c = 0;
-			print("TestSyntax end")
+			local r = EReg_EReg.new("([0-9]+)", "g");
+			local str = "hello 48 cool 87!";
+			print(r:match(str) == true);
+			print(r:matched(1) == "48");
+			print(r:split(str));
+			print("TestSyntax end");
+			Array_Array.new();
+			local a1 = setmetatable({[0]=1, 2, 3}, HaxeArrayMeta);
+			print(a1);
+			table.insert(a1, 4)
+			print(a1);
+			local a2 = setmetatable({[0]=1, 2, 3}, HaxeArrayMeta);
+			print(a2:map(function ( x1 )
+				return 100 .. x1;
+			
+			end));
+			local a3 = setmetatable({[0]=2, 1, 3}, HaxeArrayMeta);
+			a3:sort(function ( x2, y1 )
+				if(x2 < y1)then
+					return -1
+				else
+					if(x2 > y1)then
+					return 1
+				else
+					return 0
+				end
+				end
+			
+			end);
+			print("sorted a : " .. Std_Std.string(a3));
+			local x3 = setmetatable({[0]=1, 2, 3, 4}, HaxeArrayMeta);
+			print(x3:slice(1, 2));
+			print(x3);
+			print(x3:splice(1, 2));
+			print(x3);
+			local z1 = 10;
+			local x4 = 0;
+			if(z1 > 2)then
+				x4 = 7
+			else
+				x4 = 10
+			end;
+			print(x4);
+			print(z1)
 		
 	
 	end
@@ -1057,5 +1100,10 @@ function EReg.new(def)
 	setmetatable(self, EReg)
 	return self
 end
+-- TODO
+function EReg:match() return nil end
+function EReg:matched() return nil end
+function EReg:split() return nil end
+
 exec()
 Main_Main.main()

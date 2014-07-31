@@ -56,7 +56,39 @@ class TestSyntax
 		// TODO http://haxe.ru/ref_properties
 		// TODO http://haxe.ru/ref_optional-arguments
 		// TODO http://haxe.ru/ref_regular%20expressions
-
+		var r = ~/([0-9]+)/g; // литерал
+		var str = "hello 48 cool 87!";
+		trace( r.match(str) == true); // true
+		trace( r.matched(1) == "48");    // 48
+		trace( r.split(str) ); // ["hello "," cool ","!"]
  		trace("TestSyntax end");
+ 		// https://github.com/frabbit/hx2python/blob/development/demo/ArrayDemo.hx
+ 		new Array();
+ 		var a1 = [1, 2, 3];
+        trace(a1);
+        a1.push(4);
+        trace(a1);
+        var a2 = [1, 2, 3];
+        trace(a2.map(function (x) return 100+x));
+        var a = [2,1,3];
+        a.sort(function (x,y) return x < y ? -1 : x > y ? 1 : 0);
+        trace("sorted a : " + a);
+        var x = [1,2,3,4];
+        trace(x.slice(1, 2));
+        trace(x);
+        trace(x.splice(1, 2));
+        trace(x);
+        // https://github.com/frabbit/hx2python/blob/development/demo/SimpleDemo.hx
+        var z = 5 + 5;	
+		var x = 0;
+        if ( z > 2) {
+            x = 7;
+        } else {
+            x = 10;
+        }
+        trace(x);
+        trace(z);
+
+
 	}
 }

@@ -7,3 +7,7 @@ function EReg.new(def)
 	setmetatable(self, EReg)
 	return self
 end
+-- TODO
+function EReg:match() return nil end
+function EReg:matched() return nil end
+function EReg:split() return nil end

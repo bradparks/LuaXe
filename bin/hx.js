@@ -11,7 +11,20 @@ var EReg = function(r,opt) {
 };
 EReg.__name__ = true;
 EReg.prototype = {
-	__class__: EReg
+	match: function(s) {
+		if(this.r.global) this.r.lastIndex = 0;
+		this.r.m = this.r.exec(s);
+		this.r.s = s;
+		return this.r.m != null;
+	}
+	,matched: function(n) {
+		if(this.r.m != null && n >= 0 && n < this.r.m.length) return this.r.m[n]; else throw "EReg::matched";
+	}
+	,split: function(s) {
+		var d = "#__delim__#";
+		return s.replace(this.r,d).split(d);
+	}
+	,__class__: EReg
 };
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
@@ -367,7 +380,36 @@ TestSyntax.test = function() {
 	var a;
 	var b;
 	var c = 0;
+	var r = new EReg("([0-9]+)","g");
+	var str = "hello 48 cool 87!";
+	console.log(r.match(str) == true);
+	console.log(r.matched(1) == "48");
+	console.log(r.split(str));
 	console.log("TestSyntax end");
+	new Array();
+	var a1 = [1,2,3];
+	console.log(a1);
+	a1.push(4);
+	console.log(a1);
+	var a2 = [1,2,3];
+	console.log(a2.map(function(x1) {
+		return 100 + x1;
+	}));
+	var a3 = [2,1,3];
+	a3.sort(function(x2,y1) {
+		if(x2 < y1) return -1; else if(x2 > y1) return 1; else return 0;
+	});
+	console.log("sorted a : " + Std.string(a3));
+	var x3 = [1,2,3,4];
+	console.log(x3.slice(1,2));
+	console.log(x3);
+	console.log(x3.splice(1,2));
+	console.log(x3);
+	var z1 = 10;
+	var x4 = 0;
+	if(z1 > 2) x4 = 7; else x4 = 10;
+	console.log(x4);
+	console.log(z1);
 };
 var js = {};
 js.Boot = function() { };
@@ -506,6 +548,16 @@ var Bool = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
+if(Array.prototype.map == null) Array.prototype.map = function(f) {
+	var a = [];
+	var _g1 = 0;
+	var _g = this.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		a[i] = f(this[i]);
+	}
+	return a;
+};
 _TestClasses.BClass.WHOOT = "whoot";
 Main.main();
 })();

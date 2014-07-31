@@ -732,7 +732,7 @@ class LuaPrinter {
             _continueLabel = true;
             "goto continue";
 		
-		case TThrow(e1): "throw " +printExpr(e1);
+		case TThrow(e1): "error(" + printExpr(e1) + ")";
 		
         case TCast(e1, _): printExpr(e1); // ok
 		
