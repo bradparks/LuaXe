@@ -10,6 +10,9 @@
 
 -- hm, it lowers performance
 function exec()
+-- class EReg_EReg
+-- ignored --
+
 -- class HxOverrides_HxOverrides
 -- ignored --
 
@@ -30,6 +33,7 @@ do --{
 			TestClasses_TestClasses.test();
 			TestExceptions_TestExceptions.test();
 			TestExtern_TestExtern.test();
+			TestSyntax_TestSyntax.test();
 			print("[lua] >");
 			print("FeatureTest: " .. Std_Std.int(__new__(Date_Date):getTime() - d) .. "ms");
 			d = __new__(Date_Date):getTime();
@@ -571,6 +575,42 @@ do --{
 	
 end --}
 
+-- class TestSyntax_TestSyntax
+TestSyntax_TestSyntax = {};
+__inherit(TestSyntax_TestSyntax, Object);
+TestSyntax_TestSyntax.__index = TestSyntax_TestSyntax;
+do --{
+	function TestSyntax_TestSyntax.test(  )
+		
+			print("TestSyntax begin");
+			local v = 0;
+			local v1 = -134;
+			local v2 = 65280;
+			local v3 = 123.0;
+			local v4 = .14179;
+			local v5 = 13e50;
+			local v6 = -1e-99;
+			local v7 = "hello";
+			local v8 = "hello \"world\" !";
+			local v9 = "hello \"world\" !";
+			local v10 = true;
+			local v11 = false;
+			local v12 = nil;
+			local v13 = EReg_EReg.new("[a-z]+", "i");
+			local x;
+			local y = 3;
+			local z;
+			local w = "";
+			local a;
+			local b;
+			local c = 0;
+			print("TestSyntax end")
+		
+	
+	end
+	
+end --}
+
 -- class js_Boot_Boot
 -- ignored --
 
@@ -1008,5 +1048,14 @@ end
 
 function Extern:selfcall() return self.X end
 function Extern.test() return "static test" end
+local EReg = {}
+EReg_EReg = EReg
+EReg.__index = EReg
+
+function EReg.new(def)
+	local self = {}
+	setmetatable(self, EReg)
+	return self
+end
 exec()
 Main_Main.main()

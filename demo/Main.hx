@@ -64,6 +64,7 @@ class Main
         TestClasses.test();
         TestExceptions.test();
         #if lua TestExtern.test(); #end
+        TestSyntax.test(); 
         /*
 
         Car.stat("huh?");

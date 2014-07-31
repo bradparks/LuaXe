@@ -5,6 +5,14 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var EReg = function(r,opt) {
+	opt = opt.split("u").join("");
+	this.r = new RegExp(r,opt);
+};
+EReg.__name__ = true;
+EReg.prototype = {
+	__class__: EReg
+};
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
 HxOverrides.cca = function(s,index) {
@@ -32,6 +40,7 @@ Main.main = function() {
 	TestFuncs.test();
 	TestClasses.test();
 	TestExceptions.test();
+	TestSyntax.test();
 	console.log("[js] >");
 	console.log("FeatureTest: " + Std["int"](new Date().getTime() - d) + "ms");
 	d = new Date().getTime();
@@ -332,6 +341,33 @@ TestString.test = function(perf) {
 	TestString.eq("charAt",S.charAt(5) == "n");
 	TestString.eq("charCodeAt",HxOverrides.cca(S,5) == 110);
 	if(!perf) console.log("TestString end");
+};
+var TestSyntax = function() { };
+TestSyntax.__name__ = true;
+TestSyntax.test = function() {
+	console.log("TestSyntax begin");
+	var v = 0;
+	var v1 = -134;
+	var v2 = 65280;
+	var v3 = 123.0;
+	var v4 = .14179;
+	var v5 = 13e50;
+	var v6 = -1e-99;
+	var v7 = "hello";
+	var v8 = "hello \"world\" !";
+	var v9 = "hello \"world\" !";
+	var v10 = true;
+	var v11 = false;
+	var v12 = null;
+	var v13 = new EReg("[a-z]+","i");
+	var x;
+	var y = 3;
+	var z;
+	var w = "";
+	var a;
+	var b;
+	var c = 0;
+	console.log("TestSyntax end");
 };
 var js = {};
 js.Boot = function() { };
