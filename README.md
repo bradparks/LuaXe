@@ -44,18 +44,27 @@ or:
 
 Magic
 =====
+Untyped:
 ```haxe
 untyped __lua__("_G.print('__lua__')");
 untyped __call__(print, 1, 2, 3);
 untyped __tail__(os, clock, 1, 2, "hi");
 untyped __global__(print,'__lua__', 2);
 ```
-Outputs:
 ```lua
 _G.print('__lua__');
 print(1, 2, 3);
 os:clock(1, 2, "hi");
 _G.print("__lua__", 2);
+```
+Meta`s:
+```haxe
+@:require("hello", "world")
+class Main { ... }
+```
+```lua
+require "hello" -- added to top of your lua file
+require "world"
 ```
 
 External Classes
