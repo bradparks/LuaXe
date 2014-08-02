@@ -214,6 +214,7 @@ class LuaGenerator
         for(meta in c.meta.get())
         {
             if(meta.name == ":library" || meta.name == ":feature")
+            if(meta.name == ":require")
             {
                 for(param in meta.params)
                 {
@@ -449,6 +450,7 @@ class LuaGenerator
 
         for(mpt in imports)
             importsBuf.add("import '" + mpt + "';\n");
+            importsBuf.add("require \"" + mpt + "\"\n");
 
         //genExpr(api.main);
 

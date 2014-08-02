@@ -48,6 +48,7 @@ class Car extends Vehicle {
 }
 
 // testing:
+//@:require("hello", "world")
 class Main
 {
     static var test = "hello";
