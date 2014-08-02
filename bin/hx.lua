@@ -20,7 +20,7 @@ function exec()
 Main_Main = {};
 __inherit(Main_Main, Object);
 Main_Main.__index = Main_Main;
-do --{
+--{
 	function Main_Main.main(  )
 		
 			print("go -->");
@@ -62,7 +62,7 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class Std_Std
 -- ignored --
@@ -71,19 +71,19 @@ end --}
 TestClasses_LClass = {};
 __inherit(TestClasses_LClass, Object);
 TestClasses_LClass.__index = TestClasses_LClass;
-do --{
+--{
 	
 	function TestClasses_LClass.new(  )
 		local self = {}
 		setmetatable(self, TestClasses_LClass) end
 	
-end --}
+--}
 
 -- class TestClasses_BaseClass
 TestClasses_BaseClass = {};
 __inherit(TestClasses_BaseClass, Object);
 TestClasses_BaseClass.__index = TestClasses_BaseClass;
-do --{
+--{
 	
 	function TestClasses_BaseClass.new(  )
 		local self = {}
@@ -104,18 +104,18 @@ do --{
 	--static var _instances;
 	--var _count;
 	
-end --}
+--}
 
 -- class TestClasses_InterfaceDemo abstract class TestClasses_InterfaceDemo
-do --{
+--{
 	
-end --}
+--}
 
 -- class TestClasses_AClass extends TestClasses_BaseClass
 TestClasses_AClass = {};
 __inherit(TestClasses_AClass, TestClasses_BaseClass);
 TestClasses_AClass.__index = TestClasses_AClass;
-do --{
+--{
 	
 	function TestClasses_AClass.new(  )
 		local self = {}
@@ -125,13 +125,13 @@ do --{
 	return self
 	end
 	
-end --}
+--}
 
 -- class TestClasses_BClass extends TestClasses_AClass
 TestClasses_BClass = {};
 __inherit(TestClasses_BClass, TestClasses_AClass);
 TestClasses_BClass.__index = TestClasses_BClass; -- implements TestClasses_InterfaceDemo
-do --{
+--{
 	
 	function TestClasses_BClass.new( arg )
 		local self = {}
@@ -157,13 +157,13 @@ do --{
 	end
 	
 	
-end --}
+--}
 
 -- class TestClasses_CClass extends TestClasses_BClass
 TestClasses_CClass = {};
 __inherit(TestClasses_CClass, TestClasses_BClass);
 TestClasses_CClass.__index = TestClasses_CClass;
-do --{
+--{
 	
 	function TestClasses_CClass.new( arg )
 		local self = {}
@@ -176,13 +176,13 @@ do --{
 	return self
 	end
 	
-end --}
+--}
 
 -- class TestClasses_TestClasses
 TestClasses_TestClasses = {};
 __inherit(TestClasses_TestClasses, Object);
 TestClasses_TestClasses.__index = TestClasses_TestClasses;
-do --{
+--{
 	function TestClasses_TestClasses.test( perf )
 		
 			if(not perf)then
@@ -200,13 +200,13 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class TestExceptions_TestExceptions
 TestExceptions_TestExceptions = {};
 __inherit(TestExceptions_TestExceptions, Object);
 TestExceptions_TestExceptions.__index = TestExceptions_TestExceptions;
-do --{
+--{
 	function TestExceptions_TestExceptions.test( perf )
 		
 			if(not perf)then
@@ -236,13 +236,13 @@ do --{
 	end
 	
 	
-end --}
+--}
 
 -- class TestExtern_TestExtern
 TestExtern_TestExtern = {};
 __inherit(TestExtern_TestExtern, Object);
 TestExtern_TestExtern.__index = TestExtern_TestExtern;
-do --{
+--{
 	function TestExtern_TestExtern.test(  )
 		
 			print("TestExtern begin");
@@ -256,13 +256,13 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class TestFuncs_TestFuncs
 TestFuncs_TestFuncs = {};
 __inherit(TestFuncs_TestFuncs, Object);
 TestFuncs_TestFuncs.__index = TestFuncs_TestFuncs;
-do --{
+--{
 	function TestFuncs_TestFuncs.test( perf )
 		
 			if(not perf)then
@@ -337,13 +337,13 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class TestIfs_TestIfs
 TestIfs_TestIfs = {};
 __inherit(TestIfs_TestIfs, Object);
 TestIfs_TestIfs.__index = TestIfs_TestIfs;
-do --{
+--{
 	function TestIfs_TestIfs.test( perf )
 		
 			if(not perf)then
@@ -459,13 +459,13 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class TestLoops_TestLoops
 TestLoops_TestLoops = {};
 __inherit(TestLoops_TestLoops, Object);
 TestLoops_TestLoops.__index = TestLoops_TestLoops;
-do --{
+--{
 	function TestLoops_TestLoops.test( perf )
 		
 			if(not perf)then
@@ -517,13 +517,13 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class TestMagic_TestMagic
 TestMagic_TestMagic = {};
 __inherit(TestMagic_TestMagic, Object);
 TestMagic_TestMagic.__index = TestMagic_TestMagic;
-do --{
+--{
 	function TestMagic_TestMagic.test(  )
 		
 			_G.print('__lua__');
@@ -535,13 +535,13 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class TestString_TestString
 TestString_TestString = {};
 __inherit(TestString_TestString, Object);
 TestString_TestString.__index = TestString_TestString;
-do --{
+--{
 	--static var _perf;
 	function TestString_TestString.eq( text, bool )
 		if(not bool  and  not TestString_TestString._perf)then
@@ -573,13 +573,13 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class TestSyntax_TestSyntax
 TestSyntax_TestSyntax = {};
 __inherit(TestSyntax_TestSyntax, Object);
 TestSyntax_TestSyntax.__index = TestSyntax_TestSyntax;
-do --{
+--{
 	function TestSyntax_TestSyntax.test(  )
 		
 			print("TestSyntax begin");
@@ -652,7 +652,7 @@ do --{
 	
 	end
 	
-end --}
+--}
 
 -- class js_Boot_Boot
 -- ignored --
@@ -1022,6 +1022,11 @@ function HaxeArray.__tostring(o)
 end
 
 HaxeArrayMeta.__tostring = HaxeArray.__tostring;
+
+Array_Array = {}
+function Array_Array.new(arg)
+	return {} -- TODO
+end
 -- abstract (non-abstract in Lua) class Map http://api.haxe.org/Map.html
 
 -- TODO

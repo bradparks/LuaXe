@@ -35,21 +35,13 @@ using StringTools;
 class LuaGenerator
 {
     static var imports = [];
-
     var api : JSGenApi;
     var buf : StringBuf;
-    var topLevelBuf : StringBuf;
-    var storeBuf : StringBuf;
-    var packages : haxe.ds.StringMap<Bool>;
-    var forbidden : haxe.ds.StringMap<Bool>;
 
     public function new(api)
     {
         this.api = api;
         buf = new StringBuf();
-        topLevelBuf = new StringBuf();
-        packages = new haxe.ds.StringMap();
-        forbidden = new haxe.ds.StringMap();
         api.setTypeAccessor(getType);
     }
 
@@ -78,7 +70,6 @@ class LuaGenerator
     {
         var expr:haxe.macro.TypedExpr = e;
         var exprString = new LuaPrinter().printExpr(expr);
-
         print(exprString.replace("super(", "super.init("));
     }
 
@@ -119,8 +110,6 @@ class LuaGenerator
 	//	if(t.module != t.name)   //TODO(av) see what this does with sub classes in packages
 		{
 		    var modulePath = t.module + "." + t.name;
-//           trace(fullPath + " " + t);
-//           trace(LuaPrinter.pathHack.exists(modulePath));
 		    if(!LuaPrinter.pathHack.exists(modulePath))
 		        LuaPrinter.pathHack.set(modulePath, t.name);
 		}
@@ -130,8 +119,8 @@ class LuaGenerator
 
     function checkFieldName(c : ClassType, f : ClassField)
     {
-        if(forbidden.exists(f.name))
-            Context.error("The field " + f.name + " is not allowed in Lua", c.pos);
+        if(luaxe.LuaPrinter.keywords.indexOf(f.name) > -1)
+            Context.error("The *class* field named " + f.name + " is not allowed in Lua", c.pos);
     }
 
     function genClassField(c : ClassType, p : String, f : ClassField)
@@ -213,7 +202,6 @@ class LuaGenerator
     {
         for(meta in c.meta.get())
         {
-            if(meta.name == ":library" || meta.name == ":feature")
             if(meta.name == ":require")
             {
                 for(param in meta.params)
@@ -293,7 +281,7 @@ class LuaGenerator
             }
 
             if(c.isInterface)
-                print(' abstract class $p');
+                print('-- abstract class $p');
             else
                 {
                     print('\n$p = {};');
@@ -303,7 +291,6 @@ class LuaGenerator
                     print('\n__inherit($p, Object);');
 
                     print('\n$p.__index = $p;');
-                    //print('\n$p.__index = ${psup != null?psup : p};');
                 }
 
             if(c.interfaces.length > 0)
@@ -449,7 +436,6 @@ class LuaGenerator
         var importsBuf = new StringBuf();//currently only works within a single output file. Needs to be handled module by module
 
         for(mpt in imports)
-            importsBuf.add("import '" + mpt + "';\n");
             importsBuf.add("require \"" + mpt + "\"\n");
 
         //genExpr(api.main);
@@ -469,7 +455,7 @@ class LuaGenerator
         boot += "\n" + sys.io.File.getContent('$path/boot/ereg.lua'); // TODO remove from *release*
 
 
-        var combined = importsBuf.toString() + topLevelBuf.toString() +  buf.toString();
+        var combined = buf.toString();
 
         var r;
         r = ~/(Array<[A-z]{0,}>).new()/g;
@@ -508,6 +494,7 @@ class LuaGenerator
         combined = r.replace(combined,"\ttable.insert($1, $2)\n");
 
         sys.io.File.saveContent(api.outputFile,
+            importsBuf.toString() +
             sys.io.File.getContent('$path/boot/preboot.lua') +
         	"\nfunction exec()\n" +
         	combined + 
@@ -522,7 +509,7 @@ class LuaGenerator
     function openBlock()
     {
         newline();
-        print("do --{");
+        print("--{");
         indentCount ++;
         newline();
     }
@@ -531,7 +518,7 @@ class LuaGenerator
     {
         indentCount --;
         newline();
-        print("end --}");
+        print("--}");
         newline();
         newline();
     }

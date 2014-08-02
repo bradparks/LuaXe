@@ -89,3 +89,8 @@ function HaxeArray.__tostring(o)
 end
 
 HaxeArrayMeta.__tostring = HaxeArray.__tostring;
+
+Array_Array = {}
+function Array_Array.new(arg)
+	return {} -- TODO
+end

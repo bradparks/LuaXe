@@ -54,13 +54,16 @@ class LuaPrinter {
     public static var currentPath = "";
     public static var lastConstIsString = false;
 
-    static var keywords = [];
-    var kw = [ "abstract", "as", "assert", "break", "case", "catch", "class", "const",
-                            "continue", "default", "do", "dynamic", "else", "export", "external", "extends",
-                            "factory", "false", "final", "finally", "for", "get", "if", "implements",
-                            "import" , "in", "is", "library", "new", "null", "operator", "part",
-                            "return", "set", "static", "super", "switch", "this", "throw", "true",
-                            "try", "typedef", "var", "void", "while", "with" ];
+    // laguage keywords:
+    static public var keywords = [
+    "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in",
+    "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"
+    ];
+
+    // top-level reserved:
+    static public var reserved = [
+    "setmetatable"
+    ].concat(keywords);
 
     static var standardTypes:Map<String, String> = [
         "Array" => "List",
@@ -591,18 +594,18 @@ class LuaPrinter {
         if(_c != null && _d != null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}else\n${tabs}\t$_d\n${tabs}end';
 
         return "SOMETHIG GOES WRONG";
-    }  
+    }
     
     var _continueLabel = false; // <-- not perfect, TODO improve
 	public function printExpr(e:TypedExpr){        
 
         return e == null ? null : switch(e.expr) {
 		
-        case TConst(c): printConstant(c); // ok
+        case TConst(c): printConstant(c);
 
-        case TLocal(t): (""+handleKeywords(t.name)).replace("`trace", "trace"); // ok
+        case TLocal(t): (""+handleKeywords(t.name)).replace("`trace", "trace");
 
-		case TArray(e1, e2): '${printExpr(e1)}[${printExpr(e2)}]'; // ok
+		case TArray(e1, e2): '${printExpr(e1)}[${printExpr(e2)}]';
 
 		case TField(e1, fa): printField(e1, fa);
 
@@ -612,21 +615,18 @@ class LuaPrinter {
 			"setmetatable({ "
              + fl.map(
                 function(fld) {
-                    //insideEObjectDecl = true;
-                    //$type(fld);
-                    //trace(fld.expr.expr);
                     var add = "+";
                     var add = switch (fld.expr.expr) {
-                        case TFunction(//no,
+                        case TFunction(
                          func): add = "function ";
                         default: "";   
                     }
-                    return //'{fld.field}'
+                    return
                     fld.name +
                     ' = $add${printExpr(fld.expr)}'; // TODO
                 }
              ).join(", ")
-             + " },Object)";/**/
+             + " },Object)";
 
 		case TArrayDecl(el): {
             var temp = printExprs(el, ", ");
@@ -688,31 +688,28 @@ class LuaPrinter {
         // TODO while-iterator
         'for ___, ${v.name} in (' + printExpr(e1) + ') do \n$tabs\t' + printExpr(e2) + '\n${tabs}end';
 
-		//case TVars(vl): "local " +vl.map(printVar).join(", ");
-
         case TVar(v,e): "local " + printVar(v, e);
 		
-        case TBlock([]): '\n$tabs end';//'B{\n$tabs}B';
+        case TBlock([]): '\n$tabs end';
 		case TBlock(el) if (el.length == 1): printShortFunction(printExprs(el, ';\n$tabs'));
 		case TBlock(el):
             var old = tabs;
 			tabs += tabString;
-			var s = /*'{'*/ '\n$tabs' + printExprs(el, ';\n$tabs');//';\n$tabs');
+			var s = '\n$tabs' + printExprs(el, ';\n$tabs');
 			tabs = old;
-			s + '\n${tabs}'/*'}'*/;
-            //insideConstructor = null;
+			s + '\n${tabs}';
 
 		//case TFor(e1, e2): 'for ${printExpr(e1)} do\n${tabs} ${printExpr(e2)}\n${tabs}end';//'for(${printExpr(e1)}) ${printExpr(e2)}';
 		//case TIn(e1, e2): 'k,${printExpr(e1)} in ${printExpr(e2)}';//'${printExpr(e1)} in ${printExpr(e2)}';
 		
-        case TIf(econd, eif, eelse): printIfElse(econd, eif, eelse); // 'if(${printExpr(econd)}) ${printExpr(eif)}  ${opt(eelse,printExpr,"else ")}';
+        case TIf(econd, eif, eelse): printIfElse(econd, eif, eelse);
 		
         case TWhile(econd, e1, true): 
             var _cond = 'while(${printExpr(econd)})do';
             _continueLabel = true; // <-- buggy for now
             var _state = '${printExpr(e1)}end';
              _cond + (_continueLabel?" ::continue:: ":"") + _state;
-        //
+
         case TWhile(econd, e1, false): 
             var _state = 'do ${printExpr(e1)}';
             _continueLabel = true; // <-- buggy for now
@@ -720,10 +717,6 @@ class LuaPrinter {
              _state + (_continueLabel?" ::continue:: ":"") + _cond;
 		
         case TSwitch(e, cases, edef):  printSwitch(e, cases, edef);
-		/*case TTry(e1, cl):
-			'try ${printExpr(e1)}'
-			+ cl.map(function(c) return ' catch(${c.name} ) ${printExpr(c.expr)}').join("");   //: ${printComplexType(c.type)}/**/
-//		case EReturn(eo): "return " + printExpr(eo);
 
 		case TReturn(eo): "return" + opt(eo, printExpr, " ");
 
@@ -734,7 +727,7 @@ class LuaPrinter {
 		
 		case TThrow(e1): "error(" + printExpr(e1) + ")";
 		
-        case TCast(e1, _): printExpr(e1); // ok
+        case TCast(e1, _): printExpr(e1);
 		
 		case TMeta(meta, e1): printMetadata(meta) + " " +printExpr(e1);
 
