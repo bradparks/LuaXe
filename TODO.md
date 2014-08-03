@@ -13,9 +13,9 @@ TODO
 - [ ] Map
 - [ ] Enumerations
 - [ ] beware of slow strings and #lengths
-- [ ] packages
+- [x] packages
 - [ ] print modules for classnames
-- [ ] private classes
+- [x] private classes
 - [ ] Reflect
 - [ ] exclude comments from boot code
 - [ ] minify boot code
@@ -26,7 +26,7 @@ TODO
 - [ ] functions default values init
 - [ ] special Dynamic boxed class (for Arrays etc)
 - [ ] handle keywords
-- [ ] try catch
+- [x] try catch
 - [ ] verbose compiler mode luaxe-verbose
 - [ ] minify output luaxe-minify
 - [ ] file-per-package output mode
@@ -39,7 +39,7 @@ TODO
 - [ ] define globals as locals at top for speed
 - [ ] unhardcode path to boot classes
 - [ ] @expose (maybe "local" would used for class definitions by default)
-- [ ] @require
+- [x] @require
 - [ ] multiline strings
 - [x] basic code generation
 - [x] basic classes
