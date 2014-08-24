@@ -106,7 +106,7 @@ TestClasses_BaseClass.__index = TestClasses_BaseClass;
 	
 --}
 
--- class TestClasses_InterfaceDemo abstract class TestClasses_InterfaceDemo
+-- class TestClasses_InterfaceDemo-- abstract class TestClasses_InterfaceDemo
 --{
 	
 --}

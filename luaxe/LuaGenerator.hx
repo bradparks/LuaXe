@@ -441,18 +441,22 @@ class LuaGenerator
         //genExpr(api.main);
 
         var boot;
-        var path = "src/luaxe";
-        boot = "" + sys.io.File.getContent('$path/boot/boot.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/tostring.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/std.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/math.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/string.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/date.lua');
-        boot += "\n" + sys.io.File.getContent('$path/boot/extern.lua'); // TODO remove from *release*
-        boot += "\n" + sys.io.File.getContent('$path/boot/ereg.lua'); // TODO remove from *release*
+
+		var pos = Context.getPosInfos((macro null).pos);
+		var dir = haxe.io.Path.directory(pos.file);
+		var path = haxe.io.Path.addTrailingSlash(dir);
+
+		boot = "" + sys.io.File.getContent('$path/boot/boot.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/tostring.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/std.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/math.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/string.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/date.lua');
+		boot += "\n" + sys.io.File.getContent('$path/boot/extern.lua'); // TODO remove from *release*
+		boot += "\n" + sys.io.File.getContent('$path/boot/ereg.lua'); // TODO remove from *release*
 
 
         var combined = buf.toString();

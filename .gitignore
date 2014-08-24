@@ -45,3 +45,5 @@ Thumbs.db
 bin/hx/obj/darwin/all_objs
 
 bin/hx/Main
+
+haxelibtest

@@ -1,4 +1,3 @@
--cp src
 -cp demo
 -main Main
 -D lua
@@ -9,7 +8,6 @@
 
 --next
 
--cp src
 -cp demo
 -main Main
 -D !lua
@@ -19,7 +17,6 @@
 
 #--next
 #
-#-cp src
 #-cp demo
 #-main Main
 #-D !lua
@@ -29,7 +26,6 @@
 
 --next
 
-#-cp src
 #-cp demo
 #-main Main
 #-D !lua
