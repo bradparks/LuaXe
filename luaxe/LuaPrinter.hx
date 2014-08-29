@@ -22,6 +22,7 @@
 
 package luaxe;
 
+#if (macro && lua)
 import haxe.ds.StringMap;
 
 import haxe.macro.Expr.Unop;
@@ -884,3 +885,4 @@ class LuaPrinter {
 
 	function opt<T>(v:T, f:T->String, prefix = "") return v == null ? "" : (prefix + f(v));
 }
+#end

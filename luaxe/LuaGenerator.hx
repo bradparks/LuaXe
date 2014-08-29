@@ -23,6 +23,7 @@
  */
 package luaxe;
 
+#if (macro && lua)
 import haxe.macro.Type;
 import haxe.macro.JSGenApi;
 import haxe.macro.Context;
@@ -533,3 +534,4 @@ class LuaGenerator
 	}
 	#end
 }
+#end
