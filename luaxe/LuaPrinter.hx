@@ -518,7 +518,7 @@ class LuaPrinter {
             }
         }
 
-        traceString = traceStringParts.join(" .. "); //(" + ");
+        traceString = traceStringParts.join(" + ");
 
         return 'print($traceString)';
     }
@@ -654,19 +654,6 @@ class LuaPrinter {
         case TBinop(OpAdd, e1, e2): // TODO extend not only for constants
         {
             var toStringCall = '${printBinop(OpAdd)}';
-
-            toStringCall = switch(e1.expr)
-            {
-                case TConst(TString(_)):toStringCall == "+" ? '..': toStringCall;
-                default:toStringCall;
-            }
-
-            toStringCall = switch(e2.expr)
-            {
-                case TConst(TString(_)):toStringCall == "+" ? '..': toStringCall;
-                default:toStringCall;
-            }
-
             '${printExpr(e1)} $toStringCall ${printExpr(e2)}';
         };
 
