@@ -59,7 +59,7 @@ HaxeArrayMeta = {
 --end
 
 function __Array(r) 
-	return setmetatable(r, HaxeArrayMeta)--HaxeArray)
+	return setmetatable(r, HaxeArrayMeta)
 end
 
 function Array()
@@ -72,6 +72,63 @@ function HaxeArray.push(ths, elem)
 	local length = #ths
 	table.insert(ths, length+1, elem)
 	return length
+end
+
+function HaxeArray.copy(ths)
+	local result = {}
+	for k,v in pairs(ths) do -- ipairs is bad idea
+		result[k] = v
+	end
+	return __Array(result)
+end
+
+function HaxeArray.slice(ths, a, b)
+	local result = {}
+	for i = a,b-1 do
+		result[i] = ths[i]
+	end
+	return __Array(result)
+end
+
+function HaxeArray.splice(ths, a, b)
+	local result = {}
+	for i = a,b do
+		result[i] = ths[i]
+	end
+	for i = a,b-a do
+		ths[i] = ths[i+a+1]
+	end
+	for i = b,table.getn(ths) do
+		ths[i] = nil
+	end
+	return __Array(result)
+end
+
+function HaxeArray.sort(ths, fun) -- TODO optimize
+	local isSorted = false
+	while isSorted == false do
+		movedElements = 0
+		for x = 0, table.getn(ths) - 1, 1 do
+			if fun(ths[x], ths[x + 1]) > 0 then
+				movedElements = movedElements + 1
+				testedElement = ths[x]
+				ths[x] = ths[x + 1]
+				ths[x + 1] = testedElement
+			end
+		end
+		if movedElements == 0 then
+			isSorted = true
+		end
+	end
+	return ths
+end
+
+function HaxeArray.map(ths, fun)
+	local result = {}
+	for k,v in pairs(ths) do -- ipairs is bad idea
+		result[k] = fun(v)
+	end
+	return __Array(result)
 end
 
 function HaxeArray.__tostring(o)
@@ -88,9 +145,13 @@ function HaxeArray.__tostring(o)
     return s + " ]"
 end
 
+function HaxeArray.toString(o)
+	return HaxeArray.__tostring(o)
+end
+
 HaxeArrayMeta.__tostring = HaxeArray.__tostring;
 
 Array_Array = {}
 function Array_Array.new(arg)
-	return {} -- TODO
+	return setmetatable(arg or {}, HaxeArrayMeta)
 end
