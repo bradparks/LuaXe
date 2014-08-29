@@ -48,5 +48,9 @@ bin/hx/Main
 
 haxelibtest
 bin/hx.lua
+bin
+bin/hx.js
 
 bin/hx.js
+
+bin/hx.lua
