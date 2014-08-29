@@ -104,6 +104,21 @@ function HaxeArray.splice(ths, a, b)
 	return __Array(result)
 end
 
+function HaxeArray.concat(ths,a)
+	local result = {}
+	for k,v in pairs(ths) do -- ipairs is bad idea
+		result[k] = v
+	end
+    for i=0,#a do
+        result[#result+1] = a[i]
+    end
+    return __Array(result)
+end
+
+function HaxeArray.join(ths,a)
+	return table.concat(ths,a,0)
+end
+
 function HaxeArray.sort(ths, fun) -- TODO optimize
 	local isSorted = false
 	while isSorted == false do
@@ -129,6 +144,14 @@ function HaxeArray.map(ths, fun)
 		result[k] = fun(v)
 	end
 	return __Array(result)
+end
+
+function HaxeArray.pop(ths)
+	local length = #ths
+	if(length == 0) then return nil end
+	local last = ths[length]
+	ths[length] = nil
+	return last
 end
 
 function HaxeArray.__tostring(o)

@@ -72,7 +72,7 @@ class TestSyntax
         var a3 = a2.map(function (x) return 100+x);
         trace(a3);
         trace(a2.map(function (x) return 100+x));
-        var a = [2,1,3,0,9,8,7,3,4,6,7,8,9,4,2,7,9,5];
+        var a = [2,1,3,0,9,8,7,3,4,6,10,7,8,9,4,2,7,9,5];
         a.sort(function (x,y) return x < y ? -1 : x > y ? 1 : 0);
         trace("sorted a : " + a);
         var x = [1,2,3,4];
@@ -80,6 +80,12 @@ class TestSyntax
         trace(x);
         trace(x.splice(1, 2));
         trace(x);
+        trace(x.concat(a));
+        trace(a.join("Yo!"));
+        trace(a.length);
+        trace(a.pop());
+        trace(a.length);
+        trace(a.join(""));
         // https://github.com/frabbit/hx2python/blob/development/demo/SimpleDemo.hx
         var z = 5 + 5;	
 		var x = 0;
