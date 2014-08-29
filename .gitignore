@@ -47,3 +47,6 @@ bin/hx/obj/darwin/all_objs
 bin/hx/Main
 
 haxelibtest
+bin/hx.lua
+
+bin/hx.js
