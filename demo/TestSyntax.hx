@@ -61,7 +61,6 @@ class TestSyntax
 		trace( r.match(str) == true); // true
 		trace( r.matched(1) == "48");    // 48
 		trace( r.split(str) ); // ["hello "," cool ","!"]
- 		trace("TestSyntax end");
  		// https://github.com/frabbit/hx2python/blob/development/demo/ArrayDemo.hx
  		new Array();
  		var a1 = [1, 2, 3];
@@ -97,6 +96,34 @@ class TestSyntax
         trace(x);
         trace(z);
 
+        trace("Std test (false == fail)");
+        var dyn:Dynamic = null;
+        dyn = true;
+        trace(Std.string(dyn) == "true");
+        dyn = false;
+        trace(Std.string(dyn) == "false");
+        dyn = "hello";
+        trace(Std.string(dyn) == "hello");
+        dyn = -100;
+        trace(Std.string(dyn) == "-100");
+        dyn = -10.07;
+        trace(Std.string(dyn) == "-10.07");
+        dyn = null;
+        trace(Std.string(dyn) == "null");
 
+        dyn = "-101";
+        trace(Std.parseInt(dyn) == -101);
+        dyn = " 0";
+        trace(Std.parseInt(dyn) == 0);
+
+		dyn = "-10.07";
+        trace(Std.parseFloat(dyn) == -10.07);
+
+        dyn = 10.07;
+        trace(Std.int(dyn) == 10);
+        dyn = -10.07;
+        trace(Std.int(dyn) == -10);
+
+        trace("TestSyntax end");
 	}
 }

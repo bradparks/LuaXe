@@ -2,7 +2,8 @@
 Std = {};
 Std_Std = Std;
 function Std.int( x, y ) -- Fix for tail-call generator bug, TODO fix
-	return y and math.floor(y) or math.floor(x)
+	local z = y or x
+	return z > 0 and math.floor(z) or math.ceil(z)
 end
 -- TODO maybe Std.func = func is faster to call
 --static function string(s:Dynamic):String
@@ -13,7 +14,7 @@ end
 --If s is a structure, the field names along with their values are returned. The field order and the operator separating field names and values are unspecified.
 --If s is null, "null" is returned.
 function Std.string( s )
-	return tostring(s) -- TODO
+	return s==nil and "null" or tostring(s)
 end
 --function instance<T, S>(value:T, c:Class<S>):S
 --Checks if object value is an instance of class c.
@@ -31,7 +32,7 @@ end
 --The parsing rules for parseInt apply here as well, with the exception of invalid input resulting in a NaN value instead of null.
 --Additionally, decimal notation may contain a single . to denote the start of the fractions.
 function Std.is( v, t )
-	return nil -- TODO
+	return false -- TODO
 end
 --static function parseInt(x:String):Null<Int>
 --Converts a String to an Int.
@@ -42,12 +43,15 @@ end
 --Leading 0s that are not part of the 0x/0X hexadecimal notation are ignored, which means octal notation is not supported.
 --If the input cannot be recognized, the result is null.
 function Std.parseInt( x )
-	return nil -- TODO
+	return tonumber(x) -- TODO implement full specification
+end
+function Std.parseFloat( x )
+	return tonumber(x) -- TODO implement full specification
 end
 --static function random(x:Int):Int
 --Return a random integer between 0 included and x excluded.
 --If x <= 1, the result is always 0.
 function Std.random( x )
 	if x <= 1 then return 0 end
-	return 0 -- TODO
+	return math.random(0,x-1)
 end
