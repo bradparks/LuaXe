@@ -1,6 +1,7 @@
 -cp demo
 -main Main
 -D lua
+#-D test_lua_magic
 -js bin/hx.lua
 --macro luaxe.LuaGenerator.use()
 -dce full
@@ -35,7 +36,8 @@
 #
 #-cmd bin/hx/Main
 #-cmd neko bin/hx.n
--cmd /usr/bin/env node bin/hx.js
--cmd /usr/local/bin/luajit bin/hx.lua
+-cmd /usr/bin/env node bin/hx.js > log_js.txt
+-cmd /usr/local/bin/luajit bin/hx.lua > log_luajit.txt
+-cmd diff log_js.txt log_luajit.txt > diff.txt &2>/dev/null
 #-cmd /usr/local/bin/luajit -joff bin/hx.lua
 #-cmd /usr/local/bin/lua bin/hx.lua

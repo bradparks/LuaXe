@@ -60,11 +60,11 @@ class Main
         TestString.test();
         TestIfs.test();
         TestFuncs.test();
-       	#if lua TestMagic.test(); #end
+       	#if test_lua_magic TestMagic.test(); #end
         TestFuncs.test();
         TestClasses.test();
         TestExceptions.test();
-        #if lua TestExtern.test(); #end
+        #if test_lua_magic TestExtern.test(); #end
         TestSyntax.test(); 
         /*
 
@@ -124,16 +124,16 @@ class Main
         
         /* */
         #if neko
-         trace("[neko] >");
+         var platform = ("[neko] > ");
         #elseif lua
-         trace("[lua] >");
+         var platform = ("[lua] > ");
         #elseif js
-         trace("[js] >"); 
+         var platform = ("[js] > "); 
         #else 
-         trace("[cpp] >");
+         var platform = ("[cpp] > ");
         #end
 
-        trace("FeatureTest: " + Std.int((Date.now().getTime()-d)) + "ms");
+        trace(platform + "FeatureTest: " + Std.int((Date.now().getTime()-d)) + "ms");
         
         // Lua is SLOW on strings, so test them separately
         d = Date.now().getTime();
@@ -143,13 +143,13 @@ class Main
             TestString.test(true);
         }
 
-        trace("StringPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
+        trace(platform + "StringPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
 
         d = Date.now().getTime();
 
         //benchmark.LoopTesterApp.main();
 
-        trace("ComplexPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
+        trace(platform + "ComplexPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
 
         // combined perf test without strings
         d = Date.now().getTime();
@@ -161,6 +161,6 @@ class Main
             TestLoops.test(true);
         }
 
-        trace("LangPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
+        trace(platform + "LangPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
     }
 }
