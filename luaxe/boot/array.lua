@@ -154,6 +154,16 @@ function HaxeArray.pop(ths)
 	return last
 end
 
+function HaxeArray.reverse(ths)
+	local length = #ths
+	if(length < 2) then return end
+	for i = 0,length/2,1 do
+		local temp = ths[i]
+		ths[i] = ths[length-i]
+		ths[length-i] = temp
+	end
+end
+
 function HaxeArray.__tostring(o)
     --return table_print(v) --JSON:encode(v)
     local s = "[ "
