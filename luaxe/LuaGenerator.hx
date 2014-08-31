@@ -240,40 +240,36 @@ class LuaGenerator
 
             var ignorance = [
             // top classes:
+            // TODO: move up and uncomment when implemented
             "String", "String_String",
-            "Std", "Std_Std", 
-            "Class", "Class_Class",
-            "Date", "Date_Date",
-            "DateTools", "DateTools_DateTools",
-            "EReg", "EReg_EReg",
-            "Enum", "Enum_Enum",
-            "EnumValue", "EnumValue_EnumValue",
-            "IntIterator", "IntIterator_IntIterator",
-            "Lambda", "Lambda_Lambda",
-            "List", "List_List",
-            "Map", "Map_Map",
-            "Math", "Math_Math",
-            "Reflect", "Reflect_Reflect",
-            "StdTypes", "StdTypes_StdTypes",
-            "StringBuf", "StringBuf_StringBuf",
-            "StringTools", "StringTools_StringTools",
-            "Sys", "Sys_Sys",
-            "Type", "Type_Type",
-            "UInt", "UInt_UInt",
-            "Xml", "Xml_Xml",
-
-            "HxOverrides_HxOverrides",
-
-            "haxe_ds_IntMap", 
-            "haxe_ds_IntMap_IntMap",
-            "IMap", 
-            "js_Boot_Boot",
-            "Map_IMap",
-            
             "Array", "Array_Array",
-            "HxOverrides",
-            "js_Boot",
-            "haxe_Log"];
+            "HxOverrides", "HxOverrides_HxOverrides",
+            "Std", "Std_Std",
+            "js_Boot", "js_Boot_Boot",   
+            "haxe_Log", "haxe_Log_Log",
+            "StringTools", "StringTools_StringTools",
+//
+            //"Class", "Class_Class",
+            //"Date", "Date_Date",
+            //"DateTools", "DateTools_DateTools",
+            "EReg", "EReg_EReg",
+            //"Enum", "Enum_Enum",
+            //"EnumValue", "EnumValue_EnumValue",
+            //"IntIterator", "IntIterator_IntIterator",
+            //"Lambda", "Lambda_Lambda",
+            //"List", "List_List",
+            //"Map", "Map_Map",
+            //"Math", "Math_Math",
+            //"Reflect", "Reflect_Reflect",
+            //"StdTypes", "StdTypes_StdTypes",
+            //"StringBuf", "StringBuf_StringBuf",
+            //"Type", "Type_Type",
+            //"UInt", "UInt_UInt",
+            //"Xml", "Xml_Xml",
+            //"haxe_ds_IntMap", 
+            //"haxe_ds_IntMap_IntMap",
+            //"IMap", "Map_IMap", 
+            ];
 
             if(ignorance.has(p))
             {
@@ -452,6 +448,7 @@ class LuaGenerator
 		boot += "\n" + sys.io.File.getContent('$path/boot/std.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/math.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/string.lua');
+        boot += "\n" + sys.io.File.getContent('$path/boot/stringtools.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');

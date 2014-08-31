@@ -130,6 +130,32 @@ class TestSyntax
         dyn = -10.07;
         trace(Std.int(dyn) == -10);
 
+        trace("StringTools:");
+        dyn = "  TestSyntax- -StringTools  ";
+        trace(StringTools.startsWith(dyn, "  T"));
+        trace(StringTools.startsWith(dyn, " T"));
+        trace(StringTools.endsWith(dyn, "s  "));
+        trace(StringTools.endsWith(dyn, "s "));
+        trace(StringTools.fastCodeAt(dyn,5));
+        trace(StringTools.htmlEscape(dyn, true));
+        trace(StringTools.htmlEscape(dyn, false));
+        trace(StringTools.htmlUnescape(dyn));
+        trace(StringTools.isEof(dyn));
+        trace(StringTools.isSpace(dyn, 1));
+        trace(StringTools.isSpace(dyn, 4));
+        trace(StringTools.lpad(dyn, "s ", 5));
+        trace(StringTools.ltrim(dyn));
+        trace(StringTools.replace(dyn, "s ", "x!&"));
+        trace(StringTools.rpad(dyn, "s  ", 3));
+        trace(StringTools.rtrim(dyn));
+        trace(StringTools.trim(dyn));
+        trace(StringTools.urlDecode(dyn + "%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82"));
+        var r:String = StringTools.urlEncode(dyn + "привет");
+		trace(r.toUpperCase());
+		dyn = 367;
+		trace(StringTools.hex(dyn));
+
+
         trace("TestSyntax end");
 	}
 }

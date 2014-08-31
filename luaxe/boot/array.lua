@@ -116,7 +116,11 @@ function HaxeArray.concat(ths,a)
 end
 
 function HaxeArray.join(ths,a)
-	return table.concat(ths,a,0)
+	local t = {}
+	for i=0, #ths do
+		t[i] = tostring(ths[i] or "")
+	end
+	return table.concat(t,a,0)
 end
 
 function HaxeArray.sort(ths, fun) -- TODO optimize

@@ -64,7 +64,7 @@ function String:lastIndexOf(str, startIndex) -- String -> ?Int -> Int
 end
 
 -- http://lua-users.org/wiki/SplitJoin
-function String:split(delimiter) -- String -> Array<String>
+function String:split(d) -- String -> Array<String>
 --Splits this String at each occurence of delimiter.
 --If this String is the empty String "", the result is not consistent across targets and may either be [] (on Js, Cpp) or [""].
 --If delimiter is the empty String "", this String is split into an Array of this.length elements, where the elements correspond to the characters of this String.
@@ -72,7 +72,6 @@ function String:split(delimiter) -- String -> Array<String>
 --If delimiter is null, the result is unspecified.
 --Otherwise, this String is split into parts at each occurence of delimiter. If this String starts (or ends) with [delimiter}, the result Array contains a leading (or trailing) empty String "" element. Two subsequent delimiters also result in an empty String "" element.
 local t, ll
-local d = delimiter
 local p = self
   t={}
   ll=0
@@ -87,7 +86,7 @@ local p = self
         break -- Break at end, as it should be, according to the lua manual.
       end
     end
-  return t
+  return setmetatable(t, HaxeArrayMeta)
 end
 
 function String:substr(pos, len) -- Int -> ?Int -> String
@@ -99,6 +98,7 @@ end
 HxOverrides_HxOverrides = HxOverrides_HxOverrides or {}
 HxOverrides_HxOverrides.substr = String.substr
 HxOverrides_HxOverrides.cca = String.charCodeAt
+HxOverrides = HxOverrides_HxOverrides
 
 -- TEST
 --S = "Returns a String"

@@ -35,6 +35,11 @@ function __increment(t,k)
 end
 
 haxe_Log = {};
-function haxe_Log.trace(a)
+function haxe_Log.trace(a, i)
 	print(a)
+	if(i) then print(i) end
+end
+
+function haxe_Log.clear()
+	-- TODO
 end
