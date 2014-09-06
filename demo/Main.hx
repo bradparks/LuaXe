@@ -152,6 +152,13 @@ class Main
         trace(platform + "ComplexPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
 
         // combined perf test without strings
+        // heat JIT
+        for(i in 0...5) {
+            TestIfs.test(true);
+            TestFuncs.test(true);
+            TestLoops.test(true);
+        }
+
         d = Date.now().getTime();
       
         for(i in 0...100000)
