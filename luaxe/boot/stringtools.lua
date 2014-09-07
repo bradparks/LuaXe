@@ -18,7 +18,7 @@ function StringTools.hex(n, digits)
 	--	s = hexChars.charAt(n & 15) + s;
 	--	n >>>= 4;
 	--until n > 0
-	if(digits ~= null)
+	if(digits)-- ~= null)
 	then
 		while(s.length < digits)
 		do

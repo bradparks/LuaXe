@@ -154,7 +154,11 @@ class TestSyntax
 		trace(r.toUpperCase());
 		dyn = 367;
 		trace(StringTools.hex(dyn));
-
+        dyn = {a:7, b:"hello", c:0.07, d:[1,5,2], e:{f:null}, h:{i:null,k:9}};
+        trace(haxe.Json.stringify(dyn)); 
+        dyn = haxe.Json.stringify(dyn);
+        dyn = haxe.Json.parse(dyn);
+        trace(haxe.Json.stringify(dyn));
 
         trace("TestSyntax end");
 	}

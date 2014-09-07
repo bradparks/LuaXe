@@ -453,6 +453,7 @@ class LuaGenerator
 		boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/date.lua');
+        boot += "\n" + sys.io.File.getContent('$path/boot/json.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/extern.lua'); // TODO remove from *release*
 		boot += "\n" + sys.io.File.getContent('$path/boot/ereg.lua'); // TODO remove from *release*
 
