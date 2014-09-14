@@ -269,8 +269,8 @@ class LuaPrinter {
         tabs += "\t";
 		
 		switch (func.expr.expr) {
-            case TBlock(el) if (el.length == 0):	body += ' end';
-            case _: body += opt(func.expr, printExpr, '\n${tabs}') + '\n${t}${retsefl}\n${t}end';
+            case TBlock(el) if (el.length == 0):	body += ' end ';
+            case _: body += opt(func.expr, printExpr, '\n${tabs}') + '\n${t}${retsefl}\n${t}end ';
         }
 
         tabs = t;
@@ -589,10 +589,10 @@ class LuaPrinter {
             case _: _d = printExpr(eelse);
         }
 
-        if(_c == null && _d == null) return _a + _b + "then end";
-        if(_c == null && _d != null) return _a + "(not(" + _b + ')) then\n$tabs\t$_d\n${tabs}end';
+        if(_c == null && _d == null) return _a + _b + "then end ";
+        if(_c == null && _d != null) return _a + "(not(" + _b + ')) then\n$tabs\t$_d\n${tabs}end ';
         if(_c != null && _d == null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}end';
-        if(_c != null && _d != null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}else\n${tabs}\t$_d\n${tabs}end';
+        if(_c != null && _d != null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}else\n${tabs}\t$_d\n${tabs}end ';
 
         return "SOMETHIG GOES WRONG";
     }
@@ -674,11 +674,11 @@ class LuaPrinter {
         // TODO no (i)pairs on Maps... and Arrays
         // TODO smart ::continue::
         // TODO while-iterator
-        'for ___, ${v.name} in (' + printExpr(e1) + ') do \n$tabs\t' + printExpr(e2) + '\n${tabs}end';
+        'for ___, ${v.name} in (' + printExpr(e1) + ') do \n$tabs\t' + printExpr(e2) + '\n${tabs}end ';
 
         case TVar(v,e): "local " + printVar(v, e);
 		
-        case TBlock([]): '\n$tabs end';
+        case TBlock([]): '\n$tabs end ';
 		case TBlock(el) if (el.length == 1): printShortFunction(printExprs(el, ';\n$tabs'));
 		case TBlock(el):
             var old = tabs;
@@ -695,7 +695,7 @@ class LuaPrinter {
         case TWhile(econd, e1, true): 
             var _cond = 'while(${printExpr(econd)})do';
             _continueLabel = true; // <-- buggy for now
-            var _state = '${printExpr(e1)}end';
+            var _state = '${printExpr(e1)}end ';
              _cond + (_continueLabel?" ::continue:: ":"") + _state;
 
         case TWhile(econd, e1, false): 
@@ -744,7 +744,7 @@ class LuaPrinter {
 
         s += '\n${tabs}if try == false then ';
         s += '\n${tabs}local ${_dynCatch.v.name} = catch;';
-        s += '\n${tabs}${printExpr(_dynCatch.expr)}end';
+        s += '\n${tabs}${printExpr(_dynCatch.expr)}end ';
 
         return s;
     }
@@ -773,7 +773,7 @@ class LuaPrinter {
 
         if(edef != null) s += '\n${tabs}else ' + _opt(edef, printExpr); 
 
-        s += '\n${tabs}end';
+        s += '\n${tabs}end ';
 
         return s;
     }
