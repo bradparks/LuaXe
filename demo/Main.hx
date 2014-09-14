@@ -37,7 +37,7 @@ class Car extends Vehicle {
     }
 
     override function description() {
-        return //super.description() + 
+        return super.description() + 
         '; traveling at $speed mph';
     }
 
@@ -66,7 +66,7 @@ class Main
         TestExceptions.test();
         #if test_lua_magic TestExtern.test(); #end
         TestSyntax.test(); 
-        /*
+        
 
         Car.stat("huh?");
         var someVehicle = new Vehicle();
@@ -99,7 +99,7 @@ class Main
         var count:Float = 0;
         var x = 0;
 
-        for(i in 0...100000)
+        for(i in 0...10)
         {
             arr.push(i);
             arr2.push("i");
