@@ -44,3 +44,12 @@ end
 function haxe_Log.clear()
 	-- TODO
 end
+
+-- Closure
+function ___bind(o,m)
+	if(not m)then return nil end;
+	return function(...)
+    	local result = m(o, ...);
+    	return result;
+ 	end
+end

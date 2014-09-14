@@ -334,6 +334,8 @@ class LuaPrinter {
     		case _: '${printExpr(e1)}';
     	}
 
+        var closure = false;
+
         var name = switch (fa) {
             case FInstance(_, cf): 
 			var n = cf.get().name;
@@ -355,11 +357,12 @@ class LuaPrinter {
             case FStatic(_,cf): "." + cf.get().name;
             case FAnon(cf): "." + cf.get().name;
             case FDynamic(s): "." + s;
-            case FClosure(_,cf): "." + cf.get().name;
+            case FClosure(_,cf): closure = true; "." + cf.get().name;
             case FEnum(_,ef): "." + ef.name;
             case _: "/printField/" + e1 + " " + fa;
         }
 
+        if(closure) return "___bind(" + obj + ", " + obj + name + ")";
         return obj + name;
 /*
         function doDefault() {
