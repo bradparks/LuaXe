@@ -148,6 +148,7 @@ class Main
         d = Date.now().getTime();
 
         //benchmark.LoopTesterApp.main();
+        demo.genctests.Main.main();
 
         trace(platform + "ComplexPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
 
