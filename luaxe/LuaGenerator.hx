@@ -283,9 +283,9 @@ class LuaGenerator
                 {
                     print('\n$p = {};');
                     if(psup != null)
-                    print('\n__inherit($p, ${psup});');
+                    print('\n___inherit($p, ${psup});'.replace(".", "_"));
                     else
-                    print('\n__inherit($p, Object);');
+                    print('\n___inherit($p, Object);'.replace(".", "_"));
 
                     print('\n$p.__index = $p;');
                 }

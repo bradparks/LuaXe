@@ -11,7 +11,7 @@ function set(k:K, v:V):Void
 function toString():String
 ]]
 HaxeMap = {}
-__inherit(HaxeMap, Object);
+___inherit(HaxeMap, Object);
 HaxeMap.__index = HaxeMap;
 function HaxeMap.Map()
 	local r = {}

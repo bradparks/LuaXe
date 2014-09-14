@@ -478,7 +478,7 @@ class LuaPrinter {
         // TODO fix super calls in non-constuctors, and pointing to another funcs
         // TODO inline inheritance
         if(result.startsWith("super("))
-            result = '\t\t__inherit(self, $superClass.new(${printExprs(el,", ")}))';
+            result = '\t\t___inherit(self, ${superClass.replace(".", "_")}.new(${printExprs(el,", ")}))';
 
         return result;
     }
