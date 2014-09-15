@@ -38,6 +38,7 @@ class LuaGenerator
     static var imports = [];
     var api : JSGenApi;
     var buf : StringBuf;
+    static var hxClasses:Array<String> = [];
 
     public function new(api)
     {
@@ -223,7 +224,10 @@ class LuaGenerator
         }
 
         api.setCurrentClass(c);
-        var p = getPath(c).replace(".","_");
+        var p = getPath(c);
+        var __name__ = p;
+        p = p.replace(".","_");
+        hxClasses.push(p);
 
         LuaPrinter.currentPath = p + ".";
 
@@ -253,7 +257,7 @@ class LuaGenerator
             //"Date", "Date_Date",
             //"DateTools", "DateTools_DateTools",
             "EReg", "EReg_EReg",
-            //"Enum", "Enum_Enum",
+            "Enum", "Enum_Enum",
             //"EnumValue", "EnumValue_EnumValue",
             //"IntIterator", "IntIterator_IntIterator",
             //"Lambda", "Lambda_Lambda",
@@ -263,7 +267,7 @@ class LuaGenerator
             //"Reflect", "Reflect_Reflect",
             //"StdTypes", "StdTypes_StdTypes",
             //"StringBuf", "StringBuf_StringBuf",
-            //"Type", "Type_Type",
+            "Type", "Type_Type",
             //"UInt", "UInt_UInt",
             //"Xml", "Xml_Xml",
             //"haxe_ds_IntMap", 
@@ -286,6 +290,8 @@ class LuaGenerator
                     print('\n___inherit($p, ${psup});'.replace(".", "_"));
                     else
                     print('\n___inherit($p, Object);'.replace(".", "_"));
+
+                    print('\n$p.__name__ = "$__name__";');
 
                     print('\n$p.__index = $p;');
                 }
@@ -341,23 +347,25 @@ class LuaGenerator
             firstEnum = false;
         }
 
-        var p = getPath(e);
+        var p = getPath(e).replace(".", "_");
 
-        print('class $p extends Enum {');
+        print('--class $p extends Enum {');
+        print('\n$p = {}');
         newline();
-        print('$p(t, i, [p]):super(t, i, p);');
+        print('--$p(t, i, [p]):super(t, i, p);');
         newline();
         for(c in e.constructs.keys())
         {
             var c = e.constructs.get(c);
             var f = field(c.name);
-            print('static final $f = ');
+            print('$p.$f = ');
             switch( c.type ) {
                 case TFun(args, _):
                     var sargs = args.map(function(a) return a.name).join(",");
-                    print('($sargs) => new $p("${c.name}", ${c.index}, [$sargs]);');
+                    print('function($sargs) return $p.new("${c.name}", ${c.index}, {[0]=$sargs}); end');
                 default:
-                    print('new $p(${api.quoteString(c.name)}, ${c.index});');
+                    //print('new $p(${api.quoteString(c.name)}, ${c.index});');
+                    print('{[0]=${api.quoteString(c.name)}, [1]=${c.index}};');
             }
             newline();
         }
@@ -369,7 +377,7 @@ class LuaGenerator
 //            newline();
 //        }
 
-        print("} --<-- huh?");
+        print("--} --<-- huh?");
         newline();
     }
 
@@ -398,13 +406,17 @@ class LuaGenerator
 
     function generateBaseEnum()
     {
-        print("abstract class Enum {
+        /*print("abstract class Enum {
         	String tag;
         	int index;
         	List params;
         	Enum(this.tag, this.index, [this.params]);
         	toString()=>params == null ? tag : tag + '(' + params.join(',') + ')';
-        	}");	// String toString() { return haxe.Boot.enum_to_string(this); }
+        	}");	// String toString() { return haxe.Boot.enum_to_string(this); }*/
+        print("
+            Enum = {}
+            Enum_Enum = Enum
+        ");
         newline();
     }
 
@@ -443,10 +455,19 @@ class LuaGenerator
 		var dir = haxe.io.Path.directory(pos.file);
 		var path = haxe.io.Path.addTrailingSlash(dir);
 
-		boot = "" + sys.io.File.getContent('$path/boot/boot.lua');
+        boot = "";
+
+        boot += "___hxClasses = {";
+        for (i in hxClasses) {
+            boot += ''+ i +' = ' + i + ",";
+        }
+        boot += "}";
+
+		boot += "" + sys.io.File.getContent('$path/boot/boot.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/tostring.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/std.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/math.lua');
+        boot += "\n" + sys.io.File.getContent('$path/boot/type.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/string.lua');
         boot += "\n" + sys.io.File.getContent('$path/boot/stringtools.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');

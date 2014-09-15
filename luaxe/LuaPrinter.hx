@@ -137,7 +137,7 @@ class LuaPrinter {
 		case OpMod: "%";
 		case OpInterval: "...";
 		case OpArrow: "=>";
-		case OpAssignOp(op): printBinop(op) + "=";
+		case OpAssignOp(op): throw "Unreachable code";
 	}
 
 	public function printString(s:String) {
@@ -731,7 +731,7 @@ class LuaPrinter {
 
         case TTry(e1, catches): printTry(e1, catches);
 
-        case TEnumParameter( e1 /*: haxe.macro.TypedExpr */, ef /*: haxe.macro.EnumField*/ , index /*: Int */): "" + e;
+        case TEnumParameter( e1 /*: haxe.macro.TypedExpr */, ef /*: haxe.macro.EnumField*/ , index /*: Int */): "" + printExpr(e1) + '[$index]';
 	};
     }
 

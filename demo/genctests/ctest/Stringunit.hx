@@ -9,7 +9,7 @@ class Stringunit
 		var s = "foo";
 		s = s + "bar";
 		trace(s == "foobar");
-		// TODO s += "baz";
+		s += "baz";
 		trace(s == "foobarbaz");
 	}
 }

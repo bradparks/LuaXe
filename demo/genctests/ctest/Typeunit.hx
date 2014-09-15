@@ -4,7 +4,7 @@ class Typeunit
 {
 	public static function run() {
 		var cl = Type.resolveClass("Main");
-		cl != null;
+		trace(cl != null);
 		trace(Type.getClassName(cl) == "Main");
 		
 		trace(Type.resolveClass("Waneck12") == null);

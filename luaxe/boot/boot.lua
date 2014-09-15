@@ -8,6 +8,7 @@ function ___inherit(to, base)
     for k, v in pairs(base) do
         to[k] = v
     end
+    to.__super__ = base
 end
 
 function __new__(obj)
