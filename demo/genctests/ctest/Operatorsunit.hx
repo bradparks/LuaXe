@@ -40,9 +40,13 @@ class Operatorsunit
 		trace(arr[0] == 7);
 		
 		var a = [0];
-		// TODO a[0] += 1;
+
+		a[0] += 1;
+		a[0] *= 1;
+		a[0] -= 1;
+
 		trace(a[0] == 1);
-		// TODO a[0] += a[0] + 1;
+		a[0] += a[0] + 1;
 		trace(a[0] == 3);
 	}
 }

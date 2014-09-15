@@ -137,9 +137,7 @@ class LuaPrinter {
 		case OpMod: "%";
 		case OpInterval: "...";
 		case OpArrow: "=>";
-		case OpAssignOp(op):
-			printBinop(op)
-			+ "=";
+		case OpAssignOp(op): printBinop(op) + "=";
 	}
 
 	public function printString(s:String) {
@@ -659,6 +657,13 @@ class LuaPrinter {
         {
             var toStringCall = '${printBinop(OpAdd)}';
             '${printExpr(e1)} $toStringCall ${printExpr(e2)}';
+        };
+
+        case TBinop(OpAssignOp(op), e1, e2):
+        {
+            var toStringCall = '${printBinop(op)}';
+            var ex1 = printExpr(e1);
+            '${ex1} = ${ex1} $toStringCall ${printExpr(e2)}';
         };
 
         /*case TBinop(OpOr, e1, e2): 
