@@ -3,6 +3,8 @@ LuaXe
 
 Lua target for Haxe language
 
+[Hey you! Yes YOU! *click me*](https://github.com/PeyTy/LuaXe/issues/29)
+
 State: *pre-alpha*
 =====
 Primarily LuaJIT -> make super-optimized portable Haxe target!
