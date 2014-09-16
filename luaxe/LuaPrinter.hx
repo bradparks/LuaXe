@@ -747,12 +747,25 @@ class LuaPrinter {
         // TODO catch other types of exceptions
         // getting last (e:Dynamic) catch:
         var _dynCatch = catches.pop();
-
-        var s = 'local try, catch = pcall(function () ${printExpr(e1)} end);';
-
-        s += '\n${tabs}if try == false then ';
-        s += '\n${tabs}local ${_dynCatch.v.name} = catch;';
-        s += '\n${tabs}${printExpr(_dynCatch.expr)}end ';
+		
+		// try-block:
+        var s = 'local try, catch = pcall(function ()';
+			var t = tabs; tabs += "\t";
+			s += '\n${tabs}' + printExpr(e1);
+			tabs = t;
+		s += '\n${tabs}end);';
+		
+		// catch-block:
+		if (_dynCatch.expr != null) switch (_dynCatch.expr.expr) {
+		case TBlock([]):
+		default: // print block only if it's non-empty.
+			s += '\n${tabs}if try == false then';
+				t = tabs; tabs += "\t";
+				s += '\n${tabs}local ${_dynCatch.v.name} = catch;';
+				s += '\n${tabs}${printExpr(_dynCatch.expr)}';
+				tabs = t;
+			s += '\n${tabs}end';
+		}
 
         return s;
     }
