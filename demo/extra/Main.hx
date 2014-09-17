@@ -6,6 +6,9 @@
   var d = Date.now();
   trace(d);
   trace(d.getHours());
+  var d = Date.fromString("2014-10-09 10:09:08");
+  trace(d);
+  trace(d.toString());
  }
 }
 

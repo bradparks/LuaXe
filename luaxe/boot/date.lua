@@ -64,4 +64,23 @@ function Date:getFullYear()
 	return self.d.year
 end
 
--- to-do function Date.__tostring(o) end
+function Date.__tostring(o) 
+	return os.date("%Y-%m-%d %H:%M:%S", o:getTime());
+end
+
+function Date.toString(o)
+	return Date.__tostring(o)
+end
+
+function Date.fromString(dateString) -- FIXME
+	local pattern = "(%d+)%-(%d+)%-(%d+) (%d+):(%d+):(%d+)"
+    local xyear, xmonth, xday, xhour, xminute = string.match(dateString, pattern)
+    local convertedTimestamp = os.time({year = xyear, month = xmonth, 
+        day = xday, hour = xhour, min = xminute, sec = xseconds})
+    print(convertedTimestamp)
+    print(type(convertedTimestamp))
+    return Date.fromTime(convertedTimestamp)
+end
+
+HxOverrides_HxOverrides.dateStr = Date.__tostring;
+HxOverrides_HxOverrides.strDate = Date.fromString;
