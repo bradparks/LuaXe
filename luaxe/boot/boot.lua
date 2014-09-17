@@ -12,8 +12,8 @@ function ___inherit(to, base)
     to.__super__ = base
 end
 
-function __new__(obj)
-	return obj.new()
+function __new__(obj, ...)
+	return obj.new(...)
 end
 
 function ___concat(a, b)
