@@ -252,26 +252,28 @@ class LuaPrinter {
 	{
 		var head = printFunctionHead;
 		printFunctionHead = true;
+		// TODO avoid printing function head in other functions inside of constructor
+		
+		var body:String = (head?"function":"") + "(" + printArgs(func.args) + ")";
+		var returnSelf = true;
 
-		var body:String = (head?"function ":"") + "( " + printArgs(func.args) + " )";
-        var retsefl = '\n${tabs}return self';
-
+        var _tabs = tabs;
+        tabs += tabString;
+		
 		if(insideConstructor != null)
 		{
-			body +=
-            '\n\t\tlocal self = {}' +
-            '\n\t\tsetmetatable(self, $insideConstructor)';
-        } else retsefl = '';
-
-        var t = tabs;
-        tabs += "\t";
+			body += '\n${tabs}local self = setmetatable({ }, $insideConstructor)';
+        } else returnSelf = false;
 		
 		switch (func.expr.expr) {
-            case TBlock(el) if (el.length == 0):	body += ' end ';
-            case _: body += opt(func.expr, printExpr, '\n${tabs}') + '\n${t}${retsefl}\n${t}end ';
+            case TBlock(el) if (el.length == 0): body += ' end';
+			case _:
+				body += opt(func.expr, printExpr, '\n${tabs}');
+				if (returnSelf) body += '\n${tabs}return self';
+				body += '\n${_tabs}end';
         }
 
-        tabs = t;
+        tabs = _tabs;
 
         return body;
 	}
@@ -578,28 +580,45 @@ class LuaPrinter {
     function printIfElse(econd:TypedExpr, eif:TypedExpr, eelse:TypedExpr)
     {
         // eliminate: if(x){} and if(x){}else{} etc
-        var _a:String = "if";
-        var _b:String = printExpr(econd);
-        var _c:String;
-        var _d:String;
-
-        switch (eif.expr) {
-            case TBlock(el) if (el.length == 0):	_c = null;
-            case _: _c = printExpr(eif);
+		var _tabs = tabs; tabs += tabString;
+		var _cond:String, _then:String, _else:String, _type:Int;
+		switch (econd.expr) {
+		case TParenthesis(v): _cond = printExpr(v);
+		default: _cond = printExpr(econd);
+		}
+		var s:String;
+		// then-branch:
+		switch (eif.expr) {
+            case TBlock(el) if (el.length == 0): _then = null;
+            case _: _then = printExpr(eif);
         }
-
-        if(eelse != null)
-        switch (eelse.expr) {
-            case TBlock(el) if (el.length == 0):	_d = null;
-            case _: _d = printExpr(eelse);
-        }
-
-        if(_c == null && _d == null) return _a + _b + "then end ";
-        if(_c == null && _d != null) return _a + "(not(" + _b + ')) then\n$tabs\t$_d\n${tabs}end ';
-        if(_c != null && _d == null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}end';
-        if(_c != null && _d != null) return _a + _b + 'then\n$tabs\t$_c\n${tabs}else\n${tabs}\t$_d\n${tabs}end ';
-
-        return "SOMETHIG GOES WRONG";
+		// else-branch:
+		if (eelse != null) switch (eelse.expr) {
+			case TBlock(el) if (el.length == 0): _else = null;
+            case _: _else = printExpr(eelse);
+		} else _else = null;
+		// flags:
+		_type = (_then != null ? 1 : 0) | (_else != null ? 2 : 0);
+		switch (_type) {
+		case 1: // if-then (no else-branch)
+			s = 'if ($_cond) then'
+				+ '\n${tabs}$_then'
+			+ '\n${_tabs}end';
+		case 2: // if-else (no then-branch)
+			s = 'if not($_cond) then'
+				+ '\n${tabs}$_else'
+			+ '\n${_tabs}end';
+		case 3: // if-then-else
+			s = 'if ($_cond) then'
+				+ '\n${tabs}$_then'
+			+ '\n${_tabs}else'
+				+ '\n${tabs}$_else'
+			+ '\n${_tabs}end';
+		default: // blank (no branches)
+			s = 'if ($_cond) then end';
+		}
+		tabs = _tabs;
+		return s;
     }
     
     var _continueLabel = false; // <-- not perfect, TODO improve
@@ -686,18 +705,18 @@ class LuaPrinter {
         // TODO no (i)pairs on Maps... and Arrays
         // TODO smart ::continue::
         // TODO while-iterator
-        'for ___, ${v.name} in (' + printExpr(e1) + ') do \n$tabs\t' + printExpr(e2) + '\n${tabs}end ';
+		var _tabs = tabs; tabs += tabString;
+		var s = 'for ___, ${v.name} in (${printExpr(e1)}) do';
+		s += '\n${tabs}' + printExpr(e2);
+		s += '\n${_tabs}end';
+		tabs = _tabs;
+        s;
 
         case TVar(v,e): "local " + printVar(v, e);
 		
-        case TBlock([]): '\n$tabs end ';
-		case TBlock(el) if (el.length == 1): printShortFunction(printExprs(el, ';\n$tabs'));
-		case TBlock(el):
-            var old = tabs;
-			tabs += tabString;
-			var s = '\n$tabs' + printExprs(el, ';\n$tabs');
-			tabs = old;
-			s + '\n${tabs}';
+        case TBlock([]): '';
+		case TBlock(el) if (el.length == 1): printShortFunction(printExprs(el, '\n$tabs'));
+		case TBlock(el): printExprs(el, '\n$tabs');
 
 		//case TFor(e1, e2): 'for ${printExpr(e1)} do\n${tabs} ${printExpr(e2)}\n${tabs}end';//'for(${printExpr(e1)}) ${printExpr(e2)}';
 		//case TIn(e1, e2): 'k,${printExpr(e1)} in ${printExpr(e2)}';//'${printExpr(e1)} in ${printExpr(e2)}';
@@ -705,16 +724,21 @@ class LuaPrinter {
         case TIf(econd, eif, eelse): printIfElse(econd, eif, eelse);
 		
         case TWhile(econd, e1, true): 
-            var _cond = 'while(${printExpr(econd)})do';
+			var _tabs = tabs; tabs += tabString;
+            var _cond = 'while ${printExpr(econd)} do';
             _continueLabel = true; // <-- buggy for now
-            var _state = '${printExpr(e1)}end ';
-             _cond + (_continueLabel?" ::continue:: ":"") + _state;
+            var _state = '\n${tabs}${printExpr(e1)}\n${_tabs}end';
+			tabs = _tabs;
+            _cond + (_continueLabel ? " ::continue::" : "") + _state;
 
         case TWhile(econd, e1, false): 
-            var _state = 'do ${printExpr(e1)}';
+			var _tabs = tabs; tabs += tabString;
             _continueLabel = true; // <-- buggy for now
-            var _cond = 'while(${printExpr(econd)})';
-             _state + (_continueLabel?" ::continue:: ":"") + _cond;
+			var s = 'repeat\n${tabs}${printExpr(e1)}';
+			if (_continueLabel) s += '\n${tabs}::continue::';
+            s += '\n${_tabs}until not ${printExpr(econd)}';
+			tabs = _tabs;
+            s;
 		
         case TSwitch(e, cases, edef):  printSwitch(e, cases, edef);
 
@@ -801,31 +825,31 @@ class LuaPrinter {
 
     function printSwitch( _e : haxe.macro.TypedExpr , cases : Array<{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr }> , edef : Null<haxe.macro.TypedExpr>)
     {
-        var s:String = "";
-        var e = printExpr(_e);
-        var c = cases.shift();
-
-        function _opt(c:haxe.macro.TypedExpr, f) // Crop If "End" Or Print
-        {
-            if(""+c.expr != "TBlock([])")
-            return opt(c, f);
-            return "";
-        }
-        
-        s += '\n${tabs}if ' + e + " == " + printExprs(c.values, ' or $e == ') + " then " + _opt(c.expr, printExpr); 
-
-        function _case(c:{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr })
-        {
-            s += '\n${tabs}elseif ' + e + " == " + printExprs(c.values, ' or $e == ') + " then " + _opt(c.expr, printExpr); 
-        }
-
-        for(c in cases) _case(c);
-
-        if(edef != null) s += '\n${tabs}else ' + _opt(edef, printExpr); 
-
-        s += '\n${tabs}end ';
-
-        return s;
+        var s:String = "", e:String;
+		switch (_e.expr) { // convert `(value)` to `value`, if possible
+		case TParenthesis(v): e = printExpr(v);
+		default: e = printExpr(_e);
+		}
+		var _tabs = tabs; tabs += tabString;
+		
+		// print case blocks:
+		for (i in 0 ... cases.length) {
+			var c = cases[i];
+			s += (i == 0 ? 'if' : '\n${_tabs}elseif')
+				+ ' ($e == ' + printExprs(c.values, ' or $e == ') + ') then'
+				+ '\n${tabs}' + opt(c.expr, printExpr);
+		}
+		
+		// print "default" block, if any:
+		if (edef != null) {
+			s += '\n${_tabs}else'
+				+ '\n${tabs}' + opt(edef, printExpr);
+		}
+		
+		//
+		s += '\n${_tabs}end';
+		tabs = _tabs;
+		return s;
     }
 
 	public function printExprs(el:Array<TypedExpr>, sep:String) {
