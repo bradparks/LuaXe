@@ -70,7 +70,32 @@ require "hello" -- added to top of your lua file
 require "world"
 ```
 
-External Classes
+External Classes Usage
+=====
+Using external Lua **tables** fairly simple, but requires special meta **@dotpath**.
+Here is example for Love2D:
+
+```haxe
+@:keep class Main {
+ @:keep static function main() {
+  LoveGraphics.setColor(0, 0, 0, 0);
+ }
+}
+
+@:native("love.graphics") @dotpath
+@:keep extern 
+class LoveGraphics {
+ static public function setColor(r:Float, g:Float, b:Float, a:Float):Void {};
+}
+```
+Outputs:
+```lua
+function Main_Main.main(  )
+	love.graphics.setColor(0, 0, 0, 0)
+end
+```
+
+External Classes Creation
 =====
 It is very easy to create external classes for LuaXe.
 Create extern class definition:
