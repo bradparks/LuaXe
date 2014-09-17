@@ -746,27 +746,52 @@ class LuaPrinter {
     {
         // TODO catch other types of exceptions
         // getting last (e:Dynamic) catch:
-        var _dynCatch = catches.pop();
-		
-		// try-block:
+        var _dynCatch = catches.pop(), _tabs;
+        
+        // try-block:
         var s = 'local try, catch = pcall(function ()';
-			var t = tabs; tabs += "\t";
-			s += '\n${tabs}' + printExpr(e1);
-			tabs = t;
-		s += '\n${tabs}end);';
-		
-		// catch-block:
-		if (_dynCatch.expr != null) switch (_dynCatch.expr.expr) {
-		case TBlock([]):
-		default: // print block only if it's non-empty.
-			s += '\n${tabs}if try == false then';
-				t = tabs; tabs += "\t";
-				s += '\n${tabs}local ${_dynCatch.v.name} = catch;';
-				s += '\n${tabs}${printExpr(_dynCatch.expr)}';
-				tabs = t;
-			s += '\n${tabs}end';
-		}
-
+            _tabs = tabs; tabs += tabString;
+            var tryBlock = printExpr(e1);
+            s += '\n${tabs}${tryBlock}';
+            var hasReturns = (tryBlock.indexOf("return") >= 0);
+            var alwaysReturns = false;
+            if (hasReturns) {
+                switch (e1.expr) {
+                case TBlock(m):
+                    switch (m[m.length - 1].expr) {
+                    case TReturn(_): alwaysReturns = true;
+                    default:
+                    }
+                case TReturn(_): alwaysReturns = true;
+                default:
+                }
+                if (!alwaysReturns) s += '\n${tabs}return undefined';
+            }
+            tabs = _tabs;
+        s += '\n${tabs}end);';
+        
+        // catch-block:
+        if (_dynCatch.expr != null) switch (_dynCatch.expr.expr) {
+        case TBlock([]): // empty catch-block
+            if (hasReturns) {
+                if (!alwaysReturns) {
+                    s += '\n${tabs}if try and (catch ~= undefined) then return catch end';
+                } else s += '\n${tabs}if try then return catch end';
+            }
+        default: // print block only if it's non-empty.
+            s += '\n${tabs}if (try == false) then';
+                tabs += "\t";
+                s += '\n${tabs}local ${_dynCatch.v.name} = catch;';
+                s += '\n${tabs}${printExpr(_dynCatch.expr)}';
+                tabs = _tabs;
+            s += '\n${tabs}';
+            if (hasReturns) {
+                if (!alwaysReturns) {
+                    s += 'elseif (catch ~= undefined) then return catch end';
+                } else s += 'else return catch end';
+            } else s += 'end';
+        }
+ 
         return s;
     }
 
