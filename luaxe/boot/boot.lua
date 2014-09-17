@@ -2,6 +2,7 @@
 
 null = nil
 trace = print
+undefined = { } -- unique special value for (mostly) internal use.
 
 function ___inherit(to, base)
 	-- copy all fields from parent
