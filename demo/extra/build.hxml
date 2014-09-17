@@ -1,0 +1,8 @@
+-main Main
+-D lua
+-D bootless
+-js hx.lua
+--macro luaxe.LuaGenerator.use()
+-lib luaxe
+-dce full
+--connect 6000

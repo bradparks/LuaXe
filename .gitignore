@@ -54,3 +54,5 @@ bin/hx.js
 bin/hx.js
 
 bin/hx.lua
+
+demo/extra/hx.lua
