@@ -557,7 +557,11 @@ class LuaPrinter {
 
     function printBaseType(tp:BaseType):String
     {
-    	return tp.module.replace(".", "_") + "_" + tp.name;
+        if(tp.isExtern == true && tp.meta.has("dotpath"))
+        {
+            return (tp.pack.length > 0 ? tp.pack.join(".") + "." : "") + tp.name;
+        } else
+        return (tp.module.length > 0 ? tp.module.replace(".", "_") + "_" : "") + tp.name;
     }
 
     public function printModuleType (t:ModuleType) 

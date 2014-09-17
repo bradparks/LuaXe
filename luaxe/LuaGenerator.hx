@@ -522,7 +522,7 @@ class LuaGenerator
 
         sys.io.File.saveContent(api.outputFile,
             importsBuf.toString() +
-            sys.io.File.getContent('$path/boot/preboot.lua') +
+            #if !bootless sys.io.File.getContent('$path/boot/preboot.lua') + #end
         	"\nfunction exec()\n" +
         	combined + 
         	"\nend\n" +

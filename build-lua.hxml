@@ -1,7 +1,7 @@
 -cp demo
 -main Main
 -D lua
-#-D test_lua_magic
+-D test_lua_magic
 -js bin/hx.lua
 --macro luaxe.LuaGenerator.use()
 -dce full

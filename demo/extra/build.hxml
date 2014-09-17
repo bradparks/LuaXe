@@ -2,7 +2,8 @@
 -D lua
 -D bootless
 -js hx.lua
+-cp ../../
 --macro luaxe.LuaGenerator.use()
--lib luaxe
+#-lib luaxe
 -dce full
 --connect 6000

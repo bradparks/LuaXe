@@ -4,6 +4,8 @@
  }
 }
 
-@:native("love.graphics") extern class LoveGraphics {
- static function setColor(r:Float, g:Float, b:Float, a:Float):Void;
+@:native("love.graphics") @dotpath
+@:keep extern 
+class LoveGraphics {
+ static public function setColor(r:Float, g:Float, b:Float, a:Float):Void {};
 }
