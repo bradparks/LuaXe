@@ -457,6 +457,8 @@ class LuaGenerator
 
         boot = "";
 
+        #if !bootless
+
         boot += "___hxClasses = {";
         for (i in hxClasses) {
             boot += ''+ i +' = ' + i + ",";
@@ -478,6 +480,7 @@ class LuaGenerator
 		boot += "\n" + sys.io.File.getContent('$path/boot/extern.lua'); // TODO remove from *release*
 		boot += "\n" + sys.io.File.getContent('$path/boot/ereg.lua'); // TODO remove from *release*
 
+        #end
 
         var combined = buf.toString();
 
