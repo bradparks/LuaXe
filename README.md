@@ -76,16 +76,15 @@ Using external Lua **tables** fairly simple, but requires special meta **@dotpat
 Here is example for Love2D:
 
 ```haxe
-@:keep class Main {
- @:keep static function main() {
+class Main {
+ static function main() {
   LoveGraphics.setColor(0, 0, 0, 0);
  }
 }
 
 @:native("love.graphics") @dotpath
-@:keep extern 
-class LoveGraphics {
- static public function setColor(r:Float, g:Float, b:Float, a:Float):Void {};
+extern class LoveGraphics {
+ static public function setColor(r:Float, g:Float, b:Float, a:Float):Void;
 }
 ```
 Outputs:
