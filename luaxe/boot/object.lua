@@ -2,7 +2,6 @@
 Object = {}
 Object.__index = Object;
 function Object.__tostring(o)
-    --return table_print(v) --JSON:encode(v)
     local s = "{ "
     function prv(n,v)
     	s = s + n + ": " + v

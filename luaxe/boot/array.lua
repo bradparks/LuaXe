@@ -169,7 +169,6 @@ function HaxeArray.reverse(ths)
 end
 
 function HaxeArray.__tostring(o)
-    --return table_print(v) --JSON:encode(v)
     local s = "[ "
     function prv(v)
     	s = s + v

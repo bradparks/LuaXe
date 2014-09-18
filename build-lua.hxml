@@ -5,4 +5,5 @@
 -js bin/hx.lua
 --macro luaxe.LuaGenerator.use()
 -dce full
+-D dump=pretty
 --connect 6000
