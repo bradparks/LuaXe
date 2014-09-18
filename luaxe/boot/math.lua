@@ -31,3 +31,7 @@ end
 function Math.isFinite(num)
 	return num ~= Math.NEGATIVE_INFINITY and num ~= Math.POSITIVE_INFINITY and num ~= Math.NaN
 end
+
+function Math.get_NaN()return Math.NaN end
+function Math.get_POSITIVE_INFINITY()return Math.POSITIVE_INFINITY end
+function Math.get_NEGATIVE_INFINITY()return Math.NEGATIVE_INFINITY end
