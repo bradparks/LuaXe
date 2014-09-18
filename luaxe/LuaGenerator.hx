@@ -232,8 +232,7 @@ class LuaGenerator
                         default:
                     }
                 }
-            }
-
+            } else
             if(meta.name == ":remove")
             {
                 return;
@@ -500,7 +499,9 @@ class LuaGenerator
         r = ~/\t([A-z,0-9]{0,}):push\(([A-z,0-9,"']{0,})\);\n/g;
         combined = r.replace(combined,"\ttable.insert($1, $2)\n");*/
 
-        r = ~/\n--[^\n]+/g;
+        r = ~/\n[ \t]{0,}--[^\n]+/g;
+        boot = r.replace(boot, "");
+        r = ~/--[^\n]+/g;
         boot = r.replace(boot, "");
         boot = boot.replace("\n\n", "\n");
 
