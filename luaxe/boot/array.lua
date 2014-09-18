@@ -1,80 +1,30 @@
 -- Array class http://api.haxe.org/Array.html
-HaxeArray = {}
---HaxeArray.__index = HaxeArray;
---__inherit(HaxeArray, Object);
 
---HaxeArray.__index = function(self, i)
---	return __ternar(type(x) == "number",self[i+1],self[i])
---end;
-
---[[
-var length:Int
-function new():Void
-function concat(a:Array<T>):Array<T>
-function copy():Array<T>
-function filter(f:T ->Bool):Array<T>
-function indexOf(x:T, ?fromIndex:Int):Int
-function insert(pos:Int, x:T):Void
-function iterator():Iterator<T>
-function join(sep:String):String
-function lastIndexOf(x:T, ?fromIndex:Int):Int
-function map<S>(f:T ->S):Array<S>
-function pop():Null<T>
-function push(x:T):Int
-function remove(x:T):Bool
-function reverse():Void
-function shift():Null<T>
-function slice(pos:Int, ?end:Int):Array<T>
-function sort(f:T ->T ->Int):Void
-function splice(pos:Int, len:Int):Array<T>
-function toString():String
-function unshift(x:T):Void
-]]
-
---local HaxeArrayMeta;
-
---if(table.getn)then
---if(false)then	
---arr_mt = {
---	__index = function (arr, p)
---		if (p == "length") then
---			if arr[0] then return table.getn(arr) + 1 end
---			return table.getn(arr)
---		else
---			return HaxeArray[p]
---		end
---	end
---}
---else 
-HaxeArrayMeta = {
-	__index = function (arr, p)
+Array_Array = {}
+Array_Array.__index = function (arr, p)
 		if (p == "length") then
 			if arr[0] then return #arr + 1 end
-			return #arr
+			return #arr -- table.getn(arr)
 		else
-			return HaxeArray[p]
+			return Array_Array[p]
 		end
 	end
-}
---end
 
 function __Array(r) 
-	return setmetatable(r, HaxeArrayMeta)
+	return setmetatable(r, Array_Array)
 end
 
 function Array()
 	return __Array({})
 end
 
-function HaxeArray.push(ths, elem)
-	--table.insert(ths, #ths+1, elem)
-	--return ths.length
+function Array_Array.push(ths, elem)
 	local length = #ths
 	table.insert(ths, length+1, elem)
 	return length
 end
 
-function HaxeArray.copy(ths)
+function Array_Array.copy(ths)
 	local result = {}
 	for k,v in pairs(ths) do -- ipairs is bad idea
 		result[k] = v
@@ -82,7 +32,7 @@ function HaxeArray.copy(ths)
 	return __Array(result)
 end
 
-function HaxeArray.slice(ths, a, b)
+function Array_Array.slice(ths, a, b)
 	local result = {}
 	for i = a,b-1 do
 		result[i] = ths[i]
@@ -90,7 +40,7 @@ function HaxeArray.slice(ths, a, b)
 	return __Array(result)
 end
 
-function HaxeArray.splice(ths, a, b)
+function Array_Array.splice(ths, a, b)
 	local result = {}
 	for i = a,b do
 		result[i] = ths[i]
@@ -104,7 +54,7 @@ function HaxeArray.splice(ths, a, b)
 	return __Array(result)
 end
 
-function HaxeArray.concat(ths,a)
+function Array_Array.concat(ths,a)
 	local result = {}
 	for k,v in pairs(ths) do -- ipairs is bad idea
 		result[k] = v
@@ -115,7 +65,7 @@ function HaxeArray.concat(ths,a)
     return __Array(result)
 end
 
-function HaxeArray.join(ths,a)
+function Array_Array.join(ths,a)
 	local t = {}
 	for i=0, #ths do
 		t[i] = tostring(ths[i] or "")
@@ -123,7 +73,7 @@ function HaxeArray.join(ths,a)
 	return table.concat(t,a,0)
 end
 
-function HaxeArray.sort(ths, fun) -- TODO optimize
+function Array_Array.sort(ths, fun) -- TODO optimize
 	local isSorted = false
 	while isSorted == false do
 		movedElements = 0
@@ -142,7 +92,7 @@ function HaxeArray.sort(ths, fun) -- TODO optimize
 	return ths
 end
 
-function HaxeArray.map(ths, fun)
+function Array_Array.map(ths, fun)
 	local result = {}
 	for k,v in pairs(ths) do -- ipairs is bad idea
 		result[k] = fun(v)
@@ -150,7 +100,7 @@ function HaxeArray.map(ths, fun)
 	return __Array(result)
 end
 
-function HaxeArray.pop(ths)
+function Array_Array.pop(ths)
 	local length = #ths
 	if(length == 0) then return nil end
 	local last = ths[length]
@@ -158,7 +108,7 @@ function HaxeArray.pop(ths)
 	return last
 end
 
-function HaxeArray.reverse(ths)
+function Array_Array.reverse(ths)
 	local length = #ths
 	if(length < 2) then return end
 	for i = 0,length/2,1 do
@@ -168,7 +118,7 @@ function HaxeArray.reverse(ths)
 	end
 end
 
-function HaxeArray.__tostring(o)
+function Array_Array.__tostring(o)
     local s = "[ "
     function prv(v)
     	s = s + v
@@ -181,13 +131,10 @@ function HaxeArray.__tostring(o)
     return s + " ]"
 end
 
-function HaxeArray.toString(o)
-	return HaxeArray.__tostring(o)
+function Array_Array.toString(o)
+	return Array_Array.__tostring(o)
 end
 
-HaxeArrayMeta.__tostring = HaxeArray.__tostring;
-
-Array_Array = {}
 function Array_Array.new(arg)
-	return setmetatable(arg or {}, HaxeArrayMeta)
+	return setmetatable(arg or {}, Array_Array)
 end

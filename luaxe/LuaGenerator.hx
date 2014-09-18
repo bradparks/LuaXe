@@ -262,6 +262,7 @@ class LuaGenerator
 
             if(ignorance.has(p))
             {
+            	if(!hxClasses.has(p)) hxClasses.push(p);
             	#if verbose print(' ignored --\n'); #end
                 return ;
             }
@@ -446,16 +447,16 @@ class LuaGenerator
 		boot += "" + sys.io.File.getContent('$path/boot/boot.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/tostring.lua');
 		if(hxClasses.has("Std_Std")) boot += "\n" + sys.io.File.getContent('$path/boot/std.lua');
-		if(hxClasses.has("Math_Math")) boot += "\n" + sys.io.File.getContent('$path/boot/math.lua');
+		/*if(hxClasses.has("Math_Math"))*/ boot += "\n" + sys.io.File.getContent('$path/boot/math.lua');
         if(hxClasses.has("Type_Type")) boot += "\n" + sys.io.File.getContent('$path/boot/type.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/string.lua');
         if(hxClasses.has("StringTools_StringTools")) boot += "\n" + sys.io.File.getContent('$path/boot/stringtools.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');
-		if(hxClasses.has("Array_Array")) boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
+		/*if(hxClasses.has("Array_Array"))*/ boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
 		if(hxClasses.has("Map_Map")) boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/date.lua');
 		if(hxClasses.has("List_List")) boot += "\n" + sys.io.File.getContent('$path/boot/list.lua');
-        if(hxClasses.has("haxe_Json_Json")) boot += "\n" + sys.io.File.getContent('$path/boot/json.lua');
+        /*if(hxClasses.has("haxe_Json_Json"))*/ boot += "\n" + sys.io.File.getContent('$path/boot/json.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/extern.lua'); // TODO remove from *release*
 		boot += "\n" + sys.io.File.getContent('$path/boot/ereg.lua'); // TODO remove from *release*
 

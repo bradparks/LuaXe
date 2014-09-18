@@ -58,7 +58,7 @@ class LuaPrinter {
     // laguage keywords:
     static public var keywords = [
     "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in",
-    "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"
+    "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while", "_G"
     ];
 
     // top-level reserved:
@@ -641,7 +641,7 @@ class LuaPrinter {
 
 		case TArrayDecl(el): {
             var temp = printExprs(el, ", ");
-            'setmetatable({' + (temp.length>0? '[0]=${temp}}, HaxeArrayMeta)' : '}, HaxeArrayMeta)');
+            'setmetatable({' + (temp.length>0? '[0]=${temp}}, Array_Array)' : '}, Array_Array)');
         };
 
         case TTypeExpr(t): printModuleType(t);

@@ -86,7 +86,7 @@ local p = self
         break -- Break at end, as it should be, according to the lua manual.
       end
     end
-  return setmetatable(t, HaxeArrayMeta)
+  return setmetatable(t, Array_Array)
 end
 
 function String:substr(pos, len) -- Int -> ?Int -> String
