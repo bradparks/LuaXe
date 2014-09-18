@@ -9,6 +9,13 @@
   //var d = Date.fromString("2014-10-09 10:09:08");
   //trace(d);
   //trace(d.toString());
+  var x = 1;
+  for(i in 0...100)
+  {
+  	new Test();
+  	x++;
+  	x = x++ + --x;
+  }
  }
 }
 
@@ -17,3 +24,6 @@
 class LoveGraphics {
  static public function setColor(r:Float, g:Float, b:Float, a:Float):Void {};
 }
+
+//@:require("some_test")
+class Test { public function new(){}; }

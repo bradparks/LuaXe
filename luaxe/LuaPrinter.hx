@@ -518,32 +518,18 @@ class LuaPrinter {
 
             if(part.lastIndexOf('"') != part.length - 1 && part.lastIndexOf(toString) != part.length-toString.length)
             {
-                traceStringParts[i] += "";//".toString()";
+                traceStringParts[i] += "";
             }
         }
 
         traceString = traceStringParts.join(" + ");
 
-        return 'print($traceString)';
+        return '_G.print($traceString)';
     }
 
     function print_field(e1, name)
     {
         var expr = '${printExpr(e1)}.$name';
-
-        //var toFunc = false;
-
-        //trace(e1);
-
-        /*switch (e1.expr) {
-            case EConst(c):
-               trace(c); 
-               switch (c) {
-                    case CIdent(s)
-                    default:{};
-               }
-            default:{};
-        }*/
 
         if(pathHack.exists(expr))
             expr = pathHack.get(expr);
@@ -715,8 +701,8 @@ class LuaPrinter {
         case TVar(v,e): "local " + printVar(v, e);
 		
         case TBlock([]): '';
-		case TBlock(el) if (el.length == 1): printShortFunction(printExprs(el, '\n$tabs'));
-		case TBlock(el): printExprs(el, '\n$tabs');
+		case TBlock(el) if (el.length == 1): printShortFunction(printExprs(el, ';\n$tabs'));
+		case TBlock(el): printExprs(el, ';\n$tabs');
 
 		//case TFor(e1, e2): 'for ${printExpr(e1)} do\n${tabs} ${printExpr(e2)}\n${tabs}end';//'for(${printExpr(e1)}) ${printExpr(e2)}';
 		//case TIn(e1, e2): 'k,${printExpr(e1)} in ${printExpr(e2)}';//'${printExpr(e1)} in ${printExpr(e2)}';
@@ -766,8 +752,7 @@ class LuaPrinter {
     function printShortFunction(value:String)
     {
     	var hasReturn = value.indexOf("return ") == 0;
-    	//if(hasReturn) value = value.substr(7);
-    	return /*"=> " +*/ value + (hasReturn ? ";" : "");
+    	return value + (hasReturn ? ";" : "");
     }
 
     function printTry(e1:haxe.macro.TypedExpr, catches: Array<{ v : haxe.macro.TVar, expr : haxe.macro.TypedExpr }>)
@@ -853,43 +838,23 @@ class LuaPrinter {
     }
 
 	public function printExprs(el:Array<TypedExpr>, sep:String) {
-
-//        var id = null;
-//
-//        var sameID = [];
-//
-//        var idGroup = new Map<String, Array<Expr>>();
-//
-//        for(ex in el)
-//        {
-//            switch(ex.expr)
-//            {
-//                case ECall(e1, el):
-//                        switch(e1.expr)
-//                        {
-//                            case EField(e1, n):
-//                                switch(e1.expr)
-//                                {
-//                                    case EConst(CIdent(s)):
-//                                        if(id == s){
-////                                             trace(ex);
-//                                            e1.expr = EConst(CIdent(""));
-//                                            sameID.push(ex);
-//                                        }
-//                                        id = s;
-//                                    default:
-//                                }
-//
-//                            default:
-//                        }
-//                default:
-//            }
-//        }
-//
-//        if(id != null)
-//            trace(sameID.map(printExpr).join("."));
-
-		return el.map(printExpr).join(sep);
+		var result = "";
+		for(i in 0...el.length)
+        {
+        	var ex = el[i];
+            result += switch(ex.expr)
+            {
+            	case TUnop(OpIncrement, _, e): 
+            	var v = printExpr(e);
+				'$v = $v + 1';
+				case TUnop(OpDecrement, _, e): 
+            	var v = printExpr(e);
+				'$v = $v - 1';
+            	case _: printExpr(ex);
+            }
+            if(i < el.length - 1) result += sep;
+        }
+        return result;
 	}
 
 //	public function printTypeDefinition(t:TypeDefinition, printPackage = true):String {
