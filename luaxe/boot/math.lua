@@ -6,23 +6,15 @@ function Math.round(num)
 	 else return math.ceil(num-.5) end
 end
 
-Math.NaN = 1/0;
+Math.NaN = 0/0;
 Math.NEGATIVE_INFINITY = -1.0 / 0.0
 Math.POSITIVE_INFINITY = 1.0 / 0.0
 Math.PI = math.pi
 
-Math.random = math.random
-Math.abs = math.abs
-Math.min = math.min
-Math.max = math.max
-Math.sin = math.sin
-Math.cos = math.cos
-Math.exp = math.exp
-Math.log = math.log
-Math.sqrt = math.sqrt
-Math.fround = Math.round
-Math.ffloor = math.floor
-Math.fceil = math.ceil
+Math.random, Math.abs, Math.min, Math.max = math.random, math.abs, math.min, math.max
+Math.sin, Math.cos, Math.exp, Math.log, Math.tan = math.sin, math.cos, math.exp, math.log
+Math.sqrt, Math.fround, Math.ffloor, Math.fceil = math.sqrt, Math.round, math.floor, math.ceil
+Math.acos, Math.asin, Math.atan, Math.atan2, Math.pow = math.acos, math.asin, math.atan, math.atan2, math.pow
 
 function Math.floor(num)
 	return Math.round(math.floor(num))
