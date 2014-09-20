@@ -20,4 +20,11 @@ abstract LuaArray<T>(Dynamic)
 	@:arrayAccess public inline function arrayWriteFromOne(k:Int, v:T) {
 		this[k + 1] = v;
 	}
+
+	public var length(get, never):Int;
+
+	public function get_length():Int
+	{
+		return cast untyped __lua__("#")(this);
+	}
 }

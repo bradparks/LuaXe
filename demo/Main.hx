@@ -74,6 +74,7 @@ class Main
         var larr = new LuaArray<Int>();
             larr[0] = 100500;
             trace(larr[0]);
+            trace(larr.length);
         #end
 
 
