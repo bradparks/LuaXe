@@ -1,5 +1,7 @@
 package ;
 
+import luaxe.Lua;
+
 class Vehicle {
     public var numberOfWheels: Int;
     public var maxPassengers: Int;
@@ -60,13 +62,20 @@ class Main
         TestString.test();
         TestIfs.test();
         TestFuncs.test();
-       	#if test_lua_magic TestMagic.test(); #end
         TestFuncs.test();
         TestClasses.test();
         TestExceptions.test();
-        #if test_lua_magic TestExtern.test(); #end
         TestSyntax.test(); 
         
+        //#if test_lua_magic trace(Lua.eval("100 + 15.5")); #end
+        #if test_lua_magic
+        TestMagic.test();
+        TestExtern.test();
+        var larr = new LuaArray<Int>();
+            larr[0] = 100500;
+            trace(larr[0]);
+        #end
+
 
         Car.stat("huh?");
         var someVehicle = new Vehicle();
