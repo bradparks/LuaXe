@@ -23,12 +23,13 @@ Quick update:
 ```
 haxelib update luaxe
 ```
-First, you need to set JS target in your HXML file: ```-js bin/hx.lua``` Note to set *.lua* file type. Than, add LuaXe lib: ```-lib luaxe``` Add LuaXe macro: ```--macro luaxe.LuaGenerator.use()``` Dont forget to add ```-D lua``` or it won`t compile.
+First, you need to set JS target in your HXML file: ```-js bin/hx.lua``` Note to set *.lua* file type. Than, add LuaXe lib: ```-lib luaxe``` Add LuaXe macro: ```--macro luaxe.LuaGenerator.use()``` Dont forget to add ```-D lua``` or it won`t compile. Path ```luaxe/std``` contains patched std libs.
 Complete HXML file:
 ```
 -main Main
 -D lua
 -lib luaxe
+-cp luaxe/std
 -js bin/hx.lua
 --macro luaxe.LuaGenerator.use()
 -dce full
@@ -51,12 +52,14 @@ untyped __lua__("_G.print('__lua__')");
 untyped __call__(print, 1, 2, 3);
 untyped __tail__(os, clock, 1, 2, "hi");
 untyped __global__(print,'__lua__', 2);
+untyped __hash__(z);
 ```
 ```lua
 _G.print('__lua__');
 print(1, 2, 3);
 os:clock(1, 2, "hi");
 _G.print("__lua__", 2);
+#z
 ```
 Meta`s:
 ```haxe
