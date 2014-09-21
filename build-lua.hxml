@@ -1,4 +1,5 @@
 -cp demo
+-cp luaxe/std
 -main Main
 -D lua
 -D test_lua_magic
