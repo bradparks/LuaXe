@@ -9,5 +9,6 @@ class TestMagic
 		untyped __tail__(os, clock, 1, 2, "hi");
 		untyped __global__(print,'__lua__', 2);
 		var z:Int = cast "0";
+		trace(untyped __hash__(z));
 	}
 }

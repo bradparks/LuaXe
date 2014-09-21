@@ -30,7 +30,7 @@ class Main {
 		//Switchunit.run();
 		//Tryunit.run();
 		//Typeunit.run();
-		Vectorunit.run();
+	//	Vectorunit.run();
 		Whileunit.run();
 	}
 

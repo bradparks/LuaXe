@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2013 Haxe Foundation
+ * Copyright (C)2005-2014 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -58,7 +58,7 @@ class LuaPrinter {
     // laguage keywords:
     static public var keywords = [
     "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in",
-    "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while", "_G"
+    "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while", "_G", "_r"
     ];
 
     // top-level reserved:
@@ -66,19 +66,7 @@ class LuaPrinter {
     "setmetatable"
     ].concat(keywords);
 
-    static var standardTypes:Map<String, String> = [
-        "Array" => "List",
-        "Int" => "int",
-        "Float" => "double",
-    ];
-
     public static var pathHack = new StringMap();
-
-    public static function mapStandardTypes(typeName)
-    {
-        var mappedType = standardTypes.get(typeName);
-        return mappedType == null ? typeName : mappedType;
-    }
 
     public static function handleKeywords(name)
     {
@@ -149,8 +137,6 @@ class LuaPrinter {
         lastConstIsString = false;
     	return switch(c) {
 			case TString(s): printString(s);
-			//case CIdent(s),CInt(s), CFloat(s): s;
-			//case CRegexp(s,opt): '~/$s/$opt'; TODO
             case TThis: "self";
             case TNull: "nil";
             case TBool(true): "true";
@@ -160,37 +146,6 @@ class LuaPrinter {
             case TSuper: "super";
 		}
     }
-
-	/*public function printTypeParam(param:TypeParam) return switch(param) {
-		case TPType(ct): printComplexType(ct);
-		case TPExpr(e): printExpr(e);
-	}/**/
-
-/*	public function printTypePath(tp:TypePath){
-        if(tp.sub != null) return tp.sub ;
-        return
-        (tp.pack.length > 0 ? tp.pack.join("_") + "_" : "")
-        + tp.name
-		+ (tp.sub != null ? '.${tp.sub}' : "")
-		+ (tp.params.length > 0 ? "<" + tp.params.map(printTypeParam).join(", ") + ">" : "");
-    }/**/
-
-/*	// TODO: check if this can cause loops
-	public function printComplexType(ct:ComplexType) return switch(ct) {
-		case TPath(tp): printTypePath(tp);
-		case TFunction(args, ret): (args.length>0 ? args.map(printComplexType).join(" -> ") : "Void") + " -> " + printComplexType(ret);
-		case TAnonymous(fields): "{ " + [for (f in fields) printField(f) + "; "].join("") + "}";
-		case TParent(ct): "(" + printComplexType(ct) + ")";
-		case TOptional(ct): "?" + printComplexType(ct);
-		case TExtend(tp, fields): "";
-        // '{' +
-        // printTypePath(tp) + ' >,' + 
-        // ' ${fields.map(printField).join(", ")} }';
-	}/**/
-
-	public function printMetadata(meta) return "";
-	/*	'@${meta.name}'
-		+ (meta.params.length > 0 ? '(${printExprs(meta.params,", ")})' : "");/**/
 
 	public function printAccess(access:Access) return switch(access) {
 		case AStatic: "static";
@@ -202,50 +157,16 @@ class LuaPrinter {
 		case AMacro: "macro";
 	}
 
-//	public function printField(field:Field) return
-//		(field.doc != null && field.doc != "" ? "/**\n" + tabs + tabString + StringTools.replace(field.doc, "\n", "\n" + tabs + tabString) + "\n" + tabs + "**/\n" + tabs : "")
-//		+ (field.meta != null && field.meta.length > 0 ? field.meta.map(printMetadata).join(" ") + " " : "")
-//		+ (field.access != null && field.access.length > 0 ? field.access.map(printAccess).join(" ") + " " : "")
-//		+ switch(field.kind) {
-//		  case FVar(t, eo): 'var ${field.name}' + opt(t, printComplexType, " : ") + opt(eo, printExpr, " = ");
-//		  case FProp(get, set, t, eo): 'var ${field.name}($get, $set)' + opt(t, printComplexType, " : ") + opt(eo, printExpr, " = ");
-//		  case FFun(func): 'function ${field.name}' + printFunction(func);
-//		}
-
-//	public function printTypeParamDecl(tpd:TypeParamDecl) return
-//		tpd.name
-//		+ (tpd.params != null && tpd.params.length > 0 ? "<" + tpd.params.map(printTypeParamDecl).join(", ") + ">" : "")
-//		+ (tpd.constraints != null && tpd.constraints.length > 0 ? ":(" + tpd.constraints.map(printComplexType).join(", ") + ")" : "");
-
     public function printArgs(args:Array<{value:Null<TConstant>, v:TVar}>)
     {
         var argString = null;
-        //var optional = false;
-
         for(i in 0 ... args.length)
         {
             var arg = args[i];
-            //var argValue = printExpr(arg.value);
-//
-            //if((arg.opt || argValue != "#NULL") && !optional)
-            //{
-            //    optional = true;
-            //    argString += "[";
-            //}
-            //argString += arg.name;
-//
-            //if(argValue != null && argValue != "#NULL")
-            //    argString += '= $argValue';
-//
-            //if(i < args.length - 1)
-            //    argString += ",";
             argString = (argString == null?"":argString+", ") + arg.v.name;
         }
-
-        //if(optional) argString += "]";
-
         return (argString == null?"":argString);
-    }/**/
+    }
 
     public static var printFunctionHead = true;
 	public function printFunction(func:TFunc)
@@ -278,54 +199,10 @@ class LuaPrinter {
         return body;
 	}
 
-//	  public function printVar(v:Var)
-//    {
-//        return
-//        v.name
-//        //		+ opt(v.type, printComplexType, " : ")
-//        + opt(v.expr, printExpr, " = ");
-//    }
-
 	public function printVar(v:TVar, expr:Null<TypedExpr>)
 	{
 		return v.name + opt(expr, printExpr, " = ");
 	}
-//    public function printVar(v:TVar, expr:Null<TypedExpr>,context = "null")
-//    {
-//        function def () {
-//            return
-//            handleKeywords(v.name)
-//            //      + opt(v.type, printComplexType, " : ")
-//            + if (expr != null) opt(expr, printOpAssignRight.bind(_,context), " = ") else " = nil";
-//        }
-//
-//        return if (expr != null) {
-//            if (expr.expr != null)
-//            {
-//                switch (expr.expr) {
-//                    case TFunction(f):
-//                        printFunction(f /*,context,v.name*/);
-//                    case _ : def();
-//                }
-//            } else {
-//                def();
-//            }
-//        } else {
-//
-//            def();
-//        }
-//    }
-
-//    function justPath(expr)
-//    {
-//        return switch(expr.expr)
-//        {
-//            case EConst(CIdent(s)):s;
-//            case EField(e, field): justPath(e) + "_" + field;
-//            default:"";
-//        }
-//       // return printExpr(expr);
-//    }
 
 	function printField(e1:TypedExpr, fa:FieldAccess, isAssign:Bool = false)
     {
@@ -339,12 +216,20 @@ class LuaPrinter {
         var name = switch (fa) {
             case FInstance(_, cf): 
 			var n = cf.get().name;
-            switch( e1.expr )
+
+			if(n == "length")
+			switch( e1.expr )
             {
-            	// little fatser for strings and arrays
+            	case TLocal( v ) if((""+v.t).startsWith("TInst(Array,[")):
+            	return '$obj:get_length()';
+            	default:
+            }
+
+            switch( e1.expr )
+            {        	
             	case TLocal( v ) if( ""+v.t == "TInst(String,[])" ): 
             	
-            	return 
+            	return
             		(switch( n )
             		{
             			case "length": '#($obj)';
@@ -359,64 +244,13 @@ class LuaPrinter {
             case FDynamic(s): "." + s;
             case FClosure(_,cf): closure = true; "." + cf.get().name;
             case FEnum(_,ef): "." + ef.name;
-            case _: "/printField/" + e1 + " " + fa;
         }
 
         if(closure) return "___bind(" + obj + ", " + obj + name + ")";
         return obj + name;
-/*
-        function doDefault() {
-            return '$obj.${handleKeywords(name)}';
-        }
-
-        return switch (fa) {
-            case FInstance(isType("", "list") => true, cf) if (cf.get().name == "length" || cf.get().name == "get_length"):
-                "_hx_builtin.len(" + printExpr(e1, context) + ")";
-            case FInstance(x = isType("", "String") => true, cf) if (cf.get().name == "toUpperCase"):
-                printExpr(e1, context) + ".toupper";
-            case FInstance(isType("", "String") => true, cf) if (cf.get().name == "toLowerCase"):
-                printExpr(e1, context) + ".tolower";
-            
-
-            case FInstance(ct, cf): 
-                //var ct = ct.get();
-                doDefault();
-            case FStatic(x,cf): 
-            
-                doDefault();
-            case FAnon(cf) if (name == "iterator" && !isAssign):
-                switch (cf.get().type) {
-                    case TFun(args,_) if (args.length == 0): 
-                        '_hx_functools.partial(HxOverrides_iterator, $obj)';        
-                    case _ : doDefault();
-                }
-            case FAnon(cf) if (name == "shift" && !isAssign):
-                switch (cf.get().type) {
-                    case TFun(args,_) if (args.length == 0): 
-                        '_hx_functools.partial(HxOverrides_shift, $obj)';        
-                    case _ : doDefault();
-                }
-            case FAnon(_):
-                doDefault();
-            case FDynamic("iterator"):
-                '_hx_functools.partial(HxOverrides_iterator, $obj)';
-            case FDynamic("length") if (!isAssign):
-                'HxOverrides_length($obj)';
-            case FDynamic("filter") if (!isAssign):
-                '_hx_functools.partial(HxOverrides_filter, $obj)';
-            case FDynamic("map") if (!isAssign):
-                '_hx_functools.partial(HxOverrides_map, $obj)';
-            case FDynamic(_):
-                doDefault();
-            case FClosure(ct,cf): 
-                doDefault();
-            case FEnum(_,ef): 
-                doDefault();
-        }
-		/**/
     }
 
-    function printCall(e1:TypedExpr, el:Array<TypedExpr>, _static = false)
+    function printCall(e1:TypedExpr, el:Array<TypedExpr>, _static = false):String
     {
         var id = printExpr(e1);
 
@@ -428,9 +262,14 @@ class LuaPrinter {
             case "trace" :
                 formatPrintCall(el);
             case "__lua__":
-                extractString(el[0]);
+                return extractString(el[0]);
+            case "__hash__":
+                '#${printExpr(el.shift())}';
             case "__call__":
-                '${printExpr(el.shift())}(${printExprs(el,", ")})';
+            	var func = printExpr(el.shift());
+            	if(func.indexOf("\"") == 0 || func.indexOf("\'") == 0)
+            	func = func.substring(1,func.length-1);
+                '${func}(${printExprs(el,", ")})';
             case "__tail__":
                 '${printExpr(el.shift())}:${printExpr(el.shift())}(${printExprs(el,", ")})';    
             case "__global__":
@@ -491,7 +330,7 @@ class LuaPrinter {
         return switch(e.expr)
         {
             case TConst(TString(s)):s;
-            default:"####";
+            default:throw "Unreachable code";
         }
     }
 
@@ -562,6 +401,8 @@ class LuaPrinter {
             case TAbstract(ct): printBaseType(ct.get());
         }
     }
+
+    public function printMetadata(meta) return "";
 
     function printIfElse(econd:TypedExpr, eif:TypedExpr, eelse:TypedExpr)
     {
@@ -646,11 +487,20 @@ class LuaPrinter {
 
         case TTypeExpr(t): printModuleType(t);
 
-        case TCall(e1 = { expr : TField(_,FStatic (_))}, el):
-        // 'statico';
-         printCall(e1, el, true);
+        case TCall(e1 = { expr : TField(_,FStatic (_))}, el): printCall(e1, el, true);
 		
-        case TCall(e1, el): printCall(e1, el);
+		// fix for untyped __lua__
+		case TCall(e1 = { expr : TCall({ expr : TLocal(tc) },_)}, el)
+		if(tc.name == "__lua__"): 
+		//trace(tc);
+		//trace(tc.name);
+
+		//if(printExpr(e1) == "__lua__")
+		//extractString(el[0]);
+		//else continue;
+		printCall(e1, el, true);/**/
+
+		case TCall(e1, el): printCall(e1, el);
 		
         //case TNew(tp, params, el): '${printTypePath(tp)}.new(${printExprs(el,", ")})';
         case TNew(tp, _, el): 
@@ -698,14 +548,30 @@ class LuaPrinter {
 		tabs = _tabs;
         s;
 
+        // case TCall(e1 = { expr : TCall({ expr : TLocal(tc) },_)}, el)
+        case TVar(v,e)
+        if(""+v.t == "TAbstract(Int,[])" && e != null): 
+
+        var result = "local " + printVar(v, e);
+
+        switch (e.expr) {
+        	case TUnop(OpIncrement,true,{ expr : TLocal(tc)}):
+        	if(""+tc.t == "TAbstract(Int,[])")
+        	{
+        		result = "local " + v.name + " = " + tc.name;
+        		result += "; " + tc.name + " = " + tc.name + " + 1";
+        	}
+        	//	trace(e);
+        	default:
+        }
+
+        result;
+
         case TVar(v,e): "local " + printVar(v, e);
 		
         case TBlock([]): '';
 		case TBlock(el) if (el.length == 1): printShortFunction(printExprs(el, ';\n$tabs'));
 		case TBlock(el): printExprs(el, ';\n$tabs');
-
-		//case TFor(e1, e2): 'for ${printExpr(e1)} do\n${tabs} ${printExpr(e2)}\n${tabs}end';//'for(${printExpr(e1)}) ${printExpr(e2)}';
-		//case TIn(e1, e2): 'k,${printExpr(e1)} in ${printExpr(e2)}';//'${printExpr(e1)} in ${printExpr(e2)}';
 		
         case TIf(econd, eif, eelse): printIfElse(econd, eif, eelse);
 		
@@ -856,71 +722,6 @@ class LuaPrinter {
         }
         return result;
 	}
-
-//	public function printTypeDefinition(t:TypeDefinition, printPackage = true):String {
-//		var old = tabs;
-//		tabs = tabString;
-//
-//		var str = t == null ? "#NULL" :
-//			(printPackage && t.pack.length > 0 && t.pack[0] != "" ? "package " + t.pack.join("_") + ";\n" : "") +
-//			(t.meta != null && t.meta.length > 0 ? t.meta.map(printMetadata).join(" ") + " " : "") + (t.isExtern ? "extern " : "") + switch (t.kind) {
-//				case TDEnum:
-//					"enum " + t.name + (t.params.length > 0 ? "<" + t.params.map(printTypeParamDecl).join(", ") + ">" : "") + " {\n"
-//					+ [for (field in t.fields)
-//						tabs + (field.doc != null && field.doc != "" ? "/**\n" + tabs + tabString + StringTools.replace(field.doc, "\n", "\n" + tabs + tabString) + "\n" + tabs + "**/\n" + tabs : "")
-//						+ (field.meta != null && field.meta.length > 0 ? field.meta.map(printMetadata).join(" ") + " " : "")
-//						+ (switch(field.kind) {
-//							case FVar(_, _): field.name;
-//							case FProp(_, _, _, _): throw "FProp is invalid for TDEnum.";
-//							case FFun(func): field.name + printFunction(func);
-//						}) + ";"
-//					].join("\n")
-//					+ "\n}";
-//				case TDStructure:
-//					"typedef " + t.name + (t.params.length > 0 ? "<" + t.params.map(printTypeParamDecl).join(", ") + ">" : "") + " = {\n"
-//					+ [for (f in t.fields) {
-//						tabs + printField(f) + ";";
-//					}].join("\n")
-//					+ "\n}";
-//				case TDClass(superClass, interfaces, isInterface):
-//					(isInterface ? "interface " : "class ") + t.name + (t.params.length > 0 ? "<" + t.params.map(printTypeParamDecl).join(", ") + ">" : "")
-//					+ (superClass != null ? " extends " + printTypePath(superClass) : "")
-//					+ (interfaces != null ? (isInterface ? [for (tp in interfaces) " extends " + printTypePath(tp)] : [for (tp in interfaces) " implements " + printTypePath(tp)]).join("") : "")
-//					+ " {\n"
-//					+ [for (f in t.fields) {
-//						var fstr = printField(f);
-//						tabs + fstr + switch(f.kind) {
-//							case FVar(_, _), FProp(_, _, _, _): ";";
-//							case FFun(func) if (func.expr == null): ";";
-//							case _: "";
-//						};
-//					}].join("\n")
-//					+ "\n}";
-//				case TDAlias(ct):
-//					"typedef " + t.name + (t.params.length > 0 ? "<" + t.params.map(printTypeParamDecl).join(", ") + ">" : "") + " = "
-//					+ printComplexType(ct)
-//					+ ";";
-//				case TDAbstract(tthis, from, to):
-//					"abstract " + t.name
-//					+ (tthis == null ? "" : "(" + printComplexType(tthis) + ")")
-//					+ (t.params.length > 0 ? "<" + t.params.map(printTypeParamDecl).join(", ") + ">" : "")
-//					+ (from == null ? "" : [for (f in from) " from " + printComplexType(f)].join(""))
-//					+ (to == null ? "" : [for (t in to) " to " + printComplexType(t)].join(""))
-//					+ " {\n"
-//					+ [for (f in t.fields) {
-//						var fstr = printField(f);
-//						tabs + fstr + switch(f.kind) {
-//							case FVar(_, _), FProp(_, _, _, _): ";";
-//							case FFun(func) if (func.expr == null): ";";
-//							case _: "";
-//						};
-//					}].join("\n")
-//					+ "\n}";
-//			}
-//
-//		tabs = old;
-//		return str;
-//	}
 
 	function opt<T>(v:T, f:T->String, prefix = "") return v == null ? "" : (prefix + f(v));
 }

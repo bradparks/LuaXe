@@ -7,7 +7,8 @@ Date_Date = Date
 
 function Date.now()
 	local self = {
-		d = os.date("*t")
+		d = os.date("*t"),
+		ms = 1000*os.clock()
 	}
 	setmetatable(self, Date)
 	return self
@@ -17,6 +18,7 @@ function Date.fromTime(t)
 	local self = {
 		d = os.date(t)
 	}
+	self.ms = os.time(self.d)*1000;
 	setmetatable(self, Date)
 	return self
 end
@@ -28,6 +30,7 @@ function Date.new(year, month, day, hour, min, sec)
 	local self = {
 		d = {year = year, day = day, month = month, hour = hour, min = min, sec = sec}
 	}
+	self.ms = os.time(self.d)*1000;
 	setmetatable(self, Date)
 	return self
 end
@@ -57,7 +60,7 @@ function Date:getSeconds()
 end
 
 function Date:getTime()
-	return os.time(self.d)
+	return self.ms--os.time(self.d)
 end
 
 function Date:getFullYear()

@@ -58,6 +58,7 @@ class Main
     {
         trace("go -->");
         var d = Date.now().getTime();
+        var overall = d;
 
         TestString.test();
         TestIfs.test();
@@ -75,6 +76,10 @@ class Main
             larr[0] = 100500;
             trace(larr[0]);
             trace(larr.length);
+
+        //var lmap = new Map<Int, String>();
+        //	lmap[15] = "hello";
+        //	trace(lmap[15]);
         #end
 
 
@@ -176,9 +181,16 @@ class Main
         {
             TestIfs.test(true);
             TestFuncs.test(true);
-            TestLoops.test(true);
         }
 
+        var y = 0;
+        for(i in 0...10000)
+        {    
+            y += TestLoops.test(true);
+        }
+        trace("Check: " + y);
+
         trace(platform + "LangPerfTest: " + Std.int((Date.now().getTime()-d)) + "ms");
+    	trace(platform + "OverallPerfTest: " + Std.int((Date.now().getTime()-overall)) + "ms");
     }
 }
