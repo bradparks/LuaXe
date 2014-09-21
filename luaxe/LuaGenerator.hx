@@ -464,40 +464,6 @@ class LuaGenerator
         var combined = buf.toString();
 
 		var r;
-        /*r = ~/(Array<[A-z]{0,}>).new()/g;
-        //combined = r.replace(combined,"{}; -- $1");
-        combined = r.replace(combined,"Array(); -- $1");
-
-        r = ~/(haxe_ds_IntMap<[A-z]{0,}>).new()/g;
-        //combined = r.replace(combined,"{}; -- $1");
-        combined = r.replace(combined,"Map(); -- $1");
-
-        combined = combined.replace(";  ;","; ")
-        .replace(")then return; \n",")then return; end\n");
-
-        r = ~/\t\t([A-z]{0,}) ([+,-])= /g;
-        combined = r.replace(combined,"\t\t$1 = $1 $2 ");
-        //.replace(" = (  ) \n", " = function (  ) \n");
-
-        r = ~/ = \( ([A-z,0-9]{0,}) \) \n/g;
-        combined = r.replace(combined," = function ( $1 ) \n");
-        
-        // ultra fast to-localvar increments
-        r = ~/\tlocal ([A-z,0-9]{0,}) = \(function \(\) local _r = ([A-z,0-9]{0,}) or 0; [A-z,0-9]{0,} = _r ([+-]) 1; return _r end\)\(\);\n/g;
-        combined = r.replace(combined,"\tlocal $1 = $2; $2 = $2 $3 1\n");
-        
-        // ultra fast increments fix
-        r = ~/\t\(function \(\) local _r = ([A-z,0-9]{0,}) or 0; [A-z,0-9]{0,} = _r ([+-]) 1; return _r end\)\(\);\n/g;
-        combined = r.replace(combined,"\t$1 = $1 $2 1\n");
-        
-        r = ~/\t\(function \(\) ([A-z,0-9]{0,}) = \([A-z,0-9]{0,} or 0\) ([+-]) 1; return [A-z,0-9]{0,}; end\)\(\);\n/g;
-        //combined = r.replace(combined,"\t$1 = ($1 or 0) $2 1\n");
-        // TODO in haXe: always initiated?
-        combined = r.replace(combined,"\t$1 = $1 $2 1\n");
-
-        // ultra fast array push
-        r = ~/\t([A-z,0-9]{0,}):push\(([A-z,0-9,"']{0,})\);\n/g;
-        combined = r.replace(combined,"\ttable.insert($1, $2)\n");*/
 
         r = ~/\n[ \t]{0,}--[^\n]+/g;
         boot = r.replace(boot, "");

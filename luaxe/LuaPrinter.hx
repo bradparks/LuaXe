@@ -491,22 +491,12 @@ class LuaPrinter {
 		
 		// fix for untyped __lua__
 		case TCall(e1 = { expr : TCall({ expr : TLocal(tc) },_)}, el)
-		if(tc.name == "__lua__"): 
-		//trace(tc);
-		//trace(tc.name);
-
-		//if(printExpr(e1) == "__lua__")
-		//extractString(el[0]);
-		//else continue;
-		printCall(e1, el, true);/**/
+		if(tc.name == "__lua__"): printCall(e1, el, true);
 
 		case TCall(e1, el): printCall(e1, el);
 		
-        //case TNew(tp, params, el): '${printTypePath(tp)}.new(${printExprs(el,", ")})';
         case TNew(tp, _, el): 
-        	//'${printTypePath(tp)}.new(${printExprs(el,", ")})';
 			var id:String = printBaseType(tp.get());
-			//'${id}';
 			'${id}.new(${printExprs(el,", ")})';
 
         //case TBinop(OpAdd, e1, e2) if (e.t.match(TInst("String"))):
@@ -531,8 +521,8 @@ class LuaPrinter {
         case TBinop(op, e1, e2): 
             '${printExpr(e1)} ${printBinop(op)} ${printExpr(e2)}';
 		
-        case TUnop(op, true, e1): printUnop(op,printExpr(e1),true);//printExpr(e1) + printUnop(op);//, printExpr(e1));
-		case TUnop(op, false, e1): printUnop(op,printExpr(e1),false);//printUnop(op) + printExpr(e1);
+        case TUnop(op, true, e1): printUnop(op,printExpr(e1),true);
+		case TUnop(op, false, e1): printUnop(op,printExpr(e1),false);
 		
         case TFunction(func): printFunction(func);
 
@@ -548,12 +538,9 @@ class LuaPrinter {
 		tabs = _tabs;
         s;
 
-        // case TCall(e1 = { expr : TCall({ expr : TLocal(tc) },_)}, el)
         case TVar(v,e)
         if(""+v.t == "TAbstract(Int,[])" && e != null): 
-
         var result = "local " + printVar(v, e);
-
         switch (e.expr) {
         	case TUnop(OpIncrement,true,{ expr : TLocal(tc)}):
         	if(""+tc.t == "TAbstract(Int,[])")
@@ -561,10 +548,8 @@ class LuaPrinter {
         		result = "local " + v.name + " = " + tc.name;
         		result += "; " + tc.name + " = " + tc.name + " + 1";
         	}
-        	//	trace(e);
         	default:
         }
-
         result;
 
         case TVar(v,e): "local " + printVar(v, e);
