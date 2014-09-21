@@ -3,6 +3,14 @@ class TestSyntax
 	public static function test()
 	{
 		trace("TestSyntax begin");
+
+        // "flying code" removal test:
+        /* dce off ? */
+        "hello";
+        123;
+        [1,2,3]; // not removed via dce
+        /**/
+
 		// http://haxe.ru/ref-constants
 		var v = 0; // Int
 		var v = -134; // Int
