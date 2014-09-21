@@ -34,3 +34,15 @@ function ___bind(o,m)
     	return result;
  	end
 end
+
+function __Array(r) 
+	return setmetatable(r, Array_Array)
+end
+
+function Array()
+	return __Array({})
+end
+--Array_Array.toString = Array_Array.__tostring
+--function Array_Array.new(arg)return setmetatable(arg or{},Array_Array)end
+if(table.getn == nil)then table.getn = function(o)return #o end end
+if(loadstring == nil)then loadstring = function(o)return (function()return "" end) end end

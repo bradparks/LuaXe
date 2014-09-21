@@ -186,7 +186,7 @@ class LuaGenerator
         // top classes:
         // TODO: move up and uncomment when implemented
         "String_String",
-        "Array_Array",
+        //"Array_Array",
         "HxOverrides_HxOverrides",
         "Std_Std",
         "js_Boot_Boot",   
@@ -243,7 +243,7 @@ class LuaGenerator
         var p = getPath(c);
         var __name__ = p;
         p = p.replace(".","_");
-        hxClasses.push(p);
+        if(!hxClasses.has(p)) hxClasses.push(p);
 
         LuaPrinter.currentPath = p + ".";
 
@@ -452,8 +452,7 @@ class LuaGenerator
 		boot += "\n" + sys.io.File.getContent('$path/boot/string.lua');
         if(hxClasses.has("StringTools_StringTools")) boot += "\n" + sys.io.File.getContent('$path/boot/stringtools.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');
-		/*if(hxClasses.has("Array_Array"))*/ boot += "\n" + sys.io.File.getContent('$path/boot/array.lua');
-		if(hxClasses.has("Map_Map")) boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
+		if(hxClasses.has("Map_Map") || hxClasses.has("haxe_ds_IntMap_IntMap")) boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
 		boot += "\n" + sys.io.File.getContent('$path/boot/date.lua');
 		if(hxClasses.has("List_List")) boot += "\n" + sys.io.File.getContent('$path/boot/list.lua');
         /*if(hxClasses.has("haxe_Json_Json"))*/ boot += "\n" + sys.io.File.getContent('$path/boot/json.lua');
