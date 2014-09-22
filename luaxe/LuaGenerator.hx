@@ -408,7 +408,7 @@ class LuaGenerator
 
         var starter = "";
 
-        if(api.main != null && classCount > 1)
+        if(api.main != null)// && classCount > 1)
         {
             print("");
 
@@ -478,8 +478,8 @@ class LuaGenerator
         	combined + 
         	"\nend\n" +
         	boot + 
-        	"\nexec()" +
-        	"\nMain_Main.main()");
+        	"\nexec()\n" +
+        	starter);
 
         trace('Lua generated in ${Std.int((Timer.stamp() - now)*1000)}ms');
     }
