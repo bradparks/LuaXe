@@ -5,7 +5,7 @@
 -cp ../../
 --macro luaxe.LuaGenerator.use()
 #-lib luaxe
--dce no
+-dce full
 -D dump=pretty
 #--connect 6000
 -cmd /usr/local/bin/luajit hx.lua

@@ -1,4 +1,4 @@
-@:keep class Main {
+/*@:keep class Main {
  @:keep static function main() {
   //LoveGraphics.setColor(0, 0, 0, 0);
   var d = new Date(2012, 4, 25, 13, 3, 54);
@@ -26,4 +26,10 @@ class LoveGraphics {
 }
 
 //@:require("some_test")
-class Test { public function new(){}; }
+class Test { public function new(){}; }*/
+
+class Main {
+ static function main() {
+ 	trace("hello");
+ }
+}
