@@ -28,8 +28,34 @@ class LoveGraphics {
 //@:require("some_test")
 class Test { public function new(){}; }*/
 
-class Main {
+/*class Main {
  static function main() {
  	trace("hello");
+ }
+}*/
+
+package ;
+
+
+class Test
+{
+
+    public function new() 
+    {
+
+    }
+
+    public function say() {
+
+
+    }
+
+}
+
+class Main {
+ static function main() {
+
+
+     new Test().say();
  }
 }
