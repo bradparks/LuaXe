@@ -3,6 +3,9 @@ LuaXe
 
 Lua target for Haxe language
 
+<a href="http://peyty.github.io#donate"><img src="http://peyty.github.io/images/donate.png"></a>
+<a href="http://peyty.github.io#hireme"><img src="http://peyty.github.io/images/hireme.png"></a>
+
 State: *pre-alpha*
 =====
 Primarily LuaJIT -> make super-optimized portable Haxe target!
