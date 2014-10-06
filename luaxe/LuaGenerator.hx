@@ -126,6 +126,12 @@ class LuaGenerator
             Context.error("The *class* field named " + f.name + " is not allowed in Lua", c.pos);
     }
 
+    var props:Array<String> = [];
+    function addPropToClass(name:String)
+    {
+    	props.push(name);
+    }
+
     function genClassField(c : ClassType, p : String, f : ClassField)
     {
         checkFieldName(c, f);
@@ -134,6 +140,20 @@ class LuaGenerator
         if(e == null)
         {
         	#if verbose print('--var $field;'); #end
+        	switch( f.kind ) // getter
+        	{
+        		case FVar(AccCall, _), FVar(AccResolve, _):
+            	addPropToClass('get_$field');
+            	case FVar(AccNever, _): // ignored
+            	default:
+        	}
+        	switch( f.kind ) // setter
+        	{
+        		case FVar(_, AccCall):
+        		addPropToClass('set_$field');
+        		case FVar(_, AccNever): // ignored
+            	default:
+        	}
         }
         else switch( f.kind )
         {
@@ -317,6 +337,15 @@ class LuaGenerator
             }
             genClassField(c, p, f);
         }
+
+        print('\n$p.__props__ = {');
+        if(props.length > 0) {
+        	var last = props.pop();
+        	for(i in props) print('"$i",');
+        	print('"$last"');
+        }
+        print('};');
+        props = [];
 
         if(classCount > 1)
         {
@@ -503,6 +532,7 @@ class LuaGenerator
 
 	public static function use() {
 		Compiler.allowPackage("sys");
+		Compiler.define("sys");
 		Compiler.setCustomJSGenerator(function(api) new LuaGenerator(api).generate());
 	}
 }

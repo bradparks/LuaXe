@@ -47,6 +47,13 @@ class Car extends Vehicle {
     {
         trace('static called with text "$text"');
     }
+
+    public var mx(get,set):Int;
+
+    public function get_mx():Int return maxPassengers;
+    public function set_mx(val:Int):Int 
+    {maxPassengers = val;return maxPassengers;}
+    // TODO: return maxPassengers = val;
 }
 
 // testing:
@@ -84,6 +91,7 @@ class Main
 
 
         Car.stat("huh?");
+        
         var someVehicle = new Vehicle();
         trace('Vehicle: ${someVehicle.description()}');
         var bicycle = new Bicycle();
@@ -91,7 +99,7 @@ class Main
         var tandem = new Tandem();
         trace(tandem);
         trace('Tandem: ${tandem.description()}');
-        trace('Car: ${(new Car(5)).description()}');
+        trace('Car: ${(new Car(5)).description()} ${(new Car(5)).mx} ${(new Car(5)).mx = 6}');
         
         var arr = [5,55,555];
         var arr2 = ["a","b","c"];
