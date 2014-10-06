@@ -183,6 +183,35 @@ class Main
             TestFuncs.test(true);
         }
 
+        // TODO: trace(Sys.cpuTime());
+        trace(" Dyna
+        _test_multiline_strings_
+            mic ");
+
+        var inst:Dynamic = tandem;
+        trace("Std.instance: true == " + Std.instance(inst, Tandem));
+        trace("Std.instance: true == " + Std.instance(inst, Vehicle));
+        trace("Std.instance: true == " + Std.instance(inst, Bicycle));
+        trace("Std.instance: null == " + Std.instance(inst, Main.Car));
+        inst = null;
+        trace("Std.instance: null == " + Std.instance(inst, Car));
+        // TODO: trace("Std.instance: null == " + Std.instance(null, Car));
+
+        trace("Std.is: false == " + Std.is(inst, Tandem));
+        inst = tandem;
+        trace("Std.is: true == " + Std.is(inst, Tandem));
+        trace("Std.is: true == " + Std.is(inst, Vehicle));
+        trace("Std.is: true == " + Std.is(inst, Bicycle));
+        trace("Std.is: false == " + Std.is(inst, Main.Car));
+        inst = null;
+        trace("Std.is: false == " + Std.is(inst, Car));
+        inst = 0;
+        trace("Std.is: true == " + Std.is(inst, Int));
+        inst = "hi";
+        trace("Std.is: true == " + Std.is(inst, String));
+        inst = ["hi"];
+        trace("Std.is: true == " + Std.is(inst, Array));
+
         var y = 0;
         for(i in 0...10000)
         {    
