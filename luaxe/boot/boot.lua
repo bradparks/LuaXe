@@ -16,6 +16,12 @@ function __new__(obj, ...)
 	return obj.new(...)
 end
 
+function __strict_eq__(obj, to)
+	return (tostring(obj) == tostring(to))
+end
+
+__typeof__ = type;
+
 haxe_Log_Log = {};
 function haxe_Log_Log.trace(a, i)
 	print(a)

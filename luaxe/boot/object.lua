@@ -1,6 +1,7 @@
 -- base Object class
 Object = {}
 Object.__index = Object;
+Object.__super__ = nil
 function Object.__tostring(o)
     local s = "{ "
     function prv(n,v)

@@ -188,7 +188,7 @@ class LuaPrinter {
 		
 		switch (func.expr.expr) {
             case TBlock(el) if (el.length == 0): 
-            if (returnSelf) body += '\n${tabs}return self\n${tabs}end';
+            if (returnSelf) body += '\n${tabs}return self\n\tend';
             else body += ' end';
 			case _:
 				body += opt(func.expr, printExpr, '\n${tabs}');

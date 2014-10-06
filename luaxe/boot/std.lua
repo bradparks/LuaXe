@@ -23,7 +23,14 @@ end
 --This method is not guaranteed to work with interfaces or core types such as String, Array and Date.
 --If value is null, the result is null. If c is null, the result is unspecified.
 function Std.instance( value, c )
-	return nil -- TODO
+	if(value == nil)then return nil end
+	local mt = getmetatable(value)
+	if(mt == c)then return value end
+	while(mt ~= nil)do
+		mt = mt.__super__
+		if(mt == c and mt ~= Object)then return value end
+	end
+	return nil
 end
 --static function is(v:Dynamic, t:Dynamic):Bool
 --Tells if a value v is of the type t. Returns false if v or t are null.
@@ -32,8 +39,13 @@ end
 --The parsing rules for parseInt apply here as well, with the exception of invalid input resulting in a NaN value instead of null.
 --Additionally, decimal notation may contain a single . to denote the start of the fractions.
 function Std.is( v, t )
-	return false -- TODO
+	-- TODO: __ename__ Enums
+	if(not(v or t))then return false end
+	return Std.instance( v, t ) and true or false
 end
+js_Boot_Boot = js_Boot_Boot or {}
+js_Boot_Boot.__instanceof = Std.is
+__instanceof__ = Std.is
 --static function parseInt(x:String):Null<Int>
 --Converts a String to an Int.
 --Leading whitespaces are ignored.
