@@ -338,14 +338,17 @@ class LuaGenerator
             genClassField(c, p, f);
         }
 
-        print('\n$p.__props__ = {');
-        if(props.length > 0) {
-        	var last = props.pop();
-        	for(i in props) print('"$i",');
-        	print('"$last"');
-        }
-        print('};');
-        props = [];
+        if(!c.isInterface)
+        {
+        	print('\n$p.__props__ = {');
+    	    if(props.length > 0) {
+    	    	var last = props.pop();
+    	    	for(i in props) print('"$i",');
+    	    	print('"$last"');
+    	    }
+    	    print('};');
+    	    props = [];
+    	}
 
         if(classCount > 1)
         {
