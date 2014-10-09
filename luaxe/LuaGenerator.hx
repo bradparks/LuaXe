@@ -48,7 +48,7 @@ class LuaGenerator
         api.setTypeAccessor(getType);
     }
 
-    function getType(t : Type)
+    inline function getType(t : Type)
     {
         return switch(t) {
             case TInst(c, _): getPath(c.get());
@@ -76,14 +76,14 @@ class LuaGenerator
         print(exprString.replace("super(", "super.init("));
     }
 
-    function field(p : String)
+    inline function field(p : String)
     {
     	return LuaPrinter.handleKeywords(p);
     }
 
     static var classCount = 0;
 
-    function genPathHacks(t:Type)
+    inline function genPathHacks(t:Type)
     {
         switch( t ) {
             case TInst(c, _):
@@ -120,14 +120,14 @@ class LuaGenerator
         return fullPath;
     }
 
-    function checkFieldName(c : ClassType, f : ClassField)
+    inline function checkFieldName(c : ClassType, f : ClassField)
     {
         if(luaxe.LuaPrinter.keywords.indexOf(f.name) > -1)
             Context.error("The *class* field named " + f.name + " is not allowed in Lua", c.pos);
     }
 
     var props:Array<String> = [];
-    function addPropToClass(name:String)
+    inline function addPropToClass(name:String)
     {
     	props.push(name);
     }
@@ -466,66 +466,67 @@ class LuaGenerator
 		var dir = haxe.io.Path.directory(pos.file);
 		var path = haxe.io.Path.addTrailingSlash(dir);
 
-        boot = "";
+        boot = new StringBuf();
 
         #if !bootless
 
-        boot += "___hxClasses = {";
+        boot.add( "___hxClasses = {" );
         for (i in hxClasses) {
-            boot += ''+ i +' = ' + i + ",";
+            boot .add( ''+ i +' = ' + i + "," );
         }
-        boot += "}";
+        boot .add( "}" );
 
-		boot += "" + sys.io.File.getContent('$path/boot/boot.lua');
-		boot += "\n" + sys.io.File.getContent('$path/boot/tostring.lua');
-		if(hxClasses.has("Std_Std")) boot += "\n" + sys.io.File.getContent('$path/boot/std.lua');
-		/*if(hxClasses.has("Math_Math"))*/ boot += "\n" + sys.io.File.getContent('$path/boot/math.lua');
-        if(hxClasses.has("Type_Type")) boot += "\n" + sys.io.File.getContent('$path/boot/type.lua');
-		boot += "\n" + sys.io.File.getContent('$path/boot/string.lua');
-        if(hxClasses.has("StringTools_StringTools")) boot += "\n" + sys.io.File.getContent('$path/boot/stringtools.lua');
-		boot += "\n" + sys.io.File.getContent('$path/boot/object.lua');
-		if(hxClasses.has("Map_Map") || hxClasses.has("haxe_ds_IntMap_IntMap")) boot += "\n" + sys.io.File.getContent('$path/boot/map.lua');
-		boot += "\n" + sys.io.File.getContent('$path/boot/date.lua');
-		if(hxClasses.has("List_List")) boot += "\n" + sys.io.File.getContent('$path/boot/list.lua');
-        /*if(hxClasses.has("haxe_Json_Json"))*/ boot += "\n" + sys.io.File.getContent('$path/boot/json.lua');
-		boot += "\n" + sys.io.File.getContent('$path/boot/extern.lua'); // TODO remove from *release*
-		boot += "\n" + sys.io.File.getContent('$path/boot/ereg.lua'); // TODO remove from *release*
+		boot .add( "" + sys.io.File.getContent('$path/boot/boot.lua') );
+		boot .add( "\n" + sys.io.File.getContent('$path/boot/tostring.lua') );
+		if(hxClasses.has("Std_Std")) boot .add( "\n" + sys.io.File.getContent('$path/boot/std.lua') );
+		/*if(hxClasses.has("Math_Math"))*/ boot .add( "\n" + sys.io.File.getContent('$path/boot/math.lua') );
+        if(hxClasses.has("Type_Type")) boot .add( "\n" + sys.io.File.getContent('$path/boot/type.lua') );
+		boot .add( "\n" + sys.io.File.getContent('$path/boot/string.lua') );
+        if(hxClasses.has("StringTools_StringTools")) boot .add( "\n" + sys.io.File.getContent('$path/boot/stringtools.lua') );
+		boot .add( "\n" + sys.io.File.getContent('$path/boot/object.lua') );
+		if(hxClasses.has("Map_Map") || hxClasses.has("haxe_ds_IntMap_IntMap")) boot .add( "\n" + sys.io.File.getContent('$path/boot/map.lua') );
+		boot .add( "\n" + sys.io.File.getContent('$path/boot/date.lua') );
+		if(hxClasses.has("List_List")) boot .add( "\n" + sys.io.File.getContent('$path/boot/list.lua') );
+        /*if(hxClasses.has("haxe_Json_Json"))*/ boot .add( "\n" + sys.io.File.getContent('$path/boot/json.lua') );
+		boot .add( "\n" + sys.io.File.getContent('$path/boot/extern.lua') ); // TODO remove from *release*
+		boot .add( "\n" + sys.io.File.getContent('$path/boot/ereg.lua') ); // TODO remove from *release*
 
         #end
-
-        var combined = buf.toString();
 
 		var r;
 
         r = ~/\n[ \t]{0,}--[^\n]+/g;
-        boot = r.replace(boot, "");
+        var bootStr = r.replace(boot.toString(), "");
         r = ~/--[^\n]+/g;
-        boot = r.replace(boot, "");
-        boot = boot.replace("\n\n", "\n");
+        bootStr = r.replace(bootStr, "");
+        bootStr = bootStr.replace("\n\n", "\n");
 
-        sys.io.File.saveContent(api.outputFile,
-            importsBuf.toString() +
-            #if !bootless sys.io.File.getContent('$path/boot/preboot.lua') + #end
-        	"\nfunction exec()\n" +
-        	combined + 
-        	"\nend\n" +
-        	boot + 
-        	"\nexec()\n" +
-        	starter);
+        var result = new StringBuf();
+
+        result.add(importsBuf.toString());
+        #if !bootless result.add(sys.io.File.getContent('$path/boot/preboot.lua')); #end
+        result.add("\nfunction exec()\n");
+        result.add(buf.toString());
+        result.add("\nend\n");
+        result.add(bootStr);
+        result.add("\nexec()\n");
+        result.add(starter);
+
+        sys.io.File.saveContent(api.outputFile, result.toString());        	
 
         trace('Lua generated in ${Std.int((Timer.stamp() - now)*1000)}ms');
     }
 
     static var indentCount : Int = 0;
 
-    function openBlock()
+    inline function openBlock()
     {
         #if verbose newline(); print("--{"); #end
         indentCount ++;
         newline();
     }
 
-    function closeBlock()
+    inline function closeBlock()
     {
         indentCount --;
         #if verbose newline(); print("--}"); #end

@@ -68,11 +68,9 @@ class LuaPrinter {
 
     public static var pathHack = new StringMap();
 
-    public static function handleKeywords(name)
+    inline public static function handleKeywords(name)
     {
-        if(keywords.indexOf(name) != -1)
-            return "_" + name;
-        return name;
+        return (keywords.indexOf(name) != -1) ? "_" + name : name;
     }
 
 	public function new(?tabString = "\t") {
@@ -80,7 +78,7 @@ class LuaPrinter {
 		this.tabString = tabString;
 	}
 
-	public function printUnop(op:Unop, val:String = null, inFront:Bool = false)
+	public function printUnop(op:Unop, val:String = null, inFront:Bool = false):String
     if(val == null)
     return switch(op) {
 		case OpIncrement: "++";
@@ -201,7 +199,7 @@ class LuaPrinter {
         return body;
 	}
 
-	public function printVar(v:TVar, expr:Null<TypedExpr>)
+	inline public function printVar(v:TVar, expr:Null<TypedExpr>)
 	{
 		return v.name + opt(expr, printExpr, " = ");
 	}
@@ -368,7 +366,7 @@ class LuaPrinter {
         return '_G.print($traceString)';
     }
 
-    function print_field(e1, name)
+    function print_field(e1, name:String):String
     {
         var expr = '${printExpr(e1)}.$name';
 
@@ -602,7 +600,7 @@ class LuaPrinter {
 	};
     }
 
-    function printShortFunction(value:String)
+    inline function printShortFunction(value:String)
     {
     	var hasReturn = value.indexOf("return ") == 0;
     	return value + (hasReturn ? ";" : "");
@@ -661,9 +659,9 @@ class LuaPrinter {
         return s;
     }
 
-    function printSwitch( _e : haxe.macro.TypedExpr , cases : Array<{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr }> , edef : Null<haxe.macro.TypedExpr>)
+    function printSwitch( _e : haxe.macro.TypedExpr , cases : Array<{ values : Array<haxe.macro.TypedExpr>, expr : haxe.macro.TypedExpr }> , edef : Null<haxe.macro.TypedExpr>):String
     {
-        var s:String = "", e:String;
+        var s = new StringBuf(), e:String;
 		switch (_e.expr) { // convert `(value)` to `value`, if possible
 		case TParenthesis(v): e = printExpr(v);
 		default: e = printExpr(_e);
@@ -673,29 +671,29 @@ class LuaPrinter {
 		// print case blocks:
 		for (i in 0 ... cases.length) {
 			var c = cases[i];
-			s += (i == 0 ? 'if' : '\n${_tabs}elseif')
+			s .add( (i == 0 ? 'if' : '\n${_tabs}elseif')
 				+ ' ($e == ' + printExprs(c.values, ' or $e == ') + ') then'
-				+ '\n${tabs}' + opt(c.expr, printExpr);
+				+ '\n${tabs}' + opt(c.expr, printExpr) );
 		}
 		
 		// print "default" block, if any:
 		if (edef != null) {
-			s += '\n${_tabs}else'
-				+ '\n${tabs}' + opt(edef, printExpr);
+			s .add( '\n${_tabs}else'
+				+ '\n${tabs}' + opt(edef, printExpr) );
 		}
 		
 		//
-		s += '\n${_tabs}end';
+		s .add( '\n${_tabs}end' );
 		tabs = _tabs;
-		return s;
+		return s.toString();
     }
 
 	public function printExprs(el:Array<TypedExpr>, sep:String) {
-		var result = "";
+		var result = new StringBuf();
 		for(i in 0...el.length)
         {
         	var ex = el[i];
-            result += switch(ex.expr)
+            result .add( switch(ex.expr)
             {
             	case TUnop(OpIncrement, _, e): 
             	var v = printExpr(e);
@@ -704,12 +702,12 @@ class LuaPrinter {
             	var v = printExpr(e);
 				'$v = $v - 1';
             	case _: printExpr(ex);
-            }
-            if(i < el.length - 1) result += sep;
+            } );
+            if(i < el.length - 1) result .add( sep );
         }
-        return result;
+        return result.toString();
 	}
 
-	function opt<T>(v:T, f:T->String, prefix = "") return v == null ? "" : (prefix + f(v));
+	inline function opt<T>(v:T, f:T->String, prefix = "") return v == null ? "" : (prefix + f(v));
 }
 #end
