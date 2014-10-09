@@ -500,7 +500,7 @@ class LuaPrinter {
 	var _insideCall = false;
 
 	public function printExpr(e:TypedExpr){        
-		//if((""+e).indexOf("TDate") > -1) trace(""+e);
+		//if((""+e).indexOf("TMap") > -1) trace(""+e);
 
 		return e == null ? null : switch(e.expr) {
 		
@@ -607,7 +607,30 @@ class LuaPrinter {
 		
 		case TBlock([]): '';
 		case TBlock(el) if (el.length == 1): printShortFunction(printExprs(el, ';\n$tabs'));
-		case TBlock(el): printExprs(el, ';\n$tabs');
+		case TBlock(el): //printExprs(el, ';\n$tabs');
+				var sep = ';\n$tabs';
+				var result = new StringBuf();
+				for(i in 0...el.length)
+				{
+					var ex = el[i];
+					result .add( switch(ex.expr)
+					{
+						// fixes "floating" vars
+						case TConst(TInt(z)): '-- $z';
+						case TConst(TFloat(z)): '-- $z';
+						case TLocal(z): '-- ${z.name}';
+
+						case TUnop(OpIncrement, _, e): 
+						var v = printExpr(e);
+						'$v = $v + 1';
+						case TUnop(OpDecrement, _, e): 
+						var v = printExpr(e);
+						'$v = $v - 1';
+						case _: printExpr(ex);
+					} );
+					if(i < el.length - 1) result .add( sep );
+				}
+				result.toString();
 		
 		case TIf(econd, eif, eelse): printIfElse(econd, eif, eelse);
 		
