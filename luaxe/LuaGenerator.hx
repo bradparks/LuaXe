@@ -267,7 +267,7 @@ class LuaGenerator
 
         LuaPrinter.currentPath = p + ".";
 
-        if(classCount > 1)
+        if(classCount > 0)
         {
             var psup:String = null;
             LuaPrinter.superClass = null;
