@@ -70,7 +70,7 @@ class LuaPrinter {
 
 	inline public static function handleKeywords(name)
 	{
-		return (keywords.indexOf(name) != -1) ? "_" + name : name;
+		return (reserved.indexOf(name) != -1) ? "var_" + name : name;
 	}
 
 	public function new(?tabString = "\t") {
@@ -202,7 +202,7 @@ class LuaPrinter {
 
 	inline public function printVar(v:TVar, expr:Null<TypedExpr>)
 	{
-		return v.name + opt(expr, printExpr, " = ");
+		return handleKeywords(v.name) + opt(expr, printExpr, " = ");
 	}
 
 	function printField(e1:TypedExpr, fa:FieldAccess, isAssign:Bool = false)
@@ -506,7 +506,7 @@ class LuaPrinter {
 		
 		case TConst(c): printConstant(c);
 
-		case TLocal(t): (""+handleKeywords(t.name)).replace("`trace", "trace");
+		case TLocal(t): handleKeywords(t.name).replace("`trace", "trace");
 
 		case TArray(e1, e2): '${printExpr(e1)}[${printExpr(e2)}]';
 
@@ -596,7 +596,7 @@ class LuaPrinter {
 			case TUnop(OpIncrement,true,{ expr : TLocal(tc)}):
 			if(""+tc.t == "TAbstract(Int,[])")
 			{
-				result = "local " + v.name + " = " + tc.name;
+				result = "local " + handleKeywords(v.name) + " = " + tc.name;
 				result += "; " + tc.name + " = " + tc.name + " + 1";
 			}
 			default:
