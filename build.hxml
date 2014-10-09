@@ -1,0 +1,9 @@
+### lua ###
+-cp demo
+-cp luaxe/std
+-main Main
+-D lua
+-js bin/hx.lua
+--macro luaxe.LuaGenerator.use()
+-dce full
+--connect 6000

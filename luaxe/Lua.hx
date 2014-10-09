@@ -12,6 +12,10 @@ class Lua
 	#if lua return (untyped __call__("setmetatable",obj,mt)); #else return null; #end
 }
 
+/*
+	LuaArray
+	Wrap any Lua array to safely index for [0]
+*/
 abstract LuaArray<T>(Dynamic)
 {
 	public function new() this = cast untyped __lua__("{}");
