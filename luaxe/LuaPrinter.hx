@@ -88,10 +88,10 @@ class LuaPrinter {
 		case OpNegBits: "~";
 	}else
 	return switch(op) {
-		case OpIncrement: inFront? 
+		case OpIncrement: inFront?
 		'(function () local _r = $val or 0; $val = _r + 1; return _r end)()'
 		: '(function () $val = ($val or 0) + 1; return $val; end)()';
-		case OpDecrement: inFront? 
+		case OpDecrement: inFront?
 		'(function () local _r = $val or 0; $val = _r - 1; return _r end)()'
 		: '(function () $val = ($val or 0) - 1; return $val; end)()';
 		case OpNot:       inFront? '$val!' : 'not $val';
@@ -113,8 +113,8 @@ class LuaPrinter {
 		case OpLt: "<";
 		case OpLte: "<=";
 		case OpAnd: "&";
-		case OpOr: "or";//TODO "|";
-		case OpXor: "^";
+		case OpOr: " or "; // bit |
+		case OpXor: "^"; // bit
 		case OpBoolAnd: " and ";// "&&" in Lua
 		case OpBoolOr: " or ";// "||" in Lua
 		case OpShl: "<<";
@@ -264,7 +264,7 @@ class LuaPrinter {
 
 						var result = new StringBuf();
 						var sep = ';\n$tabs\t\t';
-						result.add('(function()\n$tabs\t\t');
+						result.add('(function(self)\n$tabs\t\t');
 
 						function print(i:Int)
 						{
@@ -289,7 +289,7 @@ class LuaPrinter {
 						}
 						result.add("return ");
 						print(el.length - 1);
-						result.add("end)()");
+						result.add("end)(self)");
 						result.toString();
 
 					default: printExpr(i);
@@ -328,7 +328,7 @@ class LuaPrinter {
 						switch (e.expr) {
 							case TField(e, field):
 							{
-								return '$id(${printExprs(el,", ")})'
+								return '$id(${toFuncIf()})' //'$id(${printExprs(el,", ")})'
 								.replace(".set(", ":set(")
 								.replace(".get(", ":get(")
 								.replace(".iterator(", ":iterator(");
@@ -500,7 +500,7 @@ class LuaPrinter {
 	var _insideCall = false;
 
 	public function printExpr(e:TypedExpr){        
-		//if((""+e).indexOf("TMap") > -1) trace(""+e);
+		//if((""+e).indexOf("LoopStructureGraph") > -1) trace(""+e);
 
 		return e == null ? null : switch(e.expr) {
 		
@@ -557,6 +557,36 @@ class LuaPrinter {
 		{
 			var toStringCall = '${printBinop(OpAdd)}';
 			'${printExpr(e1)} $toStringCall ${printExpr(e2)}';
+		};
+
+		case TBinop(OpXor, e1, e2): // TODO extend not only for constants
+		{
+			'bit.bxor(${printExpr(e1)}, ${printExpr(e2)})';
+		};
+
+		case TBinop(OpAnd, e1, e2): // TODO extend not only for constants
+		{
+			'bit.band(${printExpr(e1)}, ${printExpr(e2)})';
+		};
+
+		case TBinop(OpShl, e1, e2): // TODO extend not only for constants
+		{
+			'bit.lshift(${printExpr(e1)}, ${printExpr(e2)})';
+		};
+
+		case TBinop(OpShr, e1, e2): // TODO extend not only for constants
+		{
+			'bit.rshift(${printExpr(e1)}, ${printExpr(e2)})';
+		};
+
+		case TBinop(OpUShr, e1, e2): // TODO extend not only for constants
+		{
+			'bit.arshift(${printExpr(e1)}, ${printExpr(e2)})';
+		};
+
+		case TBinop(OpOr, e1, e2): // TODO extend not only for constants
+		{
+			'bit.bor(${printExpr(e1)}, ${printExpr(e2)})';
 		};
 
 		case TBinop(OpAssignOp(op), e1, e2):

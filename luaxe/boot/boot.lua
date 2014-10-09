@@ -4,6 +4,9 @@ null = nil
 trace = print
 undefined = { } -- unique special value for (mostly) internal use.
 
+if(bit == nil)then bit = bit32 end
+if(bit32 == nil)then bit32 = bit end
+
 function ___inherit(to, base)
 	-- copy all fields from parent
     for k, v in pairs(base) do
