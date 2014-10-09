@@ -1,9 +1,0 @@
---next build-lua.hxml
---next build-js.hxml
-
--cmd /usr/bin/env node bin/hx.js > log_js.txt
--cmd /usr/local/bin/luajit bin/hx.lua > log_luajit.txt
--cmd diff log_js.txt log_luajit.txt > diff.txt &2>/dev/null
-
-#-cmd /usr/local/bin/luajit -joff bin/hx.lua
-#-cmd /usr/local/bin/lua bin/hx.lua

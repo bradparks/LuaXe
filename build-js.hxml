@@ -1,6 +1,0 @@
--cp demo
--main Main
--D !lua
--js bin/hx.js
--dce full
---connect 6000

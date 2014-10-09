@@ -1,6 +1,6 @@
 package ;
 
-class TestMagic
+class Magic
 {
 	public static function test()
 	{

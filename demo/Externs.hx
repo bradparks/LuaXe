@@ -8,7 +8,7 @@ extern class Extern {
 	var X:Int;
 }
 
-class TestExtern
+class Externs
 {
 	public static function test()
 	{
