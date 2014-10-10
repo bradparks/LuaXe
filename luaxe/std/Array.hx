@@ -34,7 +34,7 @@ class Array<T> implements ArrayAccess<T> {
 		);
 	};
 
-	public function concat( a : Array<T>) : Array<T> {
+	@:keep public function concat( a : Array<T>) : Array<T> {
 		var result = untyped __lua__("{}");
 		untyped __lua__(
 		"for k,v in pairs(self) do
@@ -46,7 +46,7 @@ class Array<T> implements ArrayAccess<T> {
     	return luaxe.Lua.setmetatable(result, Array);
 	}
 
-	public function copy() : Array<T> {
+	@:keep public function copy() : Array<T> {
 		var result = untyped __lua__("{}");
 		untyped __lua__(
 		"for k,v in pairs(self) do
@@ -55,16 +55,16 @@ class Array<T> implements ArrayAccess<T> {
 		return luaxe.Lua.setmetatable(result, Array);
 	}
 
-	@:runtime public function iterator() : Iterator<T> {
+	@:keep @:runtime public function iterator() : Iterator<T> {
 		return null;
 	}
 
-	public function insert( pos : Int, x : T ) : Void {
+	@:keep public function insert( pos : Int, x : T ) : Void {
 
 	};
 
 
-	public function join( sep : String ) : String {
+	@:keep public function join( sep : String ) : String {
 		var t = untyped __lua__("{}");
 		untyped __lua__(
 		'for i=0, #self do
@@ -73,19 +73,22 @@ class Array<T> implements ArrayAccess<T> {
 		return (untyped __lua__('table.concat'))(t,sep,0);
 	}
 
-	public function toString() : String {
+	@:keep public function toString() : String {
 		var s = "[ ";
     	untyped __lua__(
     	"function prv(v)
     		s = s + v
     	end
     	local first = true
-    	for key, value in pairs (o) do
-    		prv(first and value or (", " + value))
+    	for key, value in pairs (self) do
+    		prv(first and value or (\", \" + value))
     		first = false
     	end");
     	return s + " ]";
 	}
+
+	@:keep public static function __tostring(a:Dynamic)
+	return a.toString();
 
 	@:runtime public function pop() : Null<T> {
 		var length = (untyped __hash__)(this);
@@ -95,29 +98,29 @@ class Array<T> implements ArrayAccess<T> {
 		return last;
 	}
 
-	@:runtime public function push(elem:T) : Int {
+	@:keep @:runtime public function push(elem:T) : Int {
 		var length = (untyped __hash__)(this);
 		(untyped __lua__('table.insert'))(this, length+1, elem);
 		return length;
 	}
 
-	public function unshift(x : T) : Void {
+	@:keep public function unshift(x : T) : Void {
 		return ;
 	}
 
-	public function indexOf(x : T, ?fromIndex:Int) : Int {
+	@:keep public function indexOf(x : T, ?fromIndex:Int) : Int {
 		return 0;
 	}
 
-	public function lastIndexOf(x : T, ?fromIndex:Int) : Int {
+	@:keep public function lastIndexOf(x : T, ?fromIndex:Int) : Int {
 		return 0;
 	}
 
-	public function remove(x : T) : Bool {
+	@:keep public function remove(x : T) : Bool {
 		return null;
 	}
 
-	public function reverse() : Void{
+	@:keep public function reverse() : Void{
 		untyped __lua__(
 		"local length = #self
 		if(length < 2) then return end
@@ -128,7 +131,7 @@ class Array<T> implements ArrayAccess<T> {
 		end");
 	};
 
-	@:runtime public function shift() : Null<T> {
+	@:keep @:runtime public function shift() : Null<T> {
 		return null;
 	}
 

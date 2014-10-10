@@ -85,7 +85,7 @@ class LuaPrinter {
 		case OpDecrement: "--";
 		case OpNot: "!";
 		case OpNeg: "-";
-		case OpNegBits: "~";
+		default: throw "Unreachable code";
 	}else
 	return switch(op) {
 		case OpIncrement: inFront?
@@ -97,6 +97,7 @@ class LuaPrinter {
 		case OpNot:       inFront? '$val!' : 'not $val';
 		case OpNeg:       inFront? '$val-' : '-$val';
 		case OpNegBits:   inFront? '$val~' : '~$val';
+		default: throw "Unreachable code";
 	}
 
 	public function printBinop(op:Binop)
@@ -112,18 +113,12 @@ class LuaPrinter {
 		case OpGte: ">=";
 		case OpLt: "<";
 		case OpLte: "<=";
-		case OpAnd: "&";
-		case OpOr: " or "; // bit |
-		case OpXor: "^"; // bit
 		case OpBoolAnd: " and ";// "&&" in Lua
 		case OpBoolOr: " or ";// "||" in Lua
-		case OpShl: "<<";
-		case OpShr: ">>";
-		case OpUShr: ">>>";
 		case OpMod: "%";
 		case OpInterval: "...";
 		case OpArrow: "=>";
-		case OpAssignOp(op): throw "Unreachable code";
+		default: throw "Unreachable code";
 	}
 
 	public function printString(s:String) {
@@ -274,9 +269,13 @@ class LuaPrinter {
 								case TUnop(OpIncrement, _, e): 
 								var v = printExpr(e);
 								'$v = $v + 1';
+								
 								case TUnop(OpDecrement, _, e): 
 								var v = printExpr(e);
 								'$v = $v - 1';
+
+								
+
 								case _: printExpr(ex);
 							} );
 							//if(i < el.length - 1) 
@@ -291,6 +290,16 @@ class LuaPrinter {
 						print(el.length - 1);
 						result.add("end)(self)");
 						result.toString();
+
+					case TIf(econd, eif, eelse): 
+					switch (eif.expr) {
+						case TConst(TInt(z)): '(${printExpr(econd)} and ${z} or (${printExpr(eelse)}))';
+						case TConst(TBool(z)): '(${printExpr(econd)} and ${z} or (${printExpr(eelse)}))';
+						case TConst(TFloat(z)): '(${printExpr(econd)} and ${z} or (${printExpr(eelse)}))';
+						case TConst(TString(z)): '(${printExpr(econd)} and "${z}" or (${printExpr(eelse)}))';
+						case TConst(TNull): '(_G.___ternar(${printExpr(econd)}, nil, (${printExpr(eelse)})))';
+						default: printIfElse(econd, eif, eelse);
+					}
 
 					default: printExpr(i);
 				}
@@ -500,7 +509,7 @@ class LuaPrinter {
 	var _insideCall = false;
 
 	public function printExpr(e:TypedExpr){        
-		//if((""+e).indexOf("LoopStructureGraph") > -1) trace(""+e);
+		//if((""+e).indexOf("hasNext") > -1) trace(""+e);
 
 		return e == null ? null : switch(e.expr) {
 		
@@ -521,7 +530,7 @@ class LuaPrinter {
 					var add = "+";
 					var add = switch (fld.expr.expr) {
 						case TFunction(
-						 func): add = "function ";
+						 func): add = "--[[function]] ";
 						default: "";   
 					}
 					return
@@ -602,6 +611,7 @@ class LuaPrinter {
 		case TBinop(op, e1, e2): 
 			'${printExpr(e1)} ${printBinop(op)} ${printExpr(e2)}';
 		
+		case TUnop(OpNegBits, false, e1): 'bit.bnot(${printExpr(e1)})';
 		case TUnop(op, true, e1): printUnop(op,printExpr(e1),true);
 		case TUnop(op, false, e1): printUnop(op,printExpr(e1),false);
 		
