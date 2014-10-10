@@ -9,7 +9,7 @@ class Main
 {
     public static function main()
     {
-        // Using native Lua rrays
+        // Using native Lua arrays
         // indexed from zero [0]
         var larr = new LuaArray<Int>();
         larr[0] = 100500;
